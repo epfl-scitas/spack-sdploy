@@ -1,0 +1,97 @@
+pipeline {
+    agent {
+        label 'ph02-syrah-rhel8'
+    }
+
+    // Adds timestamps to console logs
+    options {
+        timestamps()
+        ansiColor('xterm')
+    }
+
+    environment {
+        // define environment variables here for all steps
+        STACK_RELEASE = "syrah"
+        PYTHON_EXECUTABLE = "python36"
+        SDPLOY_VIRTUALENV_PATH = "/home/scitasbuildpr/${STACK_RELEASE}/virtualenv/senv-py36"
+        JENKINS_SCRIPTS_PATH= "jenkins/deploy/scripts"
+    }
+
+    stages {
+        stage('A sequential stage') {
+            steps {
+                sh '${JENKINS_SCRIPTS_PATH}/sequential_stage1.sh'
+            }
+        }
+
+        stage('A parallel stage') {
+            steps {
+                script {
+                    parallel(do_parallel_stage_1())
+                }
+            }
+        }
+    }
+}
+
+
+def get_prefix(branch_name, stack_name) {
+    def pattern = ~"origin/(packages|bugfix|features)/$stack_name/"
+    if ("${branch_name}" =~ pattern) {
+        println("PR detected")
+        return "${env.HOME}/${stack_name}/pr/${env.BUILD_TAG}"
+    }
+    println("NO PR detected for branch ${branch_name}")
+    return ""
+}
+
+def get_agent_name(environment) {
+    agent_name = 'ph02-syrah-rhel8'   
+    return agent_name
+}
+
+def _define_stages(prefix, script, message, do_junit = true) {
+    def environments = ['environment1']
+
+    def jobs = [:]
+    for (def environment in environments) {
+        def agent_name = get_agent_name(environment)
+
+        jobs["${prefix}-${agent_name}"] = {
+            stage("${prefix}-${agent_name}") {
+                node(agent_name) {
+                    env.environment = environment
+                    env.script = script
+                    def result = ''
+                    checkout scm
+                    try {
+                        ansiColor('xterm') {
+                            sh '${script}'
+                        }
+                    } catch(error) {
+                        result = error
+                        currentBuild.result = 'FAILURE'
+                        mattermostSend color: 'warning',
+                            message: "${message} failed for ${environment}. ${env.BUILD_URL} with error ${error}"
+                    }
+                    archiveArtifacts artifacts:'*.txt, *.xml',
+                        allowEmptyArchive: true
+                    if (do_junit) {
+                        junit testResults:'*.xml',
+                            allowEmptyResults: true
+                    }
+                    if (result) {
+                        throw(error)
+                    }
+                }
+            }
+        }
+    }
+    return jobs
+}
+
+def do_parallel_stage_1() {
+    return _define_stages('stage_1',
+                          '${JENKINS_SCRIPTS_PATH}/parallel_stage_1.sh',
+                          'Run a stage in parallel')
+}
