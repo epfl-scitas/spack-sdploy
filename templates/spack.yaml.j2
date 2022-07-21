@@ -1,0 +1,40 @@
+spack:
+  definitions:
+{#                                                          #}
+{#                                                          #}
+{#                                  PROGRAMMING ENVIRONMENT #}
+{#                                                          #}
+{#                                                          #}
+{% for definition, spec  in stack['pe'].items() %}
+  - {{ definition }}: [ {{ spec }} ]
+{% endfor %}
+{#                                                          #}
+{#                                                          #}
+{#                                                 PACKAGES #}
+{#                                                          #}
+{#                                                          #}
+{% for list_name, pkg_list in stack['packages'].items() %}
+  - {{ list_name }}:
+{% for pkg in pkg_list %}
+    - {{ pkg }}
+{% endfor %}
+{% endfor %}
+{#                                                          #}
+{#                                                          #}
+{#                                                 MATRICES #}
+{#                                                          #}
+{#                                                          #}
+  specs:
+{% for list_name, stack in stack['pkgs_pe'].items() %}
+{% for pe in stack['pe'] %}
+  - matrix:
+    - [ ${{ list_name }} ]
+{% if 'dependencies' in stack %}
+{% for dep in stack['dependencies'] %}
+    - [ $^{{ pe }}_{{ dep }} ]
+{% endfor %}
+{% endif %}
+    - [ $%{{pe}}_compiler ]
+{% endfor %}
+{% endfor %}
+
