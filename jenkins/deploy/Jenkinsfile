@@ -92,6 +92,6 @@ def _define_stages(prefix, script, message, do_junit = true) {
 
 def do_parallel_stage_1() {
     return _define_stages('stage_1',
-                          '${JENKINS_SCRIPTS_PATH}/parallel_stage_1.sh',
+                          '${JENKINS_SCRIPTS_PATH}/parallel_stage1.sh',
                           'Run a stage in parallel')
 }
