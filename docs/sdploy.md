@@ -4,6 +4,20 @@ sdploy is a tool for helping the deployment of a software stack using the spack
 package manager.
 
 sdeploy will create the environment configuration based on the stack definition.
+This environment configuration is defined by the following spack configuration
+files:
+
+- spack.yaml
+- packages.yaml
+- modules.yaml
+- repos.yaml
+- modules.yaml
+- mirrors.yaml
+
+sdploy provides the logic to create each one of this files. For this, the user
+must provide the list of packages it wants to install in its platform and also
+some details about this platform, such as if is accelerated or if it was fast
+network support. This is done using the stack file and platform file.
 
 ## What is a stack file and how to write it ?
 
@@ -37,9 +51,11 @@ the system compiler (in other words, the compiler that is insalled by default in
 the system). The metadata key is used internally by sdploy and it is used to
 group sections with the same functionality (in this case, PE sections).
 
-## The Packages
+## Adding packages to the stack
 
-At the minimum, a list of packages must have the following structure:
+We add a package to the stack by defining a list of packages and including the
+package in this list. At the minimum, a list of packages must have the following
+structure:
 
     core:
       metadata:
@@ -51,7 +67,10 @@ At the minimum, a list of packages must have the following structure:
 
 `core` is the name of the list of packages (it is a dictionary). The `pe` list
 specifies which compilers to use for building the packages in the list. And
-`packages` is the actual list of packages.
+`packages` is the actual list of packages. The section key under metadata will
+specify that the key core is a list of packages. This will help sdploy to group
+all the package lists in a single structure. Remember, if it is a list of
+packages, the section key (under metadata) must contain the string packages.
 
 The above declaration will add the following entry to the definitions list:
 
@@ -59,21 +78,22 @@ The above declaration will add the following entry to the definitions list:
     - core:
       - cmake@3.20.6
 
-and the following spec:
+and the following matrix in the specs section:
 
-    specs
+    specs:
     - matrix:
       - [ $core ]
       - [ $%gcc_stable_compiler ]
 
 Notice that sdploy added `_compiler` to the spec matrix. This is because
-gcc_stable is just a prefix and inside we can find all other packages that make
-up the gcc_stable programming environment, such as the gcc\_stable_mpi and the
-gcc\_stable_blas.
+gcc\_stable is just a prefix and inside we can find all other packages that make
+up the gcc\_stable programming environment, such as the gcc\_stable\_mpi and the
+gcc\_stable_blas, which are just tokens for the MPI and BLAS libraries defined
+in the PE. See more of this in the PE section above.
 
-If we would like to compile the core packages list with the intel compiler, we
-would simply add the intel programming environment to the `pe` list. In that
-case, the stack definition would look like this:
+If we would like to compile the core packages list with the intel compiler too,
+we would simply add the intel programming environment to the `pe` list. In that
+case, the core package list would look like this:
 
     core:
       metadata:
@@ -93,12 +113,13 @@ And the corresponding spec would become:
       - [ $core ]
       - [ $%intel_stable_compiler ]
 
-Notice that we didn't change the list of packages itself, so for this casem the
-definition list would be the same as above.
+Notice that we didn't change the list of packages itself, we are still compiling
+a single package, cmake@3.20.6.
 
-Now let's move on a package that requires MPI support. In this case, we would
-have to specify that in our list of packages. Let's call this new list of
-packages `mpi_pkgs`:
+Now let's move on to a package that requires MPI support. For this we are going
+to create a new list of packages and we are going to name it `mpi_pkgs`. It is a
+good pratice to come up with names that can give a hint on what kind of packages
+is this list made of:
 
     mpi_pkgs:
       metadata:
@@ -125,7 +146,8 @@ with the MPI library specified in the programming environment gcc_stable.
 
 Ia a package needs more dependencies to compile, they just need to be added to
 dependencies key where the package is defined. For example, hypre can be such a
-case, so we give a last example using this package:
+case, so we give a last example using this package. We will create a new list of
+packages for this example and we will call it mpi\_blas\_cuda_pkgs:
 
     mpi_blas_cuda_pkgs:
       metadata:
@@ -138,6 +160,22 @@ case, so we give a last example using this package:
       - cuda
       packages:
       - hypre+mpi+blas+cuda
+
+For the mpi_blas_cuda_pkgs list of packages just defined, the specs matrix would
+become like this:
+
+    - matrix:
+      - [ $mpi_pkgs ]
+      - [ $^gcc_stable_mpi ]
+      - [ $^gcc_stable_blas ]
+      - [ $^gcc_stable_cuda ]
+      - [ $%gcc_stable_compiler ]
+
+## Default packages
+
+Spack allows you to customize how your software is built through the
+packages.yaml file. To specify a default package we add the default key in the
+package spec:
 
 ## Filters
 
