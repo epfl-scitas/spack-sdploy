@@ -1,0 +1,12 @@
+packages:
+{#                                                          #}
+{#                                                          #}
+{#                                        STANDARD PACKAGES #}
+{#                                                          #}
+{#                                                          #}
+{% for pkg, definition in packages.items() %}
+  {{ pkg }}:
+{% for key, value in definition.items() %}
+    {{ key }}: {{value}}
+{% endfor %}
+{% endfor %}
