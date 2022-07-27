@@ -1,0 +1,27 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                                       #
+# SCITAS SPACK DEPLOYMENT 2022, EPFL                                    #
+#                                                                       #
+# This file contains configuration names which are                      #
+# used internally, but can hereby be modified by means                  #
+# of this file, in respect to code and data separation.                 #
+#                                                                       #
+# Example:                                                              #
+#                                                                       #
+#         stack_yaml: stack.yaml                                        #
+#                                                                       #
+#         Internally this program will use the word `stack_yaml`        #
+#         when referring to the file `stack.yaml`. If the user          #
+#         wants later to change the name of the file where the          #
+#         stack is specified, it will be sufficient to replace          #
+#         `stack.yaml` with the new name.                               #
+#                                                                       #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+config:
+  stack_yaml: stack.yaml
+  spack_yaml: spack.yaml
+  spack_yaml_template: spack.yaml.j2
+  packages_yaml: packages.yaml
+  packages_yaml_template: packages.yaml.j2
+  modules_yaml: modules.yaml
+  modules_yaml_template: modules.yaml.j2
