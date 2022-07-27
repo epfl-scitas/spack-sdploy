@@ -1,10 +1,21 @@
 packages:
 {#                                                          #}
 {#                                                          #}
-{#                                        STANDARD PACKAGES #}
+{#                                         DEFAULT PACKAGES #}
 {#                                                          #}
 {#                                                          #}
-{% for pkg, definition in packages.items() %}
+{% for pkg, definition in packages.get('defaults').items() %}
+  {{ pkg }}:
+{% for key, value in definition.items() %}
+    {{ key }}: {{value}}
+{% endfor %}
+{% endfor %}
+{#                                                          #}
+{#                                                          #}
+{#                                        EXTERNAL PACKAGES #}
+{#                                                          #}
+{#                                                          #}
+{% for pkg, definition in packages.get('externals').items() %}
   {{ pkg }}:
 {% for key, value in definition.items() %}
     {{ key }}: {{value}}
