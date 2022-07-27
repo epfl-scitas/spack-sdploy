@@ -23,6 +23,12 @@ class ReadYaml(object):
         self.data = None
         self.cursor = []
 
+        ### NEW FORMAT
+        self.data = None
+        self.config = None
+        self.platform = None
+        self.tokens = None
+
     def read(self, filename):
         """Read yaml file into data object"""
 
@@ -33,6 +39,93 @@ class ReadYaml(object):
         """Display configuration"""
 
         print(yaml.round_trip_dump(self.data))
+
+    #
+    #
+    # THESE ARE THE NEW FUNCTIONS
+    #
+    #
+
+    def replace_tokens(self, data):
+        """Reads tokens from platform file and executes replacement.
+        `data` is a dictionary where the replacements will happen.
+        Replacements are done in place."""
+
+        self.tokens = self._read_tokens(self.platform_file)
+        for key, value in self.tokens.items():
+            self._do_replace_tokens(data, '<' + str(key) + '>', str(value))
+
+    def _read_tokens(self, platform_file):
+        """Return dict of keys to be replaced in stack file
+
+        Replacements are found under the common:variables key:
+
+            platform:
+              variables:
+                key1: option1
+                key2: option2
+                ...
+
+        This method will return a dict like this:
+
+            {key1: option1, key2, option2, ...}
+        """
+
+        if not platform_file:
+            platform_file = self.platform_file
+        common = ReadYaml()
+        common.read(platform_file)
+        return(common.data['platform']['tokens'])
+
+    def _do_replace_tokens(self, d, pat, rep):
+        """Attempt to replace stuff in YAML file
+
+        >>> IN PLACE REPLACEMENT <<<
+
+        d - yaml file in form of python dicy.
+        pat - pattern to look for, par exemple: '<<id>>'.
+        rep - replacement string, par exemple: 'xy: z')."""
+
+        if isinstance(d, dict):
+            for k in d:
+                if isinstance(d[k], str):
+                    d[k] = d[k].replace(pat, rep)
+                else:
+                   self._do_replace_tokens(d[k], pat, rep)
+        if isinstance(d, list):
+            for idx, elem in enumerate(d):
+                if isinstance(elem, str):
+                    d[idx] = elem.replace(pat, rep)
+                else:
+                   self._do_replace_tokens(d[idx], pat, rep)
+
+    def read_filters(self, platform_file):
+        """Return dict of keys to be replaced in stack file
+
+        Replacements are found under the platform:filters key:
+
+            platform:
+              filters:
+                key1: option1
+                key2: option2
+                ...
+
+        This method will return a dict like this:
+
+            {key1: option1, key2, option2, ...}
+        """
+
+        if not platform_file:
+            platform_file = self.platform_file
+        common = ReadYaml()
+        common.read(platform_file)
+        return(common.data['platform']['filters'])
+
+    #
+    #
+    # END
+    #
+    #
 
     def do_choose(self, stack, dic, token):
         """Replace token keys in dictionary
