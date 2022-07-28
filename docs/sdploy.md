@@ -171,11 +171,19 @@ become like this:
       - [ $^gcc_stable_cuda ]
       - [ $%gcc_stable_compiler ]
 
+## Customising the specs
+
+
+
 ## Default packages
 
 Spack allows you to customize how your software is built through the
-packages.yaml file. To specify a default package we add the default key in the
+packages.yaml file. To specify a default package we add the `default` key in the
 package spec:
+
+    - cmake:
+        default:
+        
 
 ## Filters
 
