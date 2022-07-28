@@ -42,7 +42,7 @@ class ReadYaml(object):
 
     #
     #
-    # THESE ARE THE NEW FUNCTIONS
+    # THESE ARE THE NEW FUNCTIONS USED POTENTIALLY IN EVERY CLASS
     #
     #
 
@@ -121,11 +121,30 @@ class ReadYaml(object):
         common.read(platform_file)
         return(common.data['platform']['filters'])
 
+    def group_sections(self, dic, section):
+        """Returns dictionary composed of common sections
+
+        In the stack.yaml file there can be to different key that both are
+        related to packages or to PE. This function will group all section
+        which has section value in section key"""
+
+        tmp = {}
+        for key in dic:
+            if dic[key]['metadata']['section'] == section:
+                dic[key].pop('metadata')
+                tmp[key] = dic[key]
+        return(tmp)
+
     #
     #
     # END
     #
     #
+
+
+
+
+
 
     def do_choose(self, stack, dic, token):
         """Replace token keys in dictionary

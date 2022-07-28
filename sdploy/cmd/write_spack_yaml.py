@@ -40,10 +40,18 @@ section = "SCITAS"
 level = "short"
 
 from ..yaml_manager import ReadYaml
-from ..pe import ProgrammingEnvironment
-from ..packages import Packages
+from ..spack_yaml import SpackYaml
+# from ..pe import ProgrammingEnvironment
+# from ..packages import Packages
+from ..util import *
+from ..config import *
 
 def setup_parser(subparser):
+    subparser.add_argument(
+        '-p', '--platform', required=True,
+        help='path to the pplatform file.'
+    )
+
     subparser.add_argument(
         '-o', '--output-path',
         help='where to write spack.yaml'
@@ -84,45 +92,56 @@ def setup_parser(subparser):
 def write_spack_yaml(parser, args):
     """Create spack.yaml file"""
 
-    # Process arguments.
-    # The following definitions will later me moved to a separate file:
-    # - stack.yaml
-    # - spack.yaml.j2
-    # - spack_yaml
-    # As well as the schema keywords:
-    # - pe
-    # - packages
+    # Read sdploy configuration.
+    # Items read from configuration may apply if no option was given in the
+    # command line. Note that there aren't options for every single item that
+    # can be found in the configuration file.
+    config = ReadYaml()
+    config.read(get_prefix() + SEP + CONFIG_FILE)
+
+    # Handle arguments.
     if not args.input_path:
         args.input_path = os.getcwd()
     if not args.output_path:
         args.output_path = os.getcwd()
     if not args.source_file:
-        args.source_file = 'stack.yaml'
+        args.source_file = config.data['config']['stack_yaml']
     if not args.templates_path:
         args.templates_path = os.getcwd()
     if not args.template_file:
-        args.template_file = 'spack.yaml.j2'
+        args.template_file = config.data['config']['spack_yaml_template']
 
-    stack_yaml = args.input_path + '/' + args.source_file
-    spack_yaml = 'spack.yaml'
-    packages_yaml = 'packages.yaml'
-    packages_yaml_template = 'packages.yaml.j2'
+    stack_yaml = args.input_path + SEP + args.source_file
+    spack_yaml = config.data['config']['spack_yaml']
+    packages_yaml = config.data['config']['packages_yaml']
+    platform_yaml = args.platform
 
     # Process Programming Environment section.
-    pe = ProgrammingEnvironment(stack_yaml, stack_yaml)
-    pe(section = 'pe')
+    stack = SpackYaml(platform_yaml, stack_yaml)
 
-    # Process Packages section.
-    pkgs = Packages(stack_yaml, stack_yaml)
-    pkgs(section = 'packages')
+    # Create PE definitions dictionary
+    stack.create_pe_definitions_dict()
 
-    # spack.yaml
-    # Get all data in a single dictionary
-    data = deepcopy(pe.flat_stack)
-    data['packages'] = pkgs.pkg_defs
-    data['pkgs_pe'] = pkgs.pe
+    # Create packages definitions dictionary
+    stack.create_pkgs_definitions_dict()
 
-    # All of this will go in to a class/method
+    # Create PE matrix dictionary
+    stack.create_pe_compiler_specs_dict()
+
+    # Create PE support libraries matrix dictionary
+    stack.create_pe_libraries_specs_dict()
+
+    # Create package lists matrix dictionary
+    stack.create_pkgs_specs_dict()
+
+    # Concatenate all dicts
+    data = {}
+    data['pe_defs'] = stack.pe_defs
+    data['pkgs_defs'] = stack.pkgs_defs
+    data['pe_specs'] = stack.pe_specs
+    data['pkgs_specs'] = stack.pkgs_specs
+
+    # Jinja setup
     file_loader = FileSystemLoader(args.templates_path)
     env = Environment(loader = file_loader, trim_blocks = True)
 
@@ -132,12 +151,3 @@ def write_spack_yaml(parser, args):
     print(output)
     with open(spack_yaml, 'w') as f:
         f.write(output)
-
-    template = env.get_template(packages_yaml_template)
-    output = template.render(packages = pkgs.pkgs_yaml)
-    print(output)
-    with open(packages_yaml, 'w') as f:
-        f.write(output)
-
-#    test = ReadYaml()
-#    test.read('test.yaml')
