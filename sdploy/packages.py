@@ -300,7 +300,7 @@ class Packages(ReadYaml):
             pkg_list = []
             for pkg in v['packages']:
                 pkg_list.append(pkg)
-            st()
+
             self.defs[k] = v['packages'][0]
 
     def flatten_dict(self, d: MutableMapping, parent_key: str = '', sep: str = '_'):

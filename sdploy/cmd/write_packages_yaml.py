@@ -114,7 +114,6 @@ def write_packages_yaml(parser, args):
     packages_yaml_template = config.data['config']['packages_yaml_template']
     platform_yaml = args.platform
 
-    st()
     # Initiates variables and does initial processing
     pkgs = Packages(platform_yaml, stack_yaml)
 
