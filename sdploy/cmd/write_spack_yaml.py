@@ -41,8 +41,6 @@ level = "short"
 
 from ..yaml_manager import ReadYaml
 from ..spack_yaml import SpackYaml
-# from ..pe import ProgrammingEnvironment
-# from ..packages import Packages
 from ..util import *
 from ..config import *
 
