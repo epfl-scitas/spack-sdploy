@@ -45,10 +45,13 @@ class SpackYaml(ReadYaml):
     def create_pe_compiler_specs_dict(self):
         """Regroup compilers for parsing in specs"""
 
-        compilers_list = []
-        for pe, conf in self.pe_defs.items():
-            if pe.endswith('compiler'):
-                compilers_list.append(pe)
+        data = self.group_sections(deepcopy(self.data), 'pe')
+
+        for pe, stack in data.items():
+            for stack_name in stack.keys():
+                self.pe_specs[pe + '_' + stack_name] = list(data.get(pe).get(stack_name).keys())
+                # compiler is defined by default
+                self.pe_specs[pe + '_' + stack_name].pop(0)
 
     def create_pe_definitions_dict(self, filter = 1):
         """Regroup PE definitions in a single dictionary"""
@@ -214,3 +217,14 @@ class SpackYaml(ReadYaml):
                 yield from self._flatten_dict(v, new_key, sep=sep).items()
             else:
                 yield new_key, v
+
+    # METHOD IS NOT CURRENTLY USED
+    def _get_pe_list(self):
+        """Return list with PE names"""
+
+        stack = self.group_sections(deepcopy(self.data), 'pe')
+        pe_list = list(stack.keys())
+        if 'metadata' in pe_list:
+                pe_list.pop('metadata')
+
+        return(pe_list)
