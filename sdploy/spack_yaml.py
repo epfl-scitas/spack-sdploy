@@ -2,12 +2,14 @@ from pdb import set_trace as st
 
 from collections.abc import MutableMapping
 from copy import deepcopy
+import inspect
+
 from .yaml_manager import ReadYaml
 
 class SpackYaml(ReadYaml):
     """Manage the packages section in stack.yaml"""
 
-    def __init__(self, platform_file, stack_file):
+    def __init__(self, platform_file, stack_file, debug):
         """Declare class structs"""
 
         # The 4 dictionaries to give to jinja. The whole
@@ -17,9 +19,10 @@ class SpackYaml(ReadYaml):
         self.pe_specs = {}
         self.pkgs_specs = {}
 
-        # Configuration files
+        # Configuration
         self.platform_file = platform_file
         self.stack_file = stack_file
+        self.debug = debug
 
         # Original data
         self.data = {}
@@ -68,8 +71,14 @@ class SpackYaml(ReadYaml):
     def create_pkgs_definitions_dict(self):
         """Regroup package lists with their specs"""
 
+        if self.debug:
+            print(f'Entering function: {inspect.stack()[0][3]}')
+
         self.pkgs_stack = self.group_sections(deepcopy(self.data), 'packages')
         for pkg_list_name, pkg_list_cfg in self.pkgs_stack.items():
+
+            if self.debug:
+                print(f'Entering package list: {pkg_list_name}')
 
             self.pkgs_defs[pkg_list_name] = []
             for pkg_list in pkg_list_cfg.get('packages'):
@@ -77,10 +86,14 @@ class SpackYaml(ReadYaml):
                 # This is the case where the package has no structure
                 if isinstance(pkg_list, str):
                     package = [pkg_list]
+                    if self.debug:
+                        print(f'Reading package: {package}')
 
                 if isinstance(pkg_list, dict):
                     for pkg_name, pkg_attributes in pkg_list.items():
                         package = [pkg_name]
+                        if self.debug:
+                            print(f'Reading package: {package}')
 
                         # Do not force user to use `variants` if he only wants a filter
                         for filter in self._filters_in_package(pkg_attributes):
@@ -172,7 +185,7 @@ class SpackYaml(ReadYaml):
 
             # Check for filters presence
             for filter in self.filters.keys():
-                if filter in variants_attributes:
+                if filter in dependencies_attributes:
                     dependencies.append(dependencies_attributes.get(filter)
                                         .get(self.filters.get(filter)))
 

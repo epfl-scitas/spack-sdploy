@@ -48,6 +48,11 @@ from ..config import *
 
 def setup_parser(subparser):
     subparser.add_argument(
+        '-d', '--debug', action='store_true', default=False,
+        help='print debug information.'
+    )
+
+    subparser.add_argument(
         '-p', '--platform', required=True,
         help='path to the pplatform file.'
     )
@@ -110,6 +115,8 @@ def write_spack_yaml(parser, args):
         args.templates_path = os.getcwd()
     if not args.template_file:
         args.template_file = config.data['config']['spack_yaml_template']
+    if not args.debug:
+        args.input_path = os.getcwd()
 
     stack_yaml = args.input_path + SEP + args.source_file
     spack_yaml = config.data['config']['spack_yaml']
@@ -117,7 +124,7 @@ def write_spack_yaml(parser, args):
     platform_yaml = args.platform
 
     # Process Programming Environment section.
-    stack = SpackYaml(platform_yaml, stack_yaml)
+    stack = SpackYaml(platform_yaml, stack_yaml, args.debug)
 
     # Create PE definitions dictionary
     stack.create_pe_definitions_dict()
