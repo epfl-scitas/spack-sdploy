@@ -36,7 +36,7 @@ from jinja2 import Environment, FileSystemLoader
 from pdb import set_trace as st
 
 description = "write spack.yaml file"
-section = "SCITAS"
+section = "spack-sdploy"
 level = "short"
 
 from ..yaml_manager import ReadYaml
