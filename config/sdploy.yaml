@@ -16,12 +16,21 @@
 #         stack is specified, it will be sufficient to replace          #
 #         `stack.yaml` with the new name.                               #
 #                                                                       #
+# If a path is not declared, sdploy will use its prefix.                #
+#                                                                       #
+#                                                                       #
+#                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 config:
   stack_yaml: stack.yaml
+  stack_yaml_path: 
   spack_yaml: spack.yaml
+  spack_yaml_path:
   spack_yaml_template: spack.yaml.j2
   packages_yaml: packages.yaml
   packages_yaml_template: packages.yaml.j2
   modules_yaml: modules.yaml
   modules_yaml_template: modules.yaml.j2
+  templates_path:
+  platform_yaml:
+  platform_yaml_path:

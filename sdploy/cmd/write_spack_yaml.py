@@ -49,47 +49,21 @@ def setup_parser(subparser):
         '-d', '--debug', action='store_true', default=False,
         help='print debug information.'
     )
-
     subparser.add_argument(
-        '-p', '--platform', required=True,
-        help='path to the pplatform file.'
+        '-p', '--platform',
+        help='path to the platform file.'
     )
-
     subparser.add_argument(
-        '-o', '--output-path',
-        help='where to write spack.yaml'
+        '-s', '--stack',
+        help='path to the stack file'
     )
-
-    subparser.add_argument(
-        '-i', '--input-path',
-        help='where to find stack.yaml'
-    )
-
     subparser.add_argument(
         '-tp', '--templates-path',
         help='where to find jinja templates'
     )
-
     subparser.add_argument(
         '-tf', '--template-file',
         help='where to find jinja templates'
-    )
-
-    subparser.add_argument(
-        '-s', '--source-file',
-        help='if file not named stack.yaml (not in use)'
-    )
-
-    subparser.add_argument(
-        '-a', '--arch', help='CPU architecture (not in use)'
-    )
-
-    subparser.add_argument(
-        '-g', '--gpu', help='GPU manufacture, if any (not in use)'
-    )
-
-    subparser.add_argument(
-        '-n', '--network', help='type of network (not in use)'
     )
 
 def write_spack_yaml(parser, args):
@@ -103,26 +77,34 @@ def write_spack_yaml(parser, args):
     config.read(get_prefix() + SEP + CONFIG_FILE)
 
     # Handle arguments.
-    if not args.input_path:
-        args.input_path = os.getcwd()
-    if not args.output_path:
-        args.output_path = os.getcwd()
-    if not args.source_file:
-        args.source_file = config.data['config']['stack_yaml']
+    # sdploy will prefer command line over declared arguments in sdploy.yaml
+
+    # General information about the hardware available
+    # If defined anywhere, we will use the file provided in the platforms directory
+    if not args.platform:
+        if 'platform_yaml' in config.data['config']:
+            if config.data['config']['platform_yaml'] is None:
+                args.platform = os.getcwd() + SEP + 'platforms' + SEP + 'platform.yaml'
+            else:
+                args.platform = config.data['config']['platform_yaml']
+    if not args.stack:
+        if 'stack_yaml_path' in config.data['config']:
+            if config.data['config']['stack_yaml_path'] is None:
+                args.stack = os.getcwd() + SEP + 'samples/stack.yaml'
+            else:
+                args.stack = config.data['config']['stack_yaml_path']
     if not args.templates_path:
-        args.templates_path = os.getcwd()
+        args.templates_path = os.getcwd() + SEP + 'templates'
     if not args.template_file:
         args.template_file = config.data['config']['spack_yaml_template']
-    if not args.debug:
-        args.input_path = os.getcwd()
 
-    stack_yaml = args.input_path + SEP + args.source_file
-    spack_yaml = config.data['config']['spack_yaml']
-    packages_yaml = config.data['config']['packages_yaml']
+    debug = args.debug
+    stack_yaml = args.stack
     platform_yaml = args.platform
+    spack_yaml = config.data['config']['spack_yaml']
 
     # Process Programming Environment section.
-    stack = SpackYaml(platform_yaml, stack_yaml, args.debug)
+    stack = SpackYaml(platform_yaml, stack_yaml, debug)
 
     # Create PE definitions dictionary
     stack.create_pe_definitions_dict()
