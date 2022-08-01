@@ -19,10 +19,8 @@ def get_subdir(path, level = 1, sep = '/'):
     return (sep + sep.join(dir_levels))
 
 # Set reasonable default values for first run
-stack_yaml = 'stack.yaml'
-stack_yaml_path = get_prefix() + SEP + 'samples'
-platform_yaml = 'platform.yaml'
-platform_yaml_path = get_prefix() + SEP + 'platforms'
+stack_yaml = get_prefix() + SEP + 'samples' + SEP + 'stack.yaml'
+platform_yaml = get_prefix() + SEP + 'platforms' + SEP + 'platform.yaml'
 templates_path = get_prefix() + SEP + 'templates'
 spack_yaml_template = 'spack.yaml.j2'
 packages_yaml_template = 'packages.yaml.j2'

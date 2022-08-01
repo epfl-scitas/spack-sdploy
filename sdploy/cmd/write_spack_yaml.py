@@ -43,6 +43,7 @@ from ..yaml_manager import ReadYaml
 from ..spack_yaml import SpackYaml
 from ..util import *
 from ..config import *
+from ..config_manager import Config
 
 def setup_parser(subparser):
     subparser.add_argument(
@@ -65,97 +66,12 @@ def setup_parser(subparser):
 def write_spack_yaml(parser, args):
     """Create spack.yaml file"""
 
-    # Read sdploy configuration.
-    # Items read from configuration may apply if no option was given in the
-    # command line. Note that there aren't options for every single item that
-    # can be found in the configuration file.
-    config = ReadYaml()
-    config.read(get_prefix() + SEP + CONFIG_FILE)
-
-    # Handle arguments.
-    # sdploy respect the following priority:
-    #
-    #  1.values defined in the command line (highest priority)
-    #  2.values defined in sdploy.yaml
-    #  3.hardcoded values defined in util.py (lowest priority)
-
-    # FILENAME: stack file, for example, 'stack.yaml'
-    if not args.stack:
-        if 'stack_yaml_path' in config.data['config']:
-            if config.data['config']['stack_yaml_path'] is None:
-                args.stack = stack_yaml_path + SEP + stack_yaml
-            else:
-                args.stack = config.data['config']['stack_yaml_path']
-
-    # FILENAME: platform file, for example, 'platform.yaml'
-    if not args.platform:
-        if 'platform_yaml' in config.data['config']:
-            if config.data['config']['platform_yaml'] is None:
-                args.platform = platform_yaml_path + SEP + platform_yaml
-            else:
-                args.platform = config.data['config']['platform_yaml']
-
-    # PATH: jinja templates directory, for example, '/path/to/templates'
-    if not args.templates_path:
-        if 'templates_path' in config.data['config']:
-            if config.data['config']['templates_path'] is None:
-                args.templates_path = templates_path
-            else:
-                args.platform = config.data['config']['templates_path']
-
-    # FILENAME: template for spack.yaml, for example, 'spack.yaml.j2'
-    if 'spack_yaml_template' in config.data['config']:
-            if config.data['config']['spack_yaml_template'] is not None:
-                spack_yaml_template = config.data['config']['spack_yaml_template']
-
-    # FILENAME: template for packages.yaml, for example, 'packages.yaml.j2'
-    if 'packages_yaml_template' in config.data['config']:
-            if config.data['config']['packages_yaml_template'] is not None:
-                packages_yaml_template = config.data['config']['packages_yaml_template']
-
-    # FILENAME: template for modules.yaml, for example, 'modules.yaml.j2'
-    if 'modules_yaml_template' in config.data['config']:
-            if config.data['config']['modules_yaml_template'] is not None:
-                modules_yaml_template = config.data['config']['modules_yaml_template']
-
-    # FILENAME: spack.yaml, for example, 'spack.yaml'
-    if 'spack_yaml' in config.data['config']:
-            if config.data['config']['spack_yaml'] is not None:
-                spack_yaml = config.data['config']['spack_yaml']
-
-    # PATH: spack.yaml path, for example, '/path/to/config'
-    #       -> does not include the file name
-    if 'spack_yaml_path' in config.data['config']:
-            if config.data['config']['spack_yaml_path'] is not None:
-                spack_yaml_path = config.data['config']['spack_yaml_path']
-
-    # FILENAME: packages.yaml, for example, 'packages.yaml'
-    if 'packages_yaml' in config.data['config']:
-            if config.data['config']['packages_yaml'] is not None:
-                packages_yaml = config.data['config']['packages_yaml']
-
-    # PATH: path to packages.yaml, for example, '/path/to/config'
-    #       -> does not include the file name
-    if 'packages_yaml_path' in config.data['config']:
-            if config.data['config']['packages_yaml_path'] is not None:
-                packages_yaml_path = config.data['config']['packages_yaml_path']
-
-    # FILENAME: modules.yaml, for example, 'modules.yaml'
-    if 'modules_yaml' in config.data['config']:
-            if config.data['config']['modules_yaml'] is not None:
-                modules_yaml = config.data['config']['modules_yaml']
-
-    # PATH: path to modules.yaml, for example, '/path/to/config'
-    #       -> does not include the file name
-    if 'modules_yaml_path' in config.data['config']:
-            if config.data['config']['modules_yaml_path'] is not None:
-                modules_yaml_path = config.data['config']['modules_yaml_path']
-
-    debug = args.debug
+    config = Config(args)
+    if config.debug:
+        config.info()
 
     # Process Programming Environment section.
-    stack = SpackYaml(platform_yaml_path + SEP + platform_yaml,
-                      stack_yaml_path + SEP + stack_yaml, debug)
+    stack = SpackYaml(config.platform_yaml, config.stack_yaml, config.debug)
 
     # Create PE definitions dictionary
     stack.create_pe_definitions_dict()
