@@ -112,10 +112,10 @@ serial_packages:
     - tcl
     - valgrind ~boost ~mpi
     - voropp
-#    - cudnn@8.0.3.39-11.0:
-#        dependencies:
-#          gpu:
-#            nvidia: cuda@11.0.2
+    - cudnn@8.0.3.39-11.0:
+        dependencies:
+          gpu:
+            nvidia: cuda@11.0.2
 
 serial_packages_nvidia_only:
   metadata:
@@ -209,21 +209,21 @@ serial_packages_blas_gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
 
-#serial_packages_blas_gpu_only:
-#  metadata:
-#    section: packages
-#    gpu: only
-#  pe:
-#    - gcc_stable
-#    - intel_stable
-#  dependencies:
-#    - blas
-#    - gpu
-#  packages:
-#    - magma:
-#        variants:
-#          gpu:
-#            nvidia: +cuda cuda_arch=<cuda_arch>
+serial_packages_blas_gpu_only:
+  metadata:
+    section: packages
+    gpu: only
+  pe:
+    - gcc_stable
+    - intel_stable
+  dependencies:
+    - blas
+    - gpu
+  packages:
+    - magma:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
 
 serial_packages_blas_gcc_stable:
   metadata:
@@ -365,10 +365,10 @@ serial_packages_python_gcc_stable:
               nvidia: +cuda cuda_arch=<cuda_arch> +magma
               none: ~cuda ~cudnn ~nccl
               rocm: +magma +rocm
-#        dependencies:
-#          gpu:
-#            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
-#            rocm: [magma +rocm amdgpuarch=<amd_arch>]
+        dependencies:
+          gpu:
+            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
+            rocm: [magma +rocm amdgpuarch=<amd_arch>]
     - py-torchvision
     - r +external-lapack:
         dependencies: openjdk@11.0.2
@@ -580,12 +580,14 @@ mpi_blas_python_packages_gcc_stable:
         dependencies:
           - netcdf-c+mpi
     - openfoam +metis ^boost +mpi
-#    - paraview +shared +python3 +hdf5:
-#        variants:
-#          gpu: ~osmesa
-#          none: +osmesa
-#        dependencies:
-#          - netcdf-c+mpi
+    - paraview +shared +python3 +hdf5:
+        variants:
+          gpu:
+            nvidia: ~osmesa
+            rocm: ~osmesa
+            none: +osmesa
+        dependencies:
+          - netcdf-c+mpi
     - py-horovod controllers=mpi frameworks=pytorch,tensorflow,keras:
         variants:
           gpu:

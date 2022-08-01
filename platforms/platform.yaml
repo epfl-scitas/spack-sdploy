@@ -34,7 +34,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 platform:
   filters:
-    gpu: nvidia
+    gpu: none
     python: 2
     mpi: ethernet
   tokens:

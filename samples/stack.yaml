@@ -196,13 +196,14 @@ mpi_pkgs:
   # ADD SPEC `pkg +mpi+cuda/~cuda` TO `mpi_pkgs` PACKAGE LIST
   # DOES NOTHING IN `packages.yaml`
   - pkg:
-      variants: '@2.18 +mpi'
+      variants:
+        common: '@2.18 +mpi'
+        gpu:
+          nvidia: +cuda cuda_arch=<cuda_arch>
+          nogpu: ~cuda
       dependencies:
       - libiconv
       - libgreat
-      gpu:
-        nvidia: +cuda cuda_arch=<cuda_arch>
-        nogpu: ~cuda
       default:
         version: 2.18
         variants: +mpi
