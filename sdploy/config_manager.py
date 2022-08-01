@@ -1,3 +1,18 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                                       #
+# SCITAS STACK DEPLOYMENT 2022, EPFL                                    #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 from .yaml_manager import ReadYaml
 from .util import *
 from .config import *

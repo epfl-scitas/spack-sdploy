@@ -1,11 +1,30 @@
-# GENERAL DEFINITIONS #######################################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                                       #
+# SCITAS STACK DEPLOYMENT 2022, EPFL                                    #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+# GENERAL DEFINITIONS
 #
 #
 CONFIG_FILE = 'config/sdploy.yaml'
 SEP = '/'
 OPEN_TOKEN = '<'
 CLOSE_TOKEN = '>'
-# SCHEMA DEFINITIONS ########################################################
+#
+#
+# SCHEMA DEFINITIONS
 #
 #
 #   PKG_LIST_NAME:

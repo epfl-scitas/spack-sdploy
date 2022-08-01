@@ -1,3 +1,19 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                                       #
+# SCITAS STACK DEPLOYMENT 2022, EPFL                                    #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+#                                                                       #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
 from pdb import set_trace as st
 
 from collections.abc import MutableMapping
