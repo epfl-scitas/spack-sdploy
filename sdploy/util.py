@@ -1,10 +1,11 @@
 import os
 from .yaml_manager import ReadYaml
+from .config import *
 
 def get_prefix():
-    """Return path to current module"""
+    """Return prefix of spack-sdploy"""
 
-    return(get_subdir(__loader__.get_filename(),2))
+    return(get_subdir(__loader__.get_filename(), 2))
 
 def get_subdir(path, level = 1, sep = '/'):
     """Return subdirectory of specified level
@@ -16,3 +17,19 @@ def get_subdir(path, level = 1, sep = '/'):
     path_list = path.split(sep)
     dir_levels = path_list[1:len(path_list) - level]
     return (sep + sep.join(dir_levels))
+
+# Set reasonable default values for first run
+stack_yaml = 'stack.yaml'
+stack_yaml_path = get_prefix() + SEP + 'samples'
+platform_yaml = 'platform.yaml'
+platform_yaml_path = get_prefix() + SEP + 'platforms'
+templates_path = get_prefix() + SEP + 'templates'
+spack_yaml_template = 'spack.yaml.j2'
+packages_yaml_template = 'packages.yaml.j2'
+modules_yaml_template = 'modules.yaml.j2'
+spack_yaml = 'spack.yaml'
+spack_yaml_path = get_prefix() + SEP + 'output'
+packages_yaml = 'packages.yaml'
+packages_yaml_path = get_prefix() + SEP + 'output'
+modules_yaml = 'modules.yaml'
+modules_yaml_path = get_prefix() + SEP + 'output'
