@@ -46,24 +46,20 @@ from ..config import *
 
 def setup_parser(subparser):
     subparser.add_argument(
-        '-d', '--debug', action='store_true', default=False,
-        help='print debug information.'
+        '-s', '--stack',
+        help='path to the stack file'
     )
     subparser.add_argument(
         '-p', '--platform',
         help='path to the platform file.'
     )
     subparser.add_argument(
-        '-s', '--stack',
-        help='path to the stack file'
-    )
-    subparser.add_argument(
-        '-tp', '--templates-path',
+        '-t', '--templates-path',
         help='where to find jinja templates'
     )
     subparser.add_argument(
-        '-tf', '--template-file',
-        help='where to find jinja templates'
+        '-d', '--debug', action='store_true', default=False,
+        help='print debug information.'
     )
 
 def write_spack_yaml(parser, args):
@@ -77,34 +73,89 @@ def write_spack_yaml(parser, args):
     config.read(get_prefix() + SEP + CONFIG_FILE)
 
     # Handle arguments.
-    # sdploy will prefer command line over declared arguments in sdploy.yaml
+    # sdploy respect the following priority:
+    #
+    #  1.values defined in the command line (highest priority)
+    #  2.values defined in sdploy.yaml
+    #  3.hardcoded values defined in util.py (lowest priority)
 
-    # General information about the hardware available
-    # If defined anywhere, we will use the file provided in the platforms directory
-    if not args.platform:
-        if 'platform_yaml' in config.data['config']:
-            if config.data['config']['platform_yaml'] is None:
-                args.platform = os.getcwd() + SEP + 'platforms' + SEP + 'platform.yaml'
-            else:
-                args.platform = config.data['config']['platform_yaml']
+    # FILENAME: stack file, for example, 'stack.yaml'
     if not args.stack:
         if 'stack_yaml_path' in config.data['config']:
             if config.data['config']['stack_yaml_path'] is None:
-                args.stack = os.getcwd() + SEP + 'samples/stack.yaml'
+                args.stack = stack_yaml_path + SEP + stack_yaml
             else:
                 args.stack = config.data['config']['stack_yaml_path']
+
+    # FILENAME: platform file, for example, 'platform.yaml'
+    if not args.platform:
+        if 'platform_yaml' in config.data['config']:
+            if config.data['config']['platform_yaml'] is None:
+                args.platform = platform_yaml_path + SEP + platform_yaml
+            else:
+                args.platform = config.data['config']['platform_yaml']
+
+    # PATH: jinja templates directory, for example, '/path/to/templates'
     if not args.templates_path:
-        args.templates_path = os.getcwd() + SEP + 'templates'
-    if not args.template_file:
-        args.template_file = config.data['config']['spack_yaml_template']
+        if 'templates_path' in config.data['config']:
+            if config.data['config']['templates_path'] is None:
+                args.templates_path = templates_path
+            else:
+                args.platform = config.data['config']['templates_path']
+
+    # FILENAME: template for spack.yaml, for example, 'spack.yaml.j2'
+    if 'spack_yaml_template' in config.data['config']:
+            if config.data['config']['spack_yaml_template'] is not None:
+                spack_yaml_template = config.data['config']['spack_yaml_template']
+
+    # FILENAME: template for packages.yaml, for example, 'packages.yaml.j2'
+    if 'packages_yaml_template' in config.data['config']:
+            if config.data['config']['packages_yaml_template'] is not None:
+                packages_yaml_template = config.data['config']['packages_yaml_template']
+
+    # FILENAME: template for modules.yaml, for example, 'modules.yaml.j2'
+    if 'modules_yaml_template' in config.data['config']:
+            if config.data['config']['modules_yaml_template'] is not None:
+                modules_yaml_template = config.data['config']['modules_yaml_template']
+
+    # FILENAME: spack.yaml, for example, 'spack.yaml'
+    if 'spack_yaml' in config.data['config']:
+            if config.data['config']['spack_yaml'] is not None:
+                spack_yaml = config.data['config']['spack_yaml']
+
+    # PATH: spack.yaml path, for example, '/path/to/config'
+    #       -> does not include the file name
+    if 'spack_yaml_path' in config.data['config']:
+            if config.data['config']['spack_yaml_path'] is not None:
+                spack_yaml_path = config.data['config']['spack_yaml_path']
+
+    # FILENAME: packages.yaml, for example, 'packages.yaml'
+    if 'packages_yaml' in config.data['config']:
+            if config.data['config']['packages_yaml'] is not None:
+                packages_yaml = config.data['config']['packages_yaml']
+
+    # PATH: path to packages.yaml, for example, '/path/to/config'
+    #       -> does not include the file name
+    if 'packages_yaml_path' in config.data['config']:
+            if config.data['config']['packages_yaml_path'] is not None:
+                packages_yaml_path = config.data['config']['packages_yaml_path']
+
+    # FILENAME: modules.yaml, for example, 'modules.yaml'
+    if 'modules_yaml' in config.data['config']:
+            if config.data['config']['modules_yaml'] is not None:
+                modules_yaml = config.data['config']['modules_yaml']
+
+    # PATH: path to modules.yaml, for example, '/path/to/config'
+    #       -> does not include the file name
+    if 'modules_yaml_path' in config.data['config']:
+            if config.data['config']['modules_yaml_path'] is not None:
+                modules_yaml_path = config.data['config']['modules_yaml_path']
 
     debug = args.debug
-    stack_yaml = args.stack
-    platform_yaml = args.platform
-    spack_yaml = config.data['config']['spack_yaml']
 
     # Process Programming Environment section.
-    stack = SpackYaml(platform_yaml, stack_yaml, debug)
+    stack = SpackYaml(platform_yaml_path + SEP + platform_yaml,
+                      stack_yaml_path + SEP + stack_yaml, debug)
 
     # Create PE definitions dictionary
     stack.create_pe_definitions_dict()
@@ -133,7 +184,7 @@ def write_spack_yaml(parser, args):
     env = Environment(loader = file_loader, trim_blocks = True)
 
     # Render and write spack.yaml
-    template = env.get_template(args.template_file)
+    template = env.get_template(spack_yaml_template)
     output = template.render(stack = data)
     print(output)
     with open(spack_yaml, 'w') as f:
