@@ -31,7 +31,7 @@ section = "Sdploy"
 level = "short"
 
 from ..yaml_manager import ReadYaml
-from ..packages_yaml import Packages
+from ..packages_yaml import PackagesYaml
 from ..util import *
 from ..config import *
 from ..config_manager import Config
