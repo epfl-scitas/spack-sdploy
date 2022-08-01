@@ -45,6 +45,9 @@ class SpackYaml(ReadYaml):
     def create_pe_compiler_specs_dict(self):
         """Regroup compilers for parsing in specs"""
 
+        if self.debug:
+            print(f'Entering function: {inspect.stack()[0][3]}')
+
         data = self.group_sections(deepcopy(self.data), 'pe')
 
         for pe, stack in data.items():
@@ -55,6 +58,9 @@ class SpackYaml(ReadYaml):
 
     def create_pe_definitions_dict(self, filter = 1):
         """Regroup PE definitions in a single dictionary"""
+
+        if self.debug:
+            print(f'Entering function: {inspect.stack()[0][3]}')
 
         self.pe_stack = self.group_sections(deepcopy(self.data), 'pe')
 
@@ -120,10 +126,21 @@ class SpackYaml(ReadYaml):
                                     pkg_name, pkg_attributes.get('dependencies'))
                             )
 
+                # VERY UGLY THING TO REMOVE VERY SOON
+                EXCLUDE_PACKAGE = False
+                for item in package:
+                    if 'EXCLUDE_PACKAGE' in item:
+                        EXCLUDE_PACKAGE = True
+                if EXCLUDE_PACKAGE:
+                    continue
+
                 self.pkgs_defs[pkg_list_name].append(((' '.join(package)).strip()))
 
     def create_pkgs_specs_dict(self):
         """Regroup package lists with PE components to write the matrix specs"""
+
+        if self.debug:
+            print(f'Entering function: {inspect.stack()[0][3]}')
 
         self.pkgs_stack = self.group_sections(deepcopy(self.data), 'packages')
         for pkg_list_name, pkg_list_cfg in self.pkgs_stack.items():
@@ -171,7 +188,12 @@ class SpackYaml(ReadYaml):
             # Check for filters presence
             for filter in self.filters.keys():
                 if filter in variants_attributes:
-                    variants.append(variants_attributes.get(filter).get(self.filters.get(filter)))
+
+                    if variants_attributes.get(filter).get(self.filters.get(filter)) is not None:
+                        variants.append(variants_attributes.get(filter).get(self.filters.get(filter)))
+                    # VERY UGLY THING TO REMOVE VERY SOON
+                    if variants_attributes.get(filter).get(self.filters.get(filter)) is None:
+                        variants.append('EXCLUDE_PACKAGE')
 
         # We are just checking that version_attributes is not a structure (dict, list, etc)
         if not isinstance(variants_attributes, dict):
@@ -189,8 +211,13 @@ class SpackYaml(ReadYaml):
             # Check for filters presence
             for filter in self.filters.keys():
                 if filter in dependencies_attributes:
-                    dependencies.append(dependencies_attributes.get(filter)
-                                        .get(self.filters.get(filter)))
+
+                    if dependencies_attributes.get(filter).get(self.filters.get(filter)) is not None:
+                        dependencies.append(dependencies_attributes.get(filter)
+                                            .get(self.filters.get(filter)))
+                    # VERY UGLY THING TO REMOVE VERY SOON
+                    if dependencies_attributes.get(filter).get(self.filters.get(filter)) is None:
+                        dependencies.append('EXCLUDE_PACKAGE')
 
         # We are just checking that version_attributes is not a structure (dict, list, etc)
         if isinstance(dependencies_attributes, list):
