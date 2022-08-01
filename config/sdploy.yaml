@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 #                                                                       #
-# SCITAS SPACK DEPLOYMENT 2022, EPFL                                    #
+# SCITAS STACK DEPLOYMENT 2022, EPFL                                    #
 #                                                                       #
 # This file contains configuration names which are                      #
 # used internally, but can hereby be modified by means                  #
@@ -16,21 +16,40 @@
 #         stack is specified, it will be sufficient to replace          #
 #         `stack.yaml` with the new name.                               #
 #                                                                       #
-# If a path is not declared, sdploy will use its prefix.                #
-#                                                                       #
-#                                                                       #
+# If a key is left empty in this file, spack will use the default       #
+# value defined in the config.py module or it will use the values       #
+# given by the user at the command line. The values given at the        #
+# command line will have higher priority.                               #
 #                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 config:
+  # Name of the stack file. This name is usually stack.yaml,
+  # but it can be convenient to be able to change it in case
+  # you are running several stacks, for which you would have
+  # different names fo this file.
   stack_yaml: stack.yaml
-  stack_yaml_path: 
-  spack_yaml: spack.yaml
-  spack_yaml_path:
-  spack_yaml_template: spack.yaml.j2
-  packages_yaml: packages.yaml
-  packages_yaml_template: packages.yaml.j2
-  modules_yaml: modules.yaml
-  modules_yaml_template: modules.yaml.j2
-  templates_path:
+  stack_yaml_path:
+  # This is the name of the file where you will fill in the
+  # details about your hardware and other information like
+  # external repositories and paths.
   platform_yaml:
   platform_yaml_path:
+  # This is where spack-sdploy can find the jinja templates. Each
+  # configuration file produced by spack-sdploy will have its own
+  # template, but they are gathered here under the same directory.
+  templates_path:
+  spack_yaml_template: spack.yaml.j2
+  packages_yaml_template: packages.yaml.j2
+  modules_yaml_template: modules.yaml.j2
+  # There is no reason why the spack configuration files would have
+  # different names than those defined in spack itself, but because
+  # we don't like things hardcoded, we set here variables for these
+  # names. Remember that contrary to the paths defined above, these
+  # are paths where spack-sdploy will write to, where paths defined
+  # above are paths where spack-sdploy will look for files.
+  spack_yaml: spack.yaml
+  spack_yaml_path:
+  packages_yaml: packages.yaml
+  packages_yaml_path:
+  modules_yaml: modules.yaml
+  modules_yaml_path:
