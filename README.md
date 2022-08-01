@@ -96,6 +96,11 @@ get started using the new commands.
 ## write-spack-yaml
 
 ```
-spack write-spack-yaml -s samples/stack.yaml -tp templates -tf spack.yaml.j2
+spack write-spack-yaml
 ```
-If no options are specified, it will look for the files in the current directory.
+
+## write-packages-yaml
+
+```
+spack write-packages-yaml
+```

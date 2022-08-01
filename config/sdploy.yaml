@@ -26,7 +26,7 @@ config:
   # Name of the stack file. This name is usually stack.yaml,
   # but it can be convenient to be able to change it in case
   # you are running several stacks, for which you would have
-  # different names fo this file.
+  # different names for each stack file.
   stack_yaml: stack.yaml
   stack_yaml_path:
   # This is the name of the file where you will fill in the
