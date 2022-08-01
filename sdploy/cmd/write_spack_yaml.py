@@ -96,11 +96,11 @@ def write_spack_yaml(parser, args):
     data['pkgs_specs'] = stack.pkgs_specs
 
     # Jinja setup
-    file_loader = FileSystemLoader(args.templates_path)
+    file_loader = FileSystemLoader(config.templates_path)
     env = Environment(loader = file_loader, trim_blocks = True)
 
     # Render and write spack.yaml
-    template = env.get_template(spack_yaml_template)
+    template = env.get_template(config.spack_yaml_template)
     output = template.render(stack = data)
     print(output)
     with open(spack_yaml, 'w') as f:
