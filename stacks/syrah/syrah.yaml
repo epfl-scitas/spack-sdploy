@@ -144,9 +144,10 @@ serial_packages_gcc_stable:
     - julia+cxx+mkl
     - llvm:
         default:
-          gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch>
-            none: ~cuda
+          variants:
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch>
+              none: ~cuda
     - node-js:
         dependecies:
           - python@<python3> ~tkinter ~optimizations
@@ -556,10 +557,11 @@ mpi_blas_python_packages_gcc_stable:
           - boost +mpi
     - petsc:
         default:
-          common: ~int64 +double +hdf5 +metis +mpi +mumps +superlu-dist +hypre +suite-sparse
-          gpu:
-            nvidia: +cuda
-            none: ~cuda
+          variants:
+            common: ~int64 +double +hdf5 +metis +mpi +mumps +superlu-dist +hypre +suite-sparse
+            gpu:
+              nvidia: +cuda
+              none: ~cuda
         dependencies:
           - netlib-scalapack
           - hdf5 +mpi
