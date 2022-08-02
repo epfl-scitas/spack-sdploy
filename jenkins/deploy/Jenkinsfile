@@ -23,11 +23,8 @@ pipeline {
             steps {
                 sh '${JENKINS_SCRIPTS_PATH}/sequential_stage1.sh'
             }
-            steps {
-                sh 'echo Hi !'
-            }
-
         }
+
         stage('Install Python Environment') {
             steps {
                 sh '${JENKINS_SCRIPTS_PATH}/update_production_configuration.sh'
