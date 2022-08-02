@@ -62,7 +62,7 @@ def write_packages_yaml(parser, args):
         config.info()
 
     # Initiates variables and does initial processing
-    pkgs = Packages(config.platform_yaml, config.stack_yaml, config.debug)
+    pkgs = PackagesYaml(config.platform_yaml, config.stack_yaml, config.debug)
 
     # Create default packages dictionary
     pkgs.packages_yaml_packages()
