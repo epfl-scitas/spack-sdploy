@@ -3,7 +3,7 @@ set -euo pipefail
 
 # This script assumes that the following variables are set in the environment:
 #
-# SENV_VIRTUALENV_PATH: path where to setup the virtualenv for "senv"
+# PYTHON_VIRTUALENV_PATH: path where to setup the Python virtual environment
 #
 #
 

@@ -14,8 +14,9 @@ pipeline {
         STACK_RELEASE = "syrah"
         PYTHON_EXECUTABLE = "python3"
         SDPLOY_VIRTUALENV_PATH = "/home/scitasbuildpr/${STACK_RELEASE}/virtualenv/senv-py36"
-        PYTHON_VIRTUALENV_PATH = "/home/scitasbuildpr/${STACK_RELEASE}/py3-venv"
         JENKINS_SCRIPTS_PATH = "jenkins/deploy/scripts"
+        PYTHON_VIRTUALENV_PATH = "/home/scitasbuildpr/${STACK_RELEASE}/py3-venv"
+        STACK_PREFIX = "/home/scitasbuildpr/${STACK_RELEASE}"
     }
 
     stages {
@@ -28,6 +29,13 @@ pipeline {
         stage('Install Python Environment') {
             steps {
                 sh '${JENKINS_SCRIPTS_PATH}/update_production_configuration.sh'
+            }
+        }
+
+        stage('Clone Spack') {
+            steps {
+                sh 'echo $SPACK_INSTALL_PATH'
+                sh '${JENKINS_SCRIPTS_PATH}/install_spack.sh'
             }
         }
 
