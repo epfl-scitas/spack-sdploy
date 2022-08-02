@@ -12,15 +12,25 @@ pipeline {
     environment {
         // define environment variables here for all steps
         STACK_RELEASE = "syrah"
-        PYTHON_EXECUTABLE = "python36"
+        PYTHON_EXECUTABLE = "python3"
         SDPLOY_VIRTUALENV_PATH = "/home/scitasbuildpr/${STACK_RELEASE}/virtualenv/senv-py36"
-        JENKINS_SCRIPTS_PATH= "jenkins/deploy/scripts"
+        PYTHON_VIRTUALENV_PATH = "/home/scitasbuildpr/${STACK_RELEASE}/py3-venv"
+        JENKINS_SCRIPTS_PATH = "jenkins/deploy/scripts"
     }
 
     stages {
         stage('A sequential stage') {
             steps {
                 sh '${JENKINS_SCRIPTS_PATH}/sequential_stage1.sh'
+            }
+            steps {
+                sh 'echo Hi !'
+            }
+
+        }
+        stage('Install Python Environment') {
+            steps {
+                sh '${JENKINS_SCRIPTS_PATH}/update_production_configuration.sh'
             }
         }
 
