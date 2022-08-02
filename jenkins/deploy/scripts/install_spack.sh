@@ -10,6 +10,9 @@ set -euo pipefail
 echo 'Activating Python virtual environment'
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate
 
+echo 'Load variables'
+. $JENKINS_SCRIPTS_PATH/config.sh
+
 echo JENKINS_SCRIPTS_PATH: $JENKINS_SCRIPTS_PATH
 echo STACK_RELEASE: $STACK_RELEASE
 echo SPACK_RELEASE: $SPACK_RELEASE
