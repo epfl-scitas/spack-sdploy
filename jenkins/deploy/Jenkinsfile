@@ -29,7 +29,6 @@ pipeline {
         stage('Clone Spack') {
             steps {
                 sh 'source ${JENKINS_SCRIPTS_PATH}/config.sh'
-                sh 'echo $SPACK_INSTALL_PATH'
                 sh '${JENKINS_SCRIPTS_PATH}/install_spack.sh'
             }
         }
