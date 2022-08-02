@@ -20,12 +20,6 @@ pipeline {
     }
 
     stages {
-        stage('A sequential stage') {
-            steps {
-                sh '${JENKINS_SCRIPTS_PATH}/sequential_stage1.sh'
-            }
-        }
-
         stage('Install Python Environment') {
             steps {
                 sh '${JENKINS_SCRIPTS_PATH}/update_production_configuration.sh'
@@ -34,6 +28,7 @@ pipeline {
 
         stage('Clone Spack') {
             steps {
+                sh 'source ${JENKINS_SCRIPTS_PATH}/config.sh'
                 sh 'echo $SPACK_INSTALL_PATH'
                 sh '${JENKINS_SCRIPTS_PATH}/install_spack.sh'
             }
