@@ -40,3 +40,4 @@ platform:
   tokens:
     core_compiler: gcc@8.5.0
     cuda_arch: 70
+    python3: 3.10.4
