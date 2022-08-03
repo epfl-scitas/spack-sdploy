@@ -7,12 +7,6 @@ echo 'Activating Python virtual environment'
 echo 'Load variables'
 . $JENKINS_SCRIPTS_PATH/config.sh
 
-echo JENKINS_SCRIPTS_PATH: $JENKINS_SCRIPTS_PATH
-echo STACK_RELEASE: $STACK_RELEASE
-
-export SPACK_SDPLOY_INSTALL_PATH=${STACK_PREFIX}/${SPACK_SDPLOY_PATH}.${VERSION}
-echo SPACK_SDPLOY_INSTALL_PATH: $SPACK_SDPLOY_INSTALL_PATH
-
 if [ -e ${SPACK_SDPLOY_INSTALL_PATH} ]; then
     echo 'Previous installation of spack-sdploy detected, removing...'
     rm -rf ${SPACK_SDPLOY_INSTALL_PATH}
