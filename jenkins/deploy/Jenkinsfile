@@ -32,13 +32,18 @@ pipeline {
                 println "Hi, this is me speaking to you!"
                 sh '${JENKINS_SCRIPTS_PATH}/install_spack.sh'
                 sh 'echo "This is First Jenkins Pipeline"'
-                println "${env.SPACK_RELEASE}"
             }
         }
 
         stage('Clone spack-sdploy') {
             steps {
                 sh '${JENKINS_SCRIPTS_PATH}/install_spack_sdploy.sh'
+            }
+        }
+
+        stage('Configure spack-sdploy') {
+            steps {
+                sh '${JENKINS_SCRIPTS_PATH}/configure_spack_sdploy.sh'
             }
         }
 

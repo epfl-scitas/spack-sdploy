@@ -1,12 +1,6 @@
 #!/bin/bash -l
 set -euo pipefail
 
-# This script assumes that the following variables are set in the environment:
-#
-# PYTHON_VIRTUALENV_PATH: path where to setup the Python virtual environment
-# SPACK_INSTALL_PATH
-#
-
 echo 'Activating Python virtual environment'
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate
 
