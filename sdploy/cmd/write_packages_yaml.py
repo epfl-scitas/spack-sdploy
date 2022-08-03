@@ -91,6 +91,8 @@ def write_packages_yaml(parser, args):
 
     env = ev.active_environment()
     if env:
-        _write_yaml(output, os.path.realpath(env.manifest_path))
+        filename = os.path.join(os.path.dirname(os.path.realpath(env.manifest_path)),
+                                'packages.yaml')
+        _write_yaml(output, filename)
     else:
         _write_yaml(output, packages_yaml)
