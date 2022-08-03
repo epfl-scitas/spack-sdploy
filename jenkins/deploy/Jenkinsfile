@@ -74,6 +74,8 @@ def get_agent_name(environment) {
 }
 
 def _define_stages(prefix, script, message, do_junit = true) {
+
+    // environments == platforms
     def environments = ['environment1']
 
     def jobs = [:]
