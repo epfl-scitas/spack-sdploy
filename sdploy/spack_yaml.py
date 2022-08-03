@@ -80,6 +80,11 @@ class SpackYaml(ReadYaml):
 
         self.pe_stack = self.group_sections(deepcopy(self.data), 'pe')
 
+        # Hack for adding core_compiler definition
+        core_compiler = self.group_sections(deepcopy(self.data), 'core')
+        for k,v in core_compiler.items():
+            self.pe_stack[k] = v
+
         # Check for filters presence and applies filters
         for pe, stack in self.pe_stack.items():
             for stack_name, stack_env in stack.items():
