@@ -24,6 +24,9 @@ intel:
     mpi: intel-mpi@2019.10.317
     blas: intel-mkl@2020.4.304
     python3: python@<python3> +tkinter +optimization ^freetype@2.7.1 ^fontconfig@2.12.3
+    gpu:
+      nvidia: cuda@11.7.0
+      none: ""
 
 gcc:
   metadata:
@@ -36,6 +39,9 @@ gcc:
     blas: openblas@0.3.20 threads=none +locking
     python3: python@<python3> +tkinter +optimization ~debug
     python2: python@2.7.18 +tkinter ~debug
+    gpu:
+      nvidia: cuda@11.7.0
+      none: ""
 
 # ------------------------------------------------------------------------------
 # PACKAGES SECTION
@@ -284,6 +290,7 @@ serial_packages_python_activated:
     - intel_stable
   dependencies:
     - blas
+    - python3
   packages:
     - py-absl-py
     - py-astunparse
@@ -448,7 +455,7 @@ mpi_lapack_packages:
     - superlu-dist
     - openfoam-org +metis ^scotch+mpi
 
-mpi_blas_packages:
+mpi_lapack_python_packages:
   metadata:
     section: packages
   pe:
@@ -457,7 +464,7 @@ mpi_blas_packages:
   dependencies:
     - mpi
     - blas
-    - python
+    - python3
   packages:
     - boost +mpi
     - cgal ^boost+mpi
@@ -517,7 +524,7 @@ mpi_blas_python_packages_gcc_stable:
   dependencies:
     - mpi
     - blas
-    - python
+    - python3
   packages:
     - adios2:
         default: { variants: +hdf5 +mpi +python }
@@ -641,7 +648,7 @@ mpi_blas_python_packages_intel_stable:
   dependencies:
     - mpi
     - blas
-    - python
+    - python3
   packages:
     - petsc:
         variants:
