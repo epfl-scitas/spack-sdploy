@@ -1,3 +1,4 @@
+--- # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # PROGRAMMING ENVIRONMENT SECTION (PE)
 #
@@ -10,7 +11,6 @@
 # we want to compile the compiler or stack libraries with GPU support. For now,
 # the core_compiler should have this name (this means 'core' key and 'compiler'
 # for subkey. We can also set section:core for the core PE.
-# ------------------------------------------------------------------------------
 core:
   metadata:
     section: core
@@ -209,18 +209,6 @@ serial_packages_blas_gpu:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
-
-serial_packages_blas_gpu_only:
-  metadata:
-    section: packages
-    gpu: only
-  pe:
-    - gcc_stable
-    - intel_stable
-  dependencies:
-    - blas
-    - gpu
-  packages:
     - magma:
         variants:
           gpu:
