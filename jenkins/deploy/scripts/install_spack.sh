@@ -19,6 +19,11 @@ echo STACK_RELEASE: $STACK_RELEASE
 export SPACK_INSTALL_PATH=${STACK_PREFIX}/spack.${VERSION}
 echo SPACK_INSTALL_PATH: $SPACK_INSTALL_PATH
 
+if [ -e ${SPACK_INSTALL_PATH} ]; then
+    echo 'Previous installation of Spack detected, removing...'
+    rm -rf ${SPACK_INSTALL_PATH}
+fi
+
 git clone https://github.com/spack/spack ${SPACK_INSTALL_PATH}
 cd ${SPACK_INSTALL_PATH}
 git checkout $SPACK_RELEASE
