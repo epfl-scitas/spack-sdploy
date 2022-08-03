@@ -19,4 +19,9 @@ echo STACK_RELEASE: $STACK_RELEASE
 export SPACK_SDPLOY_INSTALL_PATH=${STACK_PREFIX}/${SPACK_SDPLOY_PATH}.${VERSION}
 echo SPACK_SDPLOY_INSTALL_PATH: $SPACK_SDPLOY_INSTALL_PATH
 
+if [ -e ${SPACK_SDPLOY_INSTALL_PATH} ]; then
+    echo 'Previous installation of spack-sdploy detected, removing...'
+    rm -rf ${SPACK_SDPLOY_INSTALL_PATH}
+fi
+
 git clone https://github.com/epfl-scitas/spack-sdploy ${SPACK_SDPLOY_INSTALL_PATH}
