@@ -16,14 +16,12 @@ echo 'Load variables'
 echo JENKINS_SCRIPTS_PATH: $JENKINS_SCRIPTS_PATH
 echo STACK_RELEASE: $STACK_RELEASE
 
-export SPACK_INSTALL_PATH=${STACK_PREFIX}/spack.${VERSION}
-echo SPACK_INSTALL_PATH: $SPACK_INSTALL_PATH
+export SPACK_SDPLOY_INSTALL_PATH=${STACK_PREFIX}/${SPACK_SDPLOY_PATH}.${VERSION}
+echo SPACK_SDPLOY_INSTALL_PATH: $SPACK_SDPLOY_INSTALL_PATH
 
-if [ -e ${SPACK_INSTALL_PATH} ]; then
-    echo 'Previous installation of Spack detected, removing...'
-    rm -rf ${SPACK_INSTALL_PATH}
+if [ -e ${SPACK_SDPLOY_INSTALL_PATH} ]; then
+    echo 'Previous installation of spack-sdploy detected, removing...'
+    rm -rf ${SPACK_SDPLOY_INSTALL_PATH}
 fi
 
-git clone https://github.com/spack/spack ${SPACK_INSTALL_PATH}
-cd ${SPACK_INSTALL_PATH}
-git checkout $SPACK_RELEASE
+git clone https://github.com/epfl-scitas/spack-sdploy ${SPACK_SDPLOY_INSTALL_PATH}

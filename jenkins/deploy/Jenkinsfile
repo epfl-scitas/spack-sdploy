@@ -28,11 +28,17 @@ pipeline {
 
         stage('Clone Spack') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/config.sh'
-                sh 'echo HI'
-                sh('echo HI')
-                sh 'echo ${env.SPACK_RELEASE}'
+                // sh '${JENKINS_SCRIPTS_PATH}/config.sh'
+                println "Hi, this is me speaking to you!"
                 sh '${JENKINS_SCRIPTS_PATH}/install_spack.sh'
+                sh 'echo "This is First Jenkins Pipeline"'
+                println "${env.SPACK_RELEASE}"
+            }
+        }
+
+        stage('Clone spack-sdploy') {
+            steps {
+                sh '${JENKINS_SCRIPTS_PATH}/install_spack_sdploy.sh'
             }
         }
 
