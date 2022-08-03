@@ -16,5 +16,5 @@ mkdir ${SPACK_USER_CONFIG_PATH}
 cat > ${SPACK_USER_CONFIG_PATH}/config.yaml << EOF
 config:
   extensions:
-    ${SPACK_SDPLOY_INSTALL_PATH}
+  - ${SPACK_SDPLOY_INSTALL_PATH}
 EOF
