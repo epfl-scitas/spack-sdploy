@@ -127,7 +127,7 @@ serial_packages_nvidia_only:
   packages:
     - cuda:
         defaults:
-          version: 11.7.0
+          version: [11.7.0]
     - cuda@10.4.0
 
 serial_packages_gcc_stable:
@@ -157,7 +157,7 @@ serial_packages_gcc_stable:
     - openblas threads=openmp
     - python:
         default:
-          version: <python3>
+          version: [<python3>]
           variants: +tkinter +optimizations ~debug
     - python@<python3> +tkinter ~optimizations +debug
     - sox
