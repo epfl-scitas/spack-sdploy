@@ -14,23 +14,22 @@
 #                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-import argparse
-import collections
-import sys
 import os
 
 import spack
 import spack.cmd
+import spack.config
+import spack.environment as ev
+import spack.schema.env
+import spack.util.spack_yaml as syaml
+import llnl.util.filesystem as fs
 
-from copy import deepcopy
 from jinja2 import Environment, FileSystemLoader
-from pdb import set_trace as st
 
 description = "write spack.yaml file"
 section = "Sdploy"
 level = "short"
 
-from ..yaml_manager import ReadYaml
 from ..spack_yaml import SpackYaml
 from ..util import *
 from ..config import *
@@ -53,6 +52,13 @@ def setup_parser(subparser):
         '-d', '--debug', action='store_true', default=False,
         help='print debug information.'
     )
+
+def _write_yaml(output, filename):
+    with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
+        yaml = syaml.load_config(output)
+        spack.config.validate(yaml, spack.schema.env.schema, filename)
+        syaml.dump_config(yaml, f, default_flow_style=False)
+
 
 def write_spack_yaml(parser, args):
     """Create spack.yaml file"""
@@ -88,11 +94,16 @@ def write_spack_yaml(parser, args):
 
     # Jinja setup
     file_loader = FileSystemLoader(config.templates_path)
-    env = Environment(loader = file_loader, trim_blocks = True)
+
+    jinja_env = Environment(loader = file_loader, trim_blocks = True)
 
     # Render and write spack.yaml
-    template = env.get_template(config.spack_yaml_template)
+    template = jinja_env.get_template(config.spack_yaml_template)
     output = template.render(stack = data)
     print(output)
-    with open(spack_yaml, 'w') as f:
-        f.write(output)
+
+    env = ev.active_environment()
+    if env:
+        _write_yaml(output, os.path.realpath(env.manifest_path))
+    else:
+        _write_yaml(output, spack_yaml)
