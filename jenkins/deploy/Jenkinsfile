@@ -47,6 +47,12 @@ pipeline {
             }
         }
 
+        stage('Create Spack environments') {
+            steps {
+                sh '${JENKINS_SCRIPTS_PATH}/create_spack_environments.sh'
+            }
+        }
+
         stage('A parallel stage') {
             steps {
                 script {
