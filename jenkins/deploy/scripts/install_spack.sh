@@ -7,9 +7,6 @@ echo 'Activating Python virtual environment'
 echo 'Load variables'
 . $JENKINS_SCRIPTS_PATH/config.sh
 
-#export SPACK_INSTALL_PATH=${STACK_PREFIX}/spack.${VERSION}
-#echo SPACK_INSTALL_PATH: $SPACK_INSTALL_PATH
-
 if [ -e ${SPACK_INSTALL_PATH} ]; then
     echo 'Previous installation of Spack detected, removing...'
     rm -rf ${SPACK_INSTALL_PATH}
