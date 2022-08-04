@@ -14,13 +14,20 @@
 #                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-from pdb import set_trace as st
+import llnl.util.tty as tty
 
 from collections.abc import MutableMapping
 from copy import deepcopy
 import inspect
 
 from .yaml_manager import ReadYaml
+
+class FilterException(Exception):
+    """Exception raised when filter evaluation fails"""
+    def __init__(self, filter, filter_value):
+        self.filter = filter
+        self.filter_value = filter_value
+
 
 class SpackYaml(ReadYaml):
     """Manage the packages section in stack.yaml"""
@@ -75,8 +82,7 @@ class SpackYaml(ReadYaml):
     def create_pe_definitions_dict(self, filter = 1):
         """Regroup PE definitions in a single dictionary"""
 
-        if self.debug:
-            print(f'Entering function: {inspect.stack()[0][3]}')
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         self.pe_stack = self.group_sections(deepcopy(self.data), 'pe')
 
@@ -101,14 +107,12 @@ class SpackYaml(ReadYaml):
     def create_pkgs_definitions_dict(self):
         """Regroup package lists with their specs"""
 
-        if self.debug:
-            print(f'Entering function: {inspect.stack()[0][3]}')
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         self.pkgs_stack = self.group_sections(deepcopy(self.data), 'packages')
         for pkg_list_name, pkg_list_cfg in self.pkgs_stack.items():
 
-            if self.debug:
-                print(f'Entering package list: {pkg_list_name}')
+            tty.debug(f'Entering package list: {pkg_list_name}')
 
             self.pkgs_defs[pkg_list_name] = []
             for pkg_list in pkg_list_cfg.get('packages'):
@@ -116,43 +120,26 @@ class SpackYaml(ReadYaml):
                 # This is the case where the package has no structure
                 if isinstance(pkg_list, str):
                     package = [pkg_list]
-                    if self.debug:
-                        print(f'Reading package: {package}')
+                    tty.debug(f'Reading package: {package}')
 
-                if isinstance(pkg_list, dict):
-                    for pkg_name, pkg_attributes in pkg_list.items():
-                        package = [pkg_name]
-                        if self.debug:
-                            print(f'Reading package: {package}')
+                try:
+                    if isinstance(pkg_list, dict):
+                        for pkg_name, pkg_attributes in pkg_list.items():
+                            package = [pkg_name]
+                            tty.debug(f'Reading package: {package}')
 
-                        # Do not force user to use `variants` if he only wants a filter
-                        for filter in self._filters_in_package(pkg_attributes):
-                            package.append(pkg_attributes[filter].get(self.filters.get(filter)))
+                            # Do not force user to use `variants` if he only wants a filter
+                            for filter in self._filters_in_package(pkg_attributes):
+                                package.append(pkg_attributes[filter].get(self.filters.get(filter)))
 
-                        if 'version' in pkg_attributes:
-                            package.append(
-                                self._spack_yaml_pkg_version(
-                                    pkg_name, pkg_attributes.get('version'))
-                            )
+                            for attr in ['version', 'variants', 'dependencies']:
+                                if attr in pkg_attributes:
+                                    _spack_yaml_pkg = getattr(SpackYaml, '_spack_yaml_pkg_' + attr)
 
-                        if 'variants' in pkg_attributes:
-                            package.append(
-                                self._spack_yaml_pkg_variants(
-                                    pkg_name, pkg_attributes.get('variants'))
-                            )
-
-                        if 'dependencies' in pkg_attributes:
-                            package.append(
-                                self._spack_yaml_pkg_dependencies(
-                                    pkg_name, pkg_attributes.get('dependencies'))
-                            )
-
-                # VERY UGLY THING TO REMOVE VERY SOON
-                EXCLUDE_PACKAGE = False
-                for item in package:
-                    if 'EXCLUDE_PACKAGE' in item:
-                        EXCLUDE_PACKAGE = True
-                if EXCLUDE_PACKAGE:
+                                    #calling self._spack_yaml_pkg_<attr>
+                                    package.append(_spack_yaml_pkg(self, pkg_name, pkg_attributes[attr]))
+                except FilterException as fe:
+                    tty.debug(f'Ignoring package {pkg_name} due to missing value for {fe.filter_value} in filter {fe.filter}')
                     continue
 
                 self.pkgs_defs[pkg_list_name].append(((' '.join(package)).strip()))
@@ -160,8 +147,7 @@ class SpackYaml(ReadYaml):
     def create_pkgs_specs_dict(self):
         """Regroup package lists with PE components to write the matrix specs"""
 
-        if self.debug:
-            print(f'Entering function: {inspect.stack()[0][3]}')
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         self.pkgs_stack = self.group_sections(deepcopy(self.data), 'packages')
         for pkg_list_name, pkg_list_cfg in self.pkgs_stack.items():
@@ -179,23 +165,31 @@ class SpackYaml(ReadYaml):
                 result.append(filter)
         return(result)
 
+    def __handle_filter(self, attributes):
+        result = []
+        if isinstance(attributes, dict):
+            # Check for filters presence
+            for filter in self.filters.keys():
+                if filter in attributes:
+                    if self.filters[filter] in attributes[filter]:
+                        values = attributes[filter][self.filters[filter]]
+                        if isinstance(values, list):
+                            result.extend(values)
+                        else:
+                            result.append(values)
+                    else:
+                        raise FilterException(filter, self.filters[filter])
+        else: # We are just checking that attributes is not a structure (dict, list, etc)
+            # We need to cast version to str because of ' '.join in next step
+            result.append(str(attributes))
+        return result
+
     def _spack_yaml_pkg_version(self, pkg_name, version_attributes):
         """Returns package version"""
 
-        version = []
-        if isinstance(version_attributes, dict):
-
-            # Check for filters presence
-            for filter in self.filters.keys():
-                if filter in version_attributes:
-                    version.append(version_attributes.get(filter).get(self.filters.get(filter)))
-
-        # We are just checking that version_attributes is not a structure (dict, list, etc)
-        if not isinstance(version_attributes, dict):
-            # We need to cast version to str because of ' '.join in next step
-            version.append(str(version_attributes))
-
+        version = self.__handle_filter(version_attributes)
         return(' '.join(version))
+
 
     def _spack_yaml_pkg_variants(self, pkg_name, variants_attributes):
         """Returns package variants"""
@@ -204,22 +198,7 @@ class SpackYaml(ReadYaml):
         if 'common' in variants_attributes:
             variants.append(variants_attributes.get('common'))
 
-        if isinstance(variants_attributes, dict):
-
-            # Check for filters presence
-            for filter in self.filters.keys():
-                if filter in variants_attributes:
-
-                    if variants_attributes.get(filter).get(self.filters.get(filter)) is not None:
-                        variants.append(variants_attributes.get(filter).get(self.filters.get(filter)))
-                    # VERY UGLY THING TO REMOVE VERY SOON
-                    if variants_attributes.get(filter).get(self.filters.get(filter)) is None:
-                        variants.append('EXCLUDE_PACKAGE')
-
-        # We are just checking that version_attributes is not a structure (dict, list, etc)
-        if not isinstance(variants_attributes, dict):
-            # We need to cast version to str because of ' '.join in next step
-            variants.append(str(variants_attributes))
+        variants.extend(self.__handle_filter(variants_attributes))
 
         return(' '.join(variants))
 
@@ -227,25 +206,13 @@ class SpackYaml(ReadYaml):
         """Returns package dependencies"""
 
         dependencies = []
-        if isinstance(dependencies_attributes, dict):
-
-            # Check for filters presence
-            for filter in self.filters.keys():
-                if filter in dependencies_attributes:
-
-                    if dependencies_attributes.get(filter).get(self.filters.get(filter)) is not None:
-                        dependencies.append(dependencies_attributes.get(filter)
-                                            .get(self.filters.get(filter)))
-                    # VERY UGLY THING TO REMOVE VERY SOON
-                    if dependencies_attributes.get(filter).get(self.filters.get(filter)) is None:
-                        dependencies.append('EXCLUDE_PACKAGE')
-
         # We are just checking that version_attributes is not a structure (dict, list, etc)
         if isinstance(dependencies_attributes, list):
-            for d in dependencies_attributes:
-                dependencies.append(str('^' + d))
+            dependencies = dependencies_attributes
+        else:
+            dependencies = self.__handle_filter(dependencies_attributes)
 
-        return(' '.join(dependencies))
+        return(' ^' + ' ^'.join(dependencies))
 
     def _flatten_dict(self, d: MutableMapping, parent_key: str = '', sep: str = '_'):
         """Returns a flat dict
@@ -273,6 +240,6 @@ class SpackYaml(ReadYaml):
         stack = self.group_sections(deepcopy(self.data), 'pe')
         pe_list = list(stack.keys())
         if 'metadata' in pe_list:
-                pe_list.pop('metadata')
+            pe_list.pop('metadata')
 
         return(pe_list)
