@@ -16,3 +16,8 @@ else
     echo 'Spack not detected...'
     git clone -b $SPACK_RELEASE https://github.com/spack/spack ${SPACK_INSTALL_PATH}
 fi
+
+echo 'Source Spack and show version'
+. $SPACK_INSTALL_PATH/share/spack/setup-env.sh
+
+spack --version
