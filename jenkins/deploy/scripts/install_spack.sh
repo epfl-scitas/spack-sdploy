@@ -8,8 +8,11 @@ echo 'Load variables'
 . $JENKINS_SCRIPTS_PATH/config.sh
 
 if [ -e ${SPACK_INSTALL_PATH} ]; then
-    echo 'Previous installation of Spack detected, removing...'
-    rm -rf ${SPACK_INSTALL_PATH}
+    echo 'Previous installation of Spack detected...'
+    cd ${SPACK_INSTALL_PATH}
+    git fetch origin
+    git checkout $SPACK_RELEASE
+else
+    echo 'Spack not detected...'
+    git clone -b $SPACK_RELEASE --single-branch https://github.com/spack/spack ${SPACK_INSTALL_PATH}
 fi
-
-git clone -b $SPACK_RELEASE --single-branch https://github.com/spack/spack ${SPACK_INSTALL_PATH}
