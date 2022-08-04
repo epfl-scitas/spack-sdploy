@@ -50,11 +50,11 @@ pipeline {
             }
         }
 
-        stage('DELETE ALL DATA') {
-            steps {
-                sh 'rm -rf ${STACK_PREFIX}'
-            }
-        }
+//        stage('DELETE ALL DATA') {
+//            steps {
+//                sh 'rm -rf ${STACK_PREFIX}'
+//            }
+//        }
 
         stage('A parallel stage') {
             steps {
