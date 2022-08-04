@@ -2,7 +2,7 @@
 set -euo pipefail
 
 export VERSION=v1
-export SPACK_RELEASE=v0.18.0
+export SPACK_RELEASE=v0.18.1
 export SPACK_SDPLOY_PATH=spack-sdploy
 export SPACK_SDPLOY_INSTALL_PATH=${STACK_PREFIX}/${SPACK_SDPLOY_PATH}
 export SPACK_CONFIG_PATH=spack-config
