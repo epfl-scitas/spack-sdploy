@@ -20,6 +20,7 @@ import spack.environment as ev
 import spack.schema.env
 import spack.util.spack_yaml as syaml
 import llnl.util.filesystem as fs
+import llnl.util.tty as tty
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -77,7 +78,7 @@ def write_packages_yaml(parser, args):
     # if new features are needed.
     data = {}
     data['defaults'] = pkgs.defaults
-    data['externals'] = pkgs.external
+    data['externals'] = pkgs.externals
 
     # Set up jinja
     file_loader = FileSystemLoader(config.templates_path)
@@ -87,7 +88,7 @@ def write_packages_yaml(parser, args):
     template = jinja2_env.get_template(config.packages_yaml_template)
     output = template.render(packages = data)
 
-    print(output)
+    tty.msg(output)
 
     env = ev.active_environment()
     if env:
