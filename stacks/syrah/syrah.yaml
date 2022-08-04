@@ -21,9 +21,9 @@ intel:
     section: pe
   stable:
     compiler: intel@20.0.4
-    mpi: intel-mpi@2019.10.317
+    mpi: intel-mpi@2019.10.317 +external-fabric
     blas: intel-mkl@2020.4.304
-    python3: python@<python3> +tkinter +optimization ^freetype@2.7.1 ^fontconfig@2.12.3
+    python3: python@<python3> +tkinter +optimizations ^freetype@2.7.1 ^fontconfig@2.12.3
     gpu:
       nvidia: cuda@11.7.0
       none: ""
@@ -37,7 +37,7 @@ gcc:
       infiniband: mvapich2 fabrics=mrail process_managers=slurm threads=multiple @2.3.7
       ethernet: mvapich2 fabrics=tcp,self process_managers=slurm threads=multiple @2.3.7
     blas: openblas@0.3.20 threads=none +locking
-    python3: python@<python3> +tkinter +optimization ~debug
+    python3: python@<python3> +tkinter +optimizations ~debug
     python2: python@2.7.18 +tkinter ~debug
     gpu:
       nvidia: cuda@11.7.0
@@ -97,8 +97,17 @@ serial_packages:
         default: { variants: +szip +hl +fortran +cxx }
     - hisat2
     - htslib
+    - hwloc:
+        default:
+          common: +cairo
+          gpu:
+            nvidia: +cuda +nvml
+            none: ~cuda ~rocm ~nvml
     - intel-tbb
     - jasper
+    - libfabric:
+        default:
+          variants: fabrics=mlx,mrail,tcp,udp,sockets
     - libxc
     - mafft
     - metis:
@@ -106,35 +115,41 @@ serial_packages:
     - muscle
     - namd interface=tcl:
         dependencies:
-          - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
+          mpi:
+            infiniband:
+              - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
     - netcdf-c ~mpi ^hdf5 ~mpi
-    - netcdf-fortran ~mpi ^netcdf-c ~mpi ^hdf5 ~mpi
+    - netcdf-fortran ^netcdf-c ~mpi ^hdf5 ~mpi
     - nfft
+    - openssl:
+        default:
+          version: 1.1.1k
+        externals:
+          - spec: openssl@1.1.1k
+            prefix: /usr
     - scotch ~mpi:
         default: { variants: +esmumps ~metis }
     - stacks
     - star
     - subread
     - tcl
+    - ucx:
+        default:
+          variants:
+            common: +knem +cma +rdmacm +threads_multiple
+            mpi:
+              infiniband: +verbs
+              ethernet: ~verbs
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch> +gdrcopy ~rocm
+              none: ~cuda ~rocm ~gdrcopy
+              amd: +rocm ~cuda
     - valgrind ~boost ~mpi
     - voropp
     - cudnn@8.0.3.39-11.0:
         dependencies:
           gpu:
             nvidia: cuda@11.0.2
-
-serial_packages_nvidia_only:
-  metadata:
-    section: packages
-    gpu: nvidia
-  pe:
-    - gcc_stable
-    - intel_stable
-  packages:
-    - cuda:
-        defaults:
-          version: [11.7.0]
-    - cuda@10.4.0
 
 serial_packages_gcc_stable:
   metadata:
@@ -147,7 +162,7 @@ serial_packages_gcc_stable:
     - glpk+gmp
     # julia >= 0.5 conflicts with intel compilers
     # it is not in the serial_packages_python_gcc_stable due to the dependecy to mkl
-    - julia+cxx+mkl
+    - julia
     - llvm:
         default:
           variants:
@@ -155,15 +170,15 @@ serial_packages_gcc_stable:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
     - node-js:
-        dependecies:
+        dependencies:
           - python@<python3> ~tkinter ~optimizations
-          - openssl@1.1.1b
+          - openssl@1.1.1o
     # TODO: check if the reuse: True makes it use the proper node-js
     - npm
     - openblas threads=openmp
     - python:
         default:
-          version: [<python3>]
+          version: <python3>
           variants: +tkinter +optimizations ~debug
     - python@<python3> +tkinter ~optimizations +debug
     - sox
@@ -173,7 +188,7 @@ serial_packages_gcc_stable_gpu:
     section: packages
   pe:
     - gcc_stable
-  dependecies:
+  dependencies:
     - gpu
   packages:
     - xgboost:
@@ -240,7 +255,7 @@ serial_packages_python:
     - gcc_stable
     - intel_stable
   dependencies:
-    - blas
+    - python3
   packages:
     - bowtie2
     - boost ~mpi:
@@ -260,11 +275,7 @@ serial_packages_python:
     - py-biopython
     - py-cutadapt
     - py-deeptools
-    - py-keras:
-        variants:
-          gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch>
-            none: ~cuda
+    - py-keras
     - py-macs2
     - py-pybigwig
     - py-pybind11
@@ -289,7 +300,6 @@ serial_packages_python_activated:
     - gcc_stable
     - intel_stable
   dependencies:
-    - blas
     - python3
   packages:
     - py-absl-py
@@ -323,7 +333,6 @@ serial_packages_python2_deprecated:
   pe:
     - gcc_stable
   dependencies:
-    - blas
     - python2
   packages:
     - jellyfish
@@ -337,7 +346,6 @@ serial_packages_python_gcc_stable:
   pe:
     - gcc_stable
   dependencies:
-    - blas
     - python3
   packages:
     # needs boost@1.54 (https://backwardincompatible.com/post/169360794395/compiling-illumina-bcl2fastq-220-on-ubuntu-with)
@@ -381,37 +389,38 @@ serial_packages_python_intel_stable:
   metadata:
     section: packages
   pe:
-    - gcc_stable
+    - intel_stable
   dependencies:
     - blas
     - python3
   packages:
-    - openbabel +python ^harfbuzz@2.1.3
+    # harfbuzz@2.3.1: conflicts with intel
+    - openbabel +python ^harfbuzz@2.3.1
 
-external_packages:
-  metadata:
-    section: packages
-    cloud: False
-  pe:
-    - core
-  packages:
-    - adf@2017.111
-    - ansys@19.2
-    - ansys@2022R1
-    - cfdplusplus@19.1
-    - comsol@5.6
-    - fdtd@2022-R1.1-2963
-    - gaussian@g16-C.01
-    - gurobi@9.1.0
-    - intel-vtune@2019.6.0.602217
-    - intel-advisor@2019.5.0.602216
-    - likwid@4.3.0
-    - maple@2017
-    - mathematica@13.0
-    # TODO install the latest version
-    - matlab@R2019b
-    - smr@2017.06
-    - totalview@2020.3.11
+# external_packages:
+#   metadata:
+#     section: packages
+#     cloud: False
+#   pe:
+#     - core
+#   packages:
+# - adf@2017.111
+# - ansys@19.2
+# - ansys@2022R1
+# - cfdplusplus@19.1
+# - comsol@5.6
+# - fdtd@2022-R1.1-2963
+# - gaussian@g16-C.01
+# - gurobi@9.1.0
+# - intel-vtune@2019.6.0.602217
+# - intel-advisor@2019.5.0.602216
+# - likwid@4.3.0
+# - maple@2017
+# - mathematica@13.0
+# # TODO install the latest version
+# - matlab@R2019b
+# - smr@2017.06
+# - totalview@2020.3.11
 
 mpi_packages:
   metadata:
@@ -428,7 +437,7 @@ mpi_packages:
         default: { variants: +mpi ~openmp }
     - hdf5 +mpi
     - netcdf-c +mpi
-    - netcdf-fortran +mpi
+    - netcdf-fortran
     - phylobayesmpi
 
 mpi_lapack_packages:
@@ -469,7 +478,7 @@ mpi_lapack_python_packages:
     - boost +mpi
     - cgal ^boost+mpi
     - iq-tree@1.6.12+mpi ^boost +mpi
-    - neuron +mpi +python +shared
+    - neuron +mpi +python
     - plumed:
         default: { variants: +mpi +gsl }
     - py-h5py ^hdf5 +mpi
@@ -499,8 +508,8 @@ mpi_blas_packages_gcc_stable:
     - mpi
     - blas
   packages:
-    - abinit~hdf5~openmp+mpi+scalapack
-    - elmerfem+mumps+openmp+hypre ^netcdf-fortran+mpi
+    - abinit +openmp +mpi +scalapack +wannier90
+    - elmerfem +mumps +openmp +hypre
     - gromacs+mpi:
         variants:
           gpu:
@@ -512,9 +521,7 @@ mpi_blas_packages_gcc_stable:
           - scotch +mpi
           - netlib-scalapack
     - netlib-scalapack
-    - yambo+mpi io=iotk,etsf-io:
-        dependencies:
-          - netcdf-fortran+mpi
+    - yambo+mpi io=iotk,etsf-io
 
 mpi_blas_python_packages_gcc_stable:
   metadata:
@@ -534,16 +541,15 @@ mpi_blas_python_packages_gcc_stable:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
         dependencies:
-          - netcdf-fortran+mpi
           - boost +mpi
-    - cp2k+mpi~plumed:
+    - cp2k +mpi ~plumed:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
         dependencies:
           - boost +mpi
-    - cp2k+mpi+plumed:
+    - cp2k +mpi +plumed:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
@@ -568,9 +574,9 @@ mpi_blas_python_packages_gcc_stable:
           gpu:
             nvidia: +cuda
             none: ~cuda
-    - lammps:
+    - lammps@20220107:
         variants:
-          common: build_type=Release +asphere +body +class2 +colloid +compress +coreshell +dipole +granular +kspace +latte +lib +manybody +mc +misc +molecule +mpi +mpiio +peri ~poems +python +qeq  +replica +rigid +shock +snap +srd +user-atc +user-h5md +user-lb +user-misc +user-netcdf +voronoi +plumed
+          common: build_type=Release +asphere +atc +body +class2 +colloid +compress +coreshell +dipole +diffraction +extra-dump +granular +h5md +kspace +latboltz +latte +lib +manybody +mc +misc +molecule +mpi +mpiio +netcdf +peri ~poems +python +qeq  +replica +rigid +shock +ml-snap +srd +voronoi +plumed
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
@@ -598,7 +604,7 @@ mpi_blas_python_packages_gcc_stable:
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda ~nccl
-    - opencv +vtk +contrib:
+    - opencv +vtk +python3:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
