@@ -550,7 +550,7 @@ mpi_lapack_gpu_packages:
               nvidia: +cuda
               none: ~cuda
 
-mpi_lapack_python_packages:
+mpi_python_packages:
   metadata:
     section: packages
   pe:
