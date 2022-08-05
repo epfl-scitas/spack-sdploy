@@ -1,14 +1,13 @@
 spack_release: v0.18.1
-stack_release: syrah
+stack_release: syrah-lite
 stack_version: v1
 
 spack_root: /ssoft/spack
 spack_external: external
 
 environments:
-  - fidis
-  - gacrux
-  - izar
+  - ph02-avx
+  - ph02-avx2
 
 mirrors:
   local: spack-mirror
