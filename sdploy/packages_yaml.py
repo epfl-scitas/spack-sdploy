@@ -14,9 +14,8 @@
 #                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-from pdb import set_trace as st
+import llnl.util.tty as tty
 
-from collections.abc import MutableMapping
 from copy import deepcopy
 import inspect
 
@@ -31,7 +30,7 @@ class PackagesYaml(ReadYaml):
 
         # Used to create packages.yaml:
         self.defaults = {}
-        self.external = {}
+        self.externals = {}
         # Configuration files
         self.platform_file = platform_file
         self.stack_file = stack_file
@@ -61,12 +60,10 @@ class PackagesYaml(ReadYaml):
             pkgs_yaml_pkgs - this dict
         """
 
-        if self.debug:
-            print(f'Entering function: {inspect.stack()[0][3]}')
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         for pkg_list_name, pkg_list_cfg in self.stack.items():
-            if self.debug:
-                print(f'Entering package list: {pkg_list_name}')
+            tty.debug(f'Entering package list: {pkg_list_name}')
 
             for pkg_list in pkg_list_cfg.get('packages'):
 
@@ -84,11 +81,14 @@ class PackagesYaml(ReadYaml):
 
                         if 'version' in defaults:
                             self._packages_yaml_packages_version(pkg_name,
-                                                                 defaults.get('version'))
+                                                                 defaults['version'])
 
                         if 'variants' in defaults:
                             self._packages_yaml_packages_variants(pkg_name,
-                                                                  defaults.get('variants'))
+                                                                  defaults['variants'])
+
+                        if 'buildable' in defaults:
+                            self.defaults[pkg_name]['buildable'] = defaults['buildable']
 
     def _packages_yaml_packages_version(self, pkg_name, version_attributes):
         """Adds version to dictionary"""
@@ -107,7 +107,7 @@ class PackagesYaml(ReadYaml):
             version.append(str(version_attributes))
 
         if version:
-            self.defaults[pkg_name]['version'] = ' '.join(version)
+            self.defaults[pkg_name]['version'] = version
 
     def _packages_yaml_packages_variants(self, pkg_name, variants_attributes):
         """Adds variants to dictionary"""
@@ -138,16 +138,15 @@ class PackagesYaml(ReadYaml):
             pkgs_external - this dict
         """
 
-        if self.debug:
-            print(f'Entering function: {inspect.stack()[0][3]}')
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
-        for pkg_list_name, pkg_list_cfg in self.stack.items():
-            for pkg_list in pkg_list_cfg.get('packages'):
+        for pkg_list_cfg in self.stack.values():
+            for pkg_list in pkg_list_cfg['packages']:
                 if isinstance(pkg_list, dict):
                     for pkg_name, pkg_attributes in pkg_list.items():
-                        if not 'external' in pkg_attributes:
+                        if not 'externals' in pkg_attributes:
                             continue
 
-                        self.external[pkg_name] = pkg_attributes.get('external')
+                        self.externals[pkg_name] = pkg_attributes['externals']
                         # externals = pkg_attributes.get('external')
 

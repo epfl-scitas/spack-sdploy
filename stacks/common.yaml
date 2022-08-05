@@ -5,7 +5,7 @@ stack_version: v1
 spack_root: /ssoft/spack
 spack_external: external
 
-environments:
+environments: # platforms
   - ph02-avx
   - ph02-avx2
 
