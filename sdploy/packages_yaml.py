@@ -90,6 +90,9 @@ class PackagesYaml(ReadYaml):
                             self._packages_yaml_packages_variants(pkg_name,
                                                                   defaults.get('variants'))
 
+                        if 'buildable' in defaults:
+                            self.defaults[pkg_name]['buildable'] = defaults['buildable']
+
     def _packages_yaml_packages_version(self, pkg_name, version_attributes):
         """Adds version to dictionary"""
 

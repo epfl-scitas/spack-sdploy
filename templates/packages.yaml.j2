@@ -21,3 +21,11 @@ packages:
     {{ key }}: {{value}}
 {% endfor %}
 {% endfor %}
+
+  all:
+    providers:
+      blas: [openblas, intel-mkl]
+      fftw-api: [fftw]
+      uuid: [util-linux-uuid]
+      gl: [mesa]
+      glu: [mesa-glu]
