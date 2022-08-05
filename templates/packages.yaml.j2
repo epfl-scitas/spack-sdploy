@@ -4,21 +4,29 @@ packages:
 {#                                         DEFAULT PACKAGES #}
 {#                                                          #}
 {#                                                          #}
-{% for pkg, definition in packages.get('defaults').items() %}
+{% for pkg, definition in packages['defaults'].items() %}
+{% if pkg not in packages['externals'] %}
   {{ pkg }}:
 {% for key, value in definition.items() %}
     {{ key }}: {{value}}
 {% endfor %}
+{% endif %}
 {% endfor %}
 {#                                                          #}
 {#                                                          #}
 {#                                        EXTERNAL PACKAGES #}
 {#                                                          #}
 {#                                                          #}
-{% for pkg, definition in packages.get('externals').items() %}
+{% for pkg, definition in packages['externals'].items() %}
   {{ pkg }}:
-{% for key, value in definition.items() %}
+{% if pkg in packages['defaults'] %}
+{% for key, value in packages['defaults'][pkg].items() %}
     {{ key }}: {{value}}
+{% endfor %}
+{% endif %}
+    externals:
+{% for spec in definition %}
+    - {{spec}}
 {% endfor %}
 {% endfor %}
 
