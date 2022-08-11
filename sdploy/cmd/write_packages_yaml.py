@@ -88,12 +88,13 @@ def write_packages_yaml(parser, args):
     template = jinja2_env.get_template(config.packages_yaml_template)
     output = template.render(packages = data)
 
-    tty.msg(output)
+    tty.msg(config.packages_yaml)
+    print(output)
 
     env = ev.active_environment()
     if env:
         filename = os.path.join(os.path.dirname(os.path.realpath(env.manifest_path)),
-                                'packages.yaml')
+                                config.packages_yaml)
         _write_yaml(output, filename)
     else:
         _write_yaml(output, packages_yaml)
