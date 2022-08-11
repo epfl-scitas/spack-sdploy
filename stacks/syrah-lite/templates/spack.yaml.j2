@@ -18,12 +18,14 @@ spack:
 {#                                                 PACKAGES #}
 {#                                                          #}
 {#                                                          #}
+{% if 'pkgs_defs' in stack.keys() %}
 {% for list_name, pkg_list in stack['pkgs_defs'].items() %}
   - {{ list_name }}:
 {% for pkg in pkg_list %}
     - {{ pkg }}
 {% endfor %}
 {% endfor %}
+{% endif %}
 {#                                                          #}
 {#                                                          #}
 {#                                                    SPECS #}
@@ -50,6 +52,7 @@ spack:
 {#                                                 PACKAGES #}
 {#                                                          #}
 {#                                                          #}
+{% if 'pkgs_specs' in stack.keys() %}
 {% for list_name, pe in stack['pkgs_specs'].items() %}
 {% for compiler in pe['compilers'] %}
   - matrix:
@@ -62,5 +65,6 @@ spack:
     - [ $%{{ compiler }}_compiler ]
 {% endfor %}
 {% endfor %}
+{% endif %}
 
   view: False

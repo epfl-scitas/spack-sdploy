@@ -50,6 +50,12 @@ pipeline {
             }
         }
 
+       stage('Install compilers') {
+            steps {
+                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
+            }
+        }
+
 //        stage('DELETE ALL DATA') {
 //            steps {
 //                sh 'rm -rf ${STACK_PREFIX}'
