@@ -12,4 +12,4 @@ if [ -e ${SPACK_SDPLOY_INSTALL_PATH} ]; then
     rm -rf ${SPACK_SDPLOY_INSTALL_PATH}
 fi
 
-git clone https://github.com/epfl-scitas/spack-sdploy ${SPACK_SDPLOY_INSTALL_PATH}
+git clone --branch debug https://github.com/epfl-scitas/spack-sdploy ${SPACK_SDPLOY_INSTALL_PATH}
