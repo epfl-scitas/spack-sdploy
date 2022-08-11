@@ -53,9 +53,9 @@ class Config(object):
         # line. If an value was passed to the argument in the command line,
         # then this value will be stored. If no value was passed through the
         # command line, then spack-sdploy will see if there is a value defined
-        # in the config.py file. If a value exists for the argument in config
+        # in the sdploy.yaml file. If a value exists for the argument in this
         # file then this is the value that will be stored. Finaly, if no value
-        # was given through the command line, nor it is defined in the config
+        # was given through the command line, nor it is defined in sdploy.yaml
         # file, then spack-sdploy will be used the value defined by default in
         # the util module.
 

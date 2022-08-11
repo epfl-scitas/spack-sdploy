@@ -45,7 +45,7 @@ config:
   # we don't like things hardcoded, we set here variables for these
   # names. Remember that contrary to the paths defined above, these
   # are paths where spack-sdploy will write to, where paths defined
-  # above are paths where spack-sdploy will look for files.
+  # above are paths where spack-sdploy will be reading from.
   spack_yaml: spack.yaml
   spack_yaml_path:
   packages_yaml: packages.yaml

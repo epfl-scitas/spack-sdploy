@@ -34,7 +34,8 @@ def get_subdir(path, level = 1, sep = '/'):
     dir_levels = path_list[1:len(path_list) - level]
     return (sep + sep.join(dir_levels))
 
-# Set reasonable default values for first run
+# Set reasonable default values for first run. This values can be changed
+# through the sdploy.yaml file or direcly from the command line.
 stack_yaml = get_prefix() + SEP + 'samples' + SEP + 'stack.yaml'
 platform_yaml = get_prefix() + SEP + 'platforms' + SEP + 'platform.yaml'
 templates_path = get_prefix() + SEP + 'templates'
