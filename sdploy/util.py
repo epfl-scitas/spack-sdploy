@@ -18,6 +18,10 @@ import os
 from .yaml_manager import ReadYaml
 from .config import *
 
+# The following line makes de tracer available
+# every time this module is imported.
+from pdb import set_trace as st
+
 def get_prefix():
     """Return prefix of spack-sdploy"""
 
