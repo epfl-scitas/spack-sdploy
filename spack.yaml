@@ -1,0 +1,109 @@
+spack:
+  definitions:
+  - intel_stable_compiler: [intel@19.1.2]
+  - intel_stable_mpi: [intel-mpi@2019.9.304]
+  - intel_stable_blas: [intel-mkl2019.5.281]
+  - intel_stable_gpu: [None]
+  - intel_stable_python: [python@3.9.12 +tkinter +optimization]
+  - intel_stable_cmake: [3.2.1]
+  - gcc_stable_compiler: [gcc@9.3.0]
+  - gcc_stable_mpi: [mvapich2 fabrics=tcp, self @2.3.6]
+  - gcc_stable_blas: [openblas@0.3.19]
+  - gcc_stable_gpu: [cuda@10.2.89]
+  - gcc_stable_python: [python@3.9.12 +tkinter +optimization]
+  - gcc_nextgen_compiler: [gcc@10.3.0]
+  - gcc_nextgen_mpi: [mvapich2@2.3.7]
+  - gcc_nextgen_blas: [openblas@0.3.20]
+  - gcc_nextgen_gpu: [None]
+  - gcc_nextgen_python: [python@3.9.12 +tkinter +optimization]
+  - llvm_deprec_compiler: [llvm@11.0.1]
+  - llvm_deprec_python: [2.7.18]
+  - llvm_deprec_mpi: [mvapich2@2.3.4]
+  - llvm_deprec_blas: [openblas@0.3.15]
+  - llvm_deprec_gpu: [None]
+  - llvm_stable_compiler: [llvm@13.0.1]
+  - llvm_stable_mpi: [mvapich2@2.3.7]
+  - llvm_stable_blas: [openblas@0.3.18]
+  - llvm_stable_gpu: [None]
+  - llvm_stable_python: [python@3.7.7 +tkinter +optimization]
+  - core_compiler: [gcc@8.5.0]
+  specs:
+  - matrix:
+    - [$intel_stable_compiler]
+    - [$%core_compiler]
+  - matrix:
+    - [$intel_stable_mpi]
+    - [$%intel_stable_compiler]
+  - matrix:
+    - [$intel_stable_blas]
+    - [$%intel_stable_compiler]
+  - matrix:
+    - [$intel_stable_gpu]
+    - [$%intel_stable_compiler]
+  - matrix:
+    - [$intel_stable_python]
+    - [$%intel_stable_compiler]
+  - matrix:
+    - [$intel_stable_cmake]
+    - [$%intel_stable_compiler]
+  - matrix:
+    - [$gcc_stable_compiler]
+    - [$%core_compiler]
+  - matrix:
+    - [$gcc_stable_mpi]
+    - [$%gcc_stable_compiler]
+  - matrix:
+    - [$gcc_stable_blas]
+    - [$%gcc_stable_compiler]
+  - matrix:
+    - [$gcc_stable_gpu]
+    - [$%gcc_stable_compiler]
+  - matrix:
+    - [$gcc_stable_python]
+    - [$%gcc_stable_compiler]
+  - matrix:
+    - [$gcc_nextgen_compiler]
+    - [$%core_compiler]
+  - matrix:
+    - [$gcc_nextgen_mpi]
+    - [$%gcc_nextgen_compiler]
+  - matrix:
+    - [$gcc_nextgen_blas]
+    - [$%gcc_nextgen_compiler]
+  - matrix:
+    - [$gcc_nextgen_gpu]
+    - [$%gcc_nextgen_compiler]
+  - matrix:
+    - [$gcc_nextgen_python]
+    - [$%gcc_nextgen_compiler]
+  - matrix:
+    - [$llvm_deprec_compiler]
+    - [$%core_compiler]
+  - matrix:
+    - [$llvm_deprec_python]
+    - [$%llvm_deprec_compiler]
+  - matrix:
+    - [$llvm_deprec_mpi]
+    - [$%llvm_deprec_compiler]
+  - matrix:
+    - [$llvm_deprec_blas]
+    - [$%llvm_deprec_compiler]
+  - matrix:
+    - [$llvm_deprec_gpu]
+    - [$%llvm_deprec_compiler]
+  - matrix:
+    - [$llvm_stable_compiler]
+    - [$%core_compiler]
+  - matrix:
+    - [$llvm_stable_mpi]
+    - [$%llvm_stable_compiler]
+  - matrix:
+    - [$llvm_stable_blas]
+    - [$%llvm_stable_compiler]
+  - matrix:
+    - [$llvm_stable_gpu]
+    - [$%llvm_stable_compiler]
+  - matrix:
+    - [$llvm_stable_python]
+    - [$%llvm_stable_compiler]
+  view: false
