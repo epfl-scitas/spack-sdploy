@@ -1,8 +1,7 @@
---- # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # PROGRAMMING ENVIRONMENT SECTION (PE)
 #
-# The PR section follows the syntax: <pe_name>_<stack_name>_<package_name>.
+# The PE section follows the syntax: <pe_name>_<stack_name>_<package_name>.
 # for example: intel_stable_compiler. There is a parent child schema that must
 # be respected. The metadata key is ignored for this purpose. The core PE only
 # has one information and does not follow the same schema. Any key under the
