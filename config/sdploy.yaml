@@ -27,16 +27,20 @@ config:
   # string like /path/to/stack.yaml, but it can be convenient to be 
   # able to change it in case you are running several stacks, for 
   # which you would have different names for each stack file.
+  # The stack_yaml file should be named after the stack name.
   stack_yaml:
   # Full name of the platform file (including path). This is the name
   # of the file where you will fill in the details about your hardware
   # capabilities (does it have acceleration ou fast communications) as
   # well as other details like which is the compiler provided by the
   # system or what python should be used.
+  # The platform_yaml file sould be named after the platform name.
   platform_yaml:
   # Information that is common to all platforms. This is usually the case
   # of external repositories git urls, installations paths, environment
   # names, spack version to be used, etc.
+  # The common_yaml file can be named simply common.yaml, since there
+  # should be one of this per stack.
   common_yaml: common.yaml
   # This is where spack-sdploy can find the jinja templates. Each
   # configuration file produced by spack-sdploy will have its own
