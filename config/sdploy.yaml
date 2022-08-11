@@ -30,9 +30,14 @@ config:
   stack_yaml:
   # Full name of the platform file (including path). This is the name
   # of the file where you will fill in the details about your hardware
-  # capabilities and other information like external repositories and
-  # paths.
+  # capabilities (does it have acceleration ou fast communications) as
+  # well as other details like which is the compiler provided by the
+  # system or what python should be used.
   platform_yaml:
+  # Information that is common to all platforms. This is usually the case
+  # of external repositories git urls, installations paths, environment
+  # names, spack version to be used, etc.
+  common_yaml: common.yaml
   # This is where spack-sdploy can find the jinja templates. Each
   # configuration file produced by spack-sdploy will have its own
   # template, but they are gathered here under the same directory.
