@@ -2,8 +2,8 @@
 #                                                                       #
 # SCITAS STACK DEPLOYMENT 2022, EPFL                                    #
 #                                                                       #
-#                                                                       #
-#                                                                       #
+# This module provides default values for all the variables. This       #
+# enable spack-sdploy to work out-of-the-box.                           #
 #                                                                       #
 #                                                                       #
 #                                                                       #
