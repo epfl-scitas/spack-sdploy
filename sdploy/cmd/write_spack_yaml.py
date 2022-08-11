@@ -23,6 +23,7 @@ import spack.environment as ev
 import spack.schema.env
 import spack.util.spack_yaml as syaml
 import llnl.util.filesystem as fs
+import llnl.util.tty as tty
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -100,10 +101,12 @@ def write_spack_yaml(parser, args):
     # Render and write spack.yaml
     template = jinja_env.get_template(config.spack_yaml_template)
     output = template.render(stack = data)
+
+    tty.msg(config.spack_yaml)
     print(output)
 
     env = ev.active_environment()
     if env:
         _write_yaml(output, os.path.realpath(env.manifest_path))
     else:
-        _write_yaml(output, spack_yaml)
+        _write_yaml(output, config.spack_yaml)
