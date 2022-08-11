@@ -62,6 +62,7 @@ pipeline {
                     parallel(some_stuff())
                 }
             }
+        }
 
         stage('A parallel stage') {
             steps {
