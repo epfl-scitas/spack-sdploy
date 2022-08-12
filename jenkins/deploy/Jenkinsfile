@@ -103,7 +103,13 @@ def _define_stages(prefix, script, message, do_junit = true) {
 
     def jobs = [:]
     for (def environment in environments) {
+
         def agent_name = get_agent_name(environment)
+
+        // ER TESTING STUFF
+        println environment
+        println agent_name
+        sh 'echo ${environment}'
 
         jobs["${prefix}-${agent_name}"] = {
             stage("${prefix}-${agent_name}") {
