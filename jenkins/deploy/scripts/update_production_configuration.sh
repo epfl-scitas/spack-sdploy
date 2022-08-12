@@ -23,4 +23,4 @@ pip install jinja2
 echo 'Installing yareed'
 echo `pwd`
 ls
-pip install ../../../yareed/
+pip install yareed/
