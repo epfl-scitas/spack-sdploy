@@ -19,3 +19,6 @@ pip install -U pip
 
 echo 'Installing Jinja2'
 pip install jinja2
+
+echo 'Installing yareed'
+pip install ../../../yareed/
