@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+yareed/__init__.py
+yareed/main.py
+yareed.egg-info/PKG-INFO
+yareed.egg-info/SOURCES.txt
+yareed.egg-info/dependency_links.txt
+yareed.egg-info/entry_points.txt
+yareed.egg-info/requires.txt
+yareed.egg-info/top_level.txt

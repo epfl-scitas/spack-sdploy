@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=41.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yareed"
+version = "0.1"
+authors = [
+  { name="SCITAS", email="hpc@epfl.ch" },
+]
+description = "Query Yaml files"
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.6"
+
+[project.urls]
+"Homepage" = "https://github.com/epfl-scitas/yareed"

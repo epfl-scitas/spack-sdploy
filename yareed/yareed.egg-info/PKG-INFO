@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Name: yareed
+Version: 0.1
+Summary: Query Yaml files
+Author: SCITAS
+Author-email: SCITAS <hpc@epfl.ch>
+Project-URL: Homepage, https://github.com/epfl-scitas/yareed
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
