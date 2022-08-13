@@ -50,7 +50,7 @@ pipeline {
             }
         }
 
-       stage('Install compilers') {
+        stage('Install compilers') {
             steps {
                 sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
             }
