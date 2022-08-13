@@ -55,7 +55,7 @@ pipeline {
                 script {
                     my_groovy_script()
                 }
-            }
+            }   
         }
 
         stage('Install compilers') {
@@ -70,22 +70,22 @@ pipeline {
 //            }
 //        }
 
-        stage('A parallel stage test') {
-            steps {
-
-                script {
-                    parallel(some_stuff())
-                }
-            }
-        }
-
-        stage('A parallel stage') {
-            steps {
-                script {
-                    parallel(do_parallel_stage_1())
-                }
-            }
-        }
+//        stage('A parallel stage test') {
+//            steps {
+//
+//                script {
+//                    parallel(some_stuff())
+//                }
+//            }
+//        }
+//
+//        stage('A parallel stage') {
+//            steps {
+//                script {
+//                    parallel(do_parallel_stage_1())
+//                }
+//            }
+//        }
     }
 }
 
