@@ -116,8 +116,8 @@ def _define_stages(prefix, script, message, do_junit = true) {
         // ER TESTING STUFF
         println('Agent Name: ' + agent_name)
         println('Environment: ' + environment)
-        println environment
-        println agent_name
+        //println environment
+        //println agent_name
 
         jobs["${prefix}-${agent_name}"] = {
 
