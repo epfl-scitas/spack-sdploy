@@ -50,6 +50,14 @@ pipeline {
             }
         }
 
+       stage('Test my groovy function') {
+            steps {
+                script {
+                    my_groovy_script()
+                }
+            }
+        }
+
         stage('Install compilers') {
             steps {
                 sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
@@ -81,6 +89,17 @@ pipeline {
     }
 }
 
+
+def my_groovy_script(my_param) {
+
+    param1 = "eduardo"
+    def param2 = "eduardo2"
+
+    println("print a simple string")
+    println("1" + param1)
+    println("2" + $param1)
+    println("3" + ${param1})
+}
 
 def get_prefix(branch_name, stack_name) {
     def pattern = ~"origin/(packages|bugfix|features)/$stack_name/"
