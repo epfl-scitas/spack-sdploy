@@ -64,6 +64,15 @@ pipeline {
 
         stage('A parallel stage test') {
             steps {
+                sh 'source ${PYTHON_VIRTUALENV_PATH/bin/activate'
+            } 
+            steps {
+                sh 'which python'
+            }
+            steps {
+                sh 'yareed -file stacks/common.yaml -keys environments'
+            }
+            steps {
                 script {
                     parallel(some_stuff())
                 }
