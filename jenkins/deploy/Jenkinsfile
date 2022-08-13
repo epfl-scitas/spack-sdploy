@@ -106,9 +106,11 @@ def _define_stages(prefix, script, message, do_junit = true) {
     def environments = "${sh (script: 'jenkins/deploy/scripts/install_compilers.sh', returnStdout: true).trim()}".split('\n')
 
     println('Environments: ' + environments)
-    println environments
+    // println environments
 
     def jobs = [:]
+
+    prinln('INSIDE LOOP')
     for (def environment in environments) {
 
         def agent_name = get_agent_name(environment)
