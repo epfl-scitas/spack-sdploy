@@ -99,7 +99,10 @@ def get_agent_name(environment) {
 def _define_stages(prefix, script, message, do_junit = true) {
 
     // environments == platforms
-    def environments = ['environment1']
+    // def environments = ['environment1']
+    def environments = "${sh (script: 'yareed --file stacks/common.yaml --keys environments', returnStdout: true).trim()}".split('\n')
+
+    println environments
 
     def jobs = [:]
     for (def environment in environments) {
@@ -109,9 +112,10 @@ def _define_stages(prefix, script, message, do_junit = true) {
         // ER TESTING STUFF
         println environment
         println agent_name
-        sh 'echo ${environment}'
 
         jobs["${prefix}-${agent_name}"] = {
+
+
             stage("${prefix}-${agent_name}") {
                 node(agent_name) {
                     env.environment = environment
