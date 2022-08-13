@@ -64,7 +64,7 @@ pipeline {
 
         stage('A parallel stage test') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/activate_spack.sh'
+
                 script {
                     parallel(some_stuff())
                 }
@@ -103,7 +103,7 @@ def _define_stages(prefix, script, message, do_junit = true) {
     // def environments = ['environment1']
     // def environments = "${sh (script: 'yareed --file stacks/common.yaml --keys environments', returnStdout: true).trim()}".split('\n')
 
-    def environments = "${sh (script: 'spack env list', returnStdout: true).trim()}".split('\n')
+    def environments = "${sh (script: 'jenkins/deploy/scripts/install_compilers.sh', returnStdout: true).trim()}".split('\n')
 
     println environments
 
