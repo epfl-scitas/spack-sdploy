@@ -64,14 +64,7 @@ pipeline {
 
         stage('A parallel stage test') {
             steps {
-
-                sh 'source ${PYTHON_VIRTUALENV_PATH}/bin/activate'
-
-                sh 'which python'
-
-                sh 'yareed -file stacks/common.yaml -keys environments'
-
-
+                sh '${JENKINS_SCRIPTS_PATH}/activate_spack.sh'
                 script {
                     parallel(some_stuff())
                 }
