@@ -70,13 +70,12 @@ pipeline {
             }
         }
 
-       stage('Print environment') {
+        stage('Install compilers') {
             steps {
-                script {
-                    sh "env"
-                }
-            }   
+                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
+            }
         }
+
 
 //      stage('Echo') {
 //            steps {
@@ -134,13 +133,6 @@ pipeline {
 //            print("HERE")
 //            sh 'echo $TEST_SPACK_ROOT'
 //            sh 'echo $SOME_VAR'
-//            }
-//        }
-
-
-//        stage('Install compilers') {
-//            steps {
-//                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
 //            }
 //        }
 
