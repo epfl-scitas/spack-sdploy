@@ -58,6 +58,15 @@ pipeline {
             }   
         }
 
+
+      stage('Which python') {
+            steps {
+                script {
+                    sh "which python"
+                }
+            }   
+        }
+
 //        stage('Install compilers') {
 //            steps {
 //                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
