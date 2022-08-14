@@ -13,13 +13,15 @@ pipeline {
 
     environment {
         // define environment variables here for all steps
-        STACK_RELEASE = "syrah"
-        PYTHON_EXECUTABLE = "python3"
         SDPLOY_VIRTUALENV_PATH = "/home/scitasbuildpr/${STACK_RELEASE}/virtualenv/senv-py36"
         JENKINS_SCRIPTS_PATH = "jenkins/deploy/scripts"
         PYTHON_VIRTUALENV_PATH =  "/home/scitasbuildpr/${STACK_RELEASE}/py3-venv"
-        STACK_PREFIX = "/home/scitasbuildpr/${STACK_RELEASE}"
-        SOME_VAR = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys spack_root').trim()
+        //STACK_PREFIX = "/home/scitasbuildpr/${STACK_RELEASE}"
+
+        STACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys stack_release').trim()
+        WORK_DIR = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys work_directory').trim()
+        STACK_PREFIX = "${WORK_DIR}/${STACK_RELEASE}"
+
     }
 
     // A variable defined in a stage is bound to that stage.
