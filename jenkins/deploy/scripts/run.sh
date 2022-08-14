@@ -15,7 +15,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 JENKINS_SCRIPTS_PATH=jenkins/deploy/scripts
-PYTHON_VIRTUALENV_PATH=/home/scitasbuildpr/syrah/py3-env
+PYTHON_VIRTUALENV_PATH=/home/scitasbuildpr/syrah/py3-venv
 SPACK_INSTALL_PATH=/home/scitasbuildpr/syrah/spack.v1
 
 # 'Load variables'
