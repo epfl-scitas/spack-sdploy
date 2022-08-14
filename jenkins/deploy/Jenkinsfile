@@ -112,6 +112,7 @@ pipeline {
                 script {
                     var = "sh '${JENKINS_SCRIPTS_PATH}/run.sh which python'"
                 }
+                echo $var
             }   
         }
 
