@@ -95,8 +95,10 @@ pipeline {
 
       stage('Error) {
             steps {
-                sh "which python"
-            }   
+                catchError {
+                    sh "which python"
+                }
+            }
         }
 
       stage('Stage after rror) {
