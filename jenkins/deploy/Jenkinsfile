@@ -93,6 +93,18 @@ pipeline {
             }   
         }
 
+      stage('Error) {
+            steps {
+                sh "which python"
+            }   
+        }
+
+      stage('Stage after rror) {
+            steps {
+                echo "after error"
+            }   
+        }
+
 //        stage('Install compilers') {
 //            steps {
 //                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
