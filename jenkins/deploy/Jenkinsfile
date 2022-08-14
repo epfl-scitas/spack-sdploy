@@ -21,6 +21,9 @@ pipeline {
         PYTHON_VIRTUALENV_PATH = "${WORK_DIR}/${STACK_RELEASE}/${PYTHON_VENV}"
         ENVIRONMENTS = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments').trim()
         JENKINS_SCRIPTS_PATH = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys jenkins_scripts_path').trim()
+        STACK_RELEASE_VER = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys stack_version').trim()
+        SPACK_PATH = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys spack').trim()
+        STACK_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_PATH}.${STACK_RELEASE_VER}"
     }
 
     // A variable defined in a stage is bound to that stage.
@@ -33,6 +36,7 @@ pipeline {
                 echo "STACK_PREFIX: $STACK_PREFIX"
                 echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUALENV_PATH}"
                 echo "JENKINS_SCRIPTS_PATH: ${JENKINS_SCRIPTS_PATH}"
+                echo "STACK_INSTALL_PATH: ${STACK_INSTALL_PATH}"
             }   
         }
 
