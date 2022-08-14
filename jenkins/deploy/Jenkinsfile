@@ -108,7 +108,7 @@ pipeline {
 
       stage('Use run.sh') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/run.sh which python'
+                sh 'echo which python `${JENKINS_SCRIPTS_PATH}/run.sh which python`'
             }   
         }
 
