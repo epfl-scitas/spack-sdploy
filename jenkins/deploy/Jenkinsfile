@@ -117,7 +117,7 @@ pipeline {
             print("yareed: $yareed_path")
             print("environments: $environemnts")
             print("HERE")
-            sh "echo ${TEST_SPACK_ROOT}"
+            sh 'echo $TEST_SPACK_ROOT'
             }
         }
 
