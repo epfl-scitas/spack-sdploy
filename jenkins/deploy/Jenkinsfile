@@ -108,17 +108,13 @@ pipeline {
 
       stage('Use run.sh') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/run.sh which python'
                 script {
                     python_path = "${sh (script: 'jenkins/deploy/scripts/run.sh which python', returnStdout: true).trim()}".split('\n')
                     yareed_path = "${sh (script: 'jenkins/deploy/scripts/run.sh which yareed', returnStdout: true).trim()}".split('\n')
                     environemnts = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
-                    print $environments.first()
                 }
-            echo "python: $python_path"
-            echo "yareed: $yareed_path.first()"
-
-            echo "environments: $environemnts"
+            print("python: $python_path")
+            print("yareed: $yareed_path")
             print("environments: $environemnts")
             }
         }
