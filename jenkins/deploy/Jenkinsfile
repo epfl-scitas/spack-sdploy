@@ -111,19 +111,8 @@ pipeline {
                 sh '${JENKINS_SCRIPTS_PATH}/run.sh which python'
                 script {
                     var1 = "${sh (script: 'jenkins/deploy/scripts/run.sh which python', returnStdout: true).trim()}".split('\n')
-                    var2 = "${sh 'jenkins/deploy/scripts/run.sh which python'}"
-                    var3 = sh 'jenkins/deploy/scripts/run.sh which python'
-                    var4 = sh "jenkins/deploy/scripts/run.sh which python"
                 }
-                var5 = sh 'jenkins/deploy/scripts/run.sh which python'
-                var6 = "${sh 'jenkins/deploy/scripts/run.sh which python'}"
-
             echo "var1: $var1"
-            echo "var2: $var2"
-            echo "var3: $var3"
-            echo "var4: $var4"
-            echo "var5: $var5"
-            echo "var6: $var6"
             }
         }
 
