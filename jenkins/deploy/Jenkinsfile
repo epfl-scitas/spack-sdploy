@@ -101,7 +101,7 @@ pipeline {
             }
         }
 
-      stage('Stage after rror) {
+      stage('Stage after Error') {
             steps {
                 echo "after error"
             }   
