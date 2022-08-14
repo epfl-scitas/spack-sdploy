@@ -63,12 +63,6 @@ pipeline {
             }   
         }
 
-      stage('Task') {
-          steps {
-              sh 'task --version'
-          }
-      }
-
       stage('Echo') {
             steps {
                 // env. is optional, but good practice
@@ -111,6 +105,13 @@ pipeline {
                 echo "after error"
             }   
         }
+
+      stage('Use run.sh') {
+            steps {
+                sh 'run.sh which python'
+            }   
+        }
+
 
 //        stage('Install compilers') {
 //            steps {
