@@ -1,3 +1,5 @@
+def some_var = "cat"
+
 pipeline {
     agent {
         label 'ph02-syrah-rhel8'
@@ -21,8 +23,6 @@ pipeline {
 
     // A variable defined in a stage is bound to that stage.
     // A variable defined in environment cannot be muttated in stages.
-
-    def some_var = "cat"
 
     stages {
 //        stage('Install Python Environment') {
