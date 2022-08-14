@@ -96,10 +96,8 @@ def my_groovy_script(my_param) {
     def param2 = "eduardo2"
 
     println("print a simple string")
-    println("1" + param1)
-    println("3" + ${param1})
-
-    println("3" + param2)
+    println("1: " + param1)
+    println("2: " + param2)
 
 }
 
