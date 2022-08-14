@@ -109,7 +109,9 @@ pipeline {
       stage('Use run.sh') {
             steps {
                 sh '${JENKINS_SCRIPTS_PATH}/run.sh which python'
-                //def var = "sh '${JENKINS_SCRIPTS_PATH}/run.sh which python'"
+                script {
+                    var = "sh '${JENKINS_SCRIPTS_PATH}/run.sh which python'"
+                }
             }   
         }
 
@@ -142,8 +144,7 @@ pipeline {
 
 //        stage('A parallel stage test') {
 //            steps {
-//
-//                script {
+////              script {
 //                    parallel(some_stuff())
 //                }
 //            }
