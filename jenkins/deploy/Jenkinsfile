@@ -65,6 +65,8 @@ pipeline {
                     sh "echo Eduardo"
                     sh "echo Eduardo"
                     sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
+                    sh "which spack"
+                    sh "which python"
                 }
             }   
         }
