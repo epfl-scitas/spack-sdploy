@@ -117,6 +117,7 @@ pipeline {
             echo "python: $python_path"
             echo "yareed: $yareed_path"
             echo "environments: $environemnts"
+            print("environments: $environemnts")
             }
         }
 
