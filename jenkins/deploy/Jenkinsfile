@@ -68,6 +68,13 @@ pipeline {
             }   
         }
 
+      stage('Which python 2') {
+            steps {
+                    sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
+                    sh "echo $PATH"
+            }   
+        }
+
 //        stage('Install compilers') {
 //            steps {
 //                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
