@@ -110,9 +110,11 @@ pipeline {
             steps {
                 sh '${JENKINS_SCRIPTS_PATH}/run.sh which python'
                 script {
-                    var1 = "${sh (script: 'jenkins/deploy/scripts/run.sh which python', returnStdout: true).trim()}".split('\n')
+                    python_path = "${sh (script: 'jenkins/deploy/scripts/run.sh which python', returnStdout: true).trim()}".split('\n')
+                    yareed_path = "${sh (script: 'jenkins/deploy/scripts/run.sh which yareed', returnStdout: true).trim()}".split('\n')
                 }
-            echo "var1: $var1"
+            echo "python: $python_path"
+            echo "yareed: $yareed_path"
             }
         }
 
