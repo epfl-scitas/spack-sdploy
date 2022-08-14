@@ -18,7 +18,7 @@ pipeline {
         WORK_DIR = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys work_directory').trim()
         STACK_PREFIX = "${WORK_DIR}/${STACK_RELEASE}"
         PYTHON_VENV = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys python_venv').trim()
-        PYTHON_VIRTUAL_ENV_PATH = "${WORK_DIR}/${STACK_RELEASE}/${PYTHON_VENV}"
+        PYTHON_VIRTUALENV_PATH = "${WORK_DIR}/${STACK_RELEASE}/${PYTHON_VENV}"
         ENVIRONMENTS = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments').trim()
         JENKINS_SCRIPTS_PATH = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys jenkins_scripts_path').trim()
     }
@@ -31,7 +31,7 @@ pipeline {
                 echo "STACK_RELEASE: $STACK_RELEASE"
                 echo "WORK_DIR: $WORK_DIR"
                 echo "STACK_PREFIX: $STACK_PREFIX"
-                echo "PYTHON_VIRTUAL_ENV_PATH: ${PYTHON_VIRTUAL_ENV_PATH}"
+                echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUAL_ENV_PATH}"
                 echo "JENKINS_SCRIPTS_PATH: ${JENKINS_SCRIPTS_PATH}"
             }   
         }
