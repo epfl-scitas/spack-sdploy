@@ -14,13 +14,13 @@
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-echo 'Load variables'
+# 'Load variables'
 . ${JENKINS_SCRIPTS_PATH}/config.sh
 
-echo 'Activating Python virtual environment'
+# 'Activating Python virtual environment'
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate
 
-echo 'Source Spack'
+# 'Source Spack'
 . $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 
 $@
