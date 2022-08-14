@@ -20,6 +20,8 @@
 # 'Activating Python virtual environment'
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate
 
+export TEST_SPACK_ROOT=`yareed -file stacks/common.yaml -keys spack_root`
+
 # 'Source Spack'
 . $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 

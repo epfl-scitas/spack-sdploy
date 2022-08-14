@@ -19,9 +19,6 @@ pipeline {
         JENKINS_SCRIPTS_PATH = "jenkins/deploy/scripts"
         PYTHON_VIRTUALENV_PATH =  "/home/scitasbuildpr/${STACK_RELEASE}/py3-venv"
         STACK_PREFIX = "/home/scitasbuildpr/${STACK_RELEASE}"
-        script {
-            env_test = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
-        }
     }
 
     // A variable defined in a stage is bound to that stage.
@@ -119,6 +116,7 @@ pipeline {
             print("python: $python_path")
             print("yareed: $yareed_path")
             print("environments: $environemnts")
+            echo ${TEST_SPACK_ROOT}
             }
         }
 
