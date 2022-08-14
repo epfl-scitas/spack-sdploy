@@ -121,7 +121,7 @@ pipeline {
             echo "var2: $var2"
             echo "var3: $var3"
             echo "var4: $var4"
-            echo "var5: $var55"
+            echo "var5: $var5"
             }
         }
 
