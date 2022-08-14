@@ -58,11 +58,11 @@ pipeline {
             }   
         }
 
-        stage('Install compilers') {
-            steps {
-                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
-            }
-        }
+//        stage('Install compilers') {
+//            steps {
+//                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
+//            }
+//        }
 
        stage('Test my groovy function') {
             steps {
