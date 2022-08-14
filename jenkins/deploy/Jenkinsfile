@@ -11,21 +11,19 @@ pipeline {
         ansiColor('xterm')
     }
 
+    // A variable defined in environment block is available through all stages
+    // and its value cannot be changed later.
     environment {
-        // define environment variables here for all steps
         STACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys stack_release').trim()
         WORK_DIR = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys work_directory').trim()
         STACK_PREFIX = "${WORK_DIR}/${STACK_RELEASE}"
         PYTHON_VENV = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys python_venv').trim()
         PYTHON_VIRTUAL_ENV_PATH = "${WORK_DIR}/${STACK_RELEASE}/${PYTHON_VENV}"
         ENVIRONMENTS = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments').trim()
+        JENKINS_SCRIPTS_PATH = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys jenkins_scripts_path').trim()
     }
 
-
-
     // A variable defined in a stage is bound to that stage.
-    // A variable defined in environment cannot be muttated in stages.
-
     stages {
 
        stage('Print variables') {
@@ -34,38 +32,39 @@ pipeline {
                 echo "WORK_DIR: $WORK_DIR"
                 echo "STACK_PREFIX: $STACK_PREFIX"
                 echo "PYTHON_VIRTUAL_ENV_PATH: ${PYTHON_VIRTUAL_ENV_PATH}"
+                echo "JENKINS_SCRIPTS_PATH: ${JENKINS_SCRIPTS_PATH}"
             }   
         }
 
-//        stage('Install Python Environment') {
-//            steps {
-//                sh '${JENKINS_SCRIPTS_PATH}/update_production_configuration.sh'
-//            }
-//        }
-//
-//        stage('Clone Spack') {
-//            steps {
-//                sh '${JENKINS_SCRIPTS_PATH}/install_spack.sh'
-//            }
-//        }
-//
-//        stage('Clone spack-sdploy') {
-//            steps {
-//                sh '${JENKINS_SCRIPTS_PATH}/install_spack_sdploy.sh'
-//            }
-//        }
-//
-//        stage('Configure spack-sdploy') {
-//            steps {
-//                sh '${JENKINS_SCRIPTS_PATH}/configure_spack_sdploy.sh'
-//            }
-//        }
-//
-//        stage('Create Spack environments') {
-//            steps {
-//                sh '${JENKINS_SCRIPTS_PATH}/create_spack_environments.sh'
-//            }
-//        }
+        stage('Install Python Environment') {
+            steps {
+                sh '${JENKINS_SCRIPTS_PATH}/update_production_configuration.sh'
+            }
+        }
+
+        stage('Clone Spack') {
+            steps {
+                sh '${JENKINS_SCRIPTS_PATH}/install_spack.sh'
+            }
+        }
+
+        stage('Clone spack-sdploy') {
+            steps {
+                sh '${JENKINS_SCRIPTS_PATH}/install_spack_sdploy.sh'
+            }
+        }
+
+        stage('Configure spack-sdploy') {
+            steps {
+                sh '${JENKINS_SCRIPTS_PATH}/configure_spack_sdploy.sh'
+            }
+        }
+
+        stage('Create Spack environments') {
+            steps {
+                sh '${JENKINS_SCRIPTS_PATH}/create_spack_environments.sh'
+            }
+        }
 
        stage('Print environment') {
             steps {
@@ -75,64 +74,64 @@ pipeline {
             }   
         }
 
-      stage('Echo') {
-            steps {
-                // env. is optional, but good practice
-                echo "BUILD_NUMBER = ${env.BUILD_NUMBER}"
-                sh 'echo PATH = $PATH'
-                sh "echo PATH = $PATH"
-                echo "animal: $animal"
-            }
-        }
-
-      stage('Export variables') {
-            steps {
-                sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
-                sh 'echo $PATH'
-                // This variable must be changed inside a script block !
-                script {
-                    animal = "dog"
-                }
-            }   
-        }
-
-      stage('Export variables 2') {
-            steps {
-                sh "${JENKINS_SCRIPTS_PATH}/config.sh"
-                sh 'echo $PATH'
-                echo "animal: $animal"
-            }   
-        }
-
-      stage('Error') {
-            steps {
-                catchError(message:'Error, but ok', buildResult:'Unstable', stageResult:'unstable') {
-                    sh "which python"
-                }
-            }
-        }
-
-      stage('Stage after Error') {
-            steps {
-                echo "after error"
-            }   
-        }
-
-      stage('Use run.sh') {
-            steps {
-                script {
-                    python_path = "${sh (script: 'jenkins/deploy/scripts/run.sh which python', returnStdout: true).trim()}".split('\n')
-                    yareed_path = "${sh (script: 'jenkins/deploy/scripts/run.sh which yareed', returnStdout: true).trim()}".split('\n')
-                    environemnts = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
-                }
-            print("python: $python_path")
-            print("yareed: $yareed_path")
-            print("environments: $environemnts")
-            print("HERE")
-            sh 'echo $TEST_SPACK_ROOT'
-            sh 'echo $SOME_VAR'
-            }
-        }
+//      stage('Echo') {
+//            steps {
+//                // env. is optional, but good practice
+//                echo "BUILD_NUMBER = ${env.BUILD_NUMBER}"
+//                sh 'echo PATH = $PATH'
+//                sh "echo PATH = $PATH"
+//                echo "animal: $animal"
+//            }
+//        }
+//
+//      stage('Export variables') {
+//            steps {
+//                sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
+//                sh 'echo $PATH'
+//                // This variable must be changed inside a script block !
+//                script {
+//                    animal = "dog"
+//                }
+//            }   
+//        }
+//
+//      stage('Export variables 2') {
+//            steps {
+//                sh "${JENKINS_SCRIPTS_PATH}/config.sh"
+//                sh 'echo $PATH'
+//                echo "animal: $animal"
+//            }   
+//        }
+//
+//      stage('Error') {
+//            steps {
+//                catchError(message:'Error, but ok', buildResult:'Unstable', stageResult:'unstable') {
+//                    sh "which python"
+//                }
+//            }
+//        }
+//
+//      stage('Stage after Error') {
+//            steps {
+//                echo "after error"
+//            }   
+//        }
+//
+//      stage('Use run.sh') {
+//            steps {
+//                script {
+//                    python_path = "${sh (script: 'jenkins/deploy/scripts/run.sh which python', returnStdout: true).trim()}".split('\n')
+//                    yareed_path = "${sh (script: 'jenkins/deploy/scripts/run.sh which yareed', returnStdout: true).trim()}".split('\n')
+//                    environemnts = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
+//                }
+//            print("python: $python_path")
+//            print("yareed: $yareed_path")
+//            print("environments: $environemnts")
+//            print("HERE")
+//            sh 'echo $TEST_SPACK_ROOT'
+//            sh 'echo $SOME_VAR'
+//            }
+//        }
 
 
 //        stage('Install compilers') {
@@ -149,11 +148,11 @@ pipeline {
             }   
         }
 
-        stage('Install compilers') {
-            steps {
-                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
-            }
-        }
+//        stage('Install compilers') {
+//            steps {
+//                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
+//            }
+//        }
 
 //        stage('DELETE ALL DATA') {
 //            steps {
