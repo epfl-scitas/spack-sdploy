@@ -24,10 +24,19 @@ pipeline {
 
     }
 
+
+
     // A variable defined in a stage is bound to that stage.
     // A variable defined in environment cannot be muttated in stages.
 
     stages {
+
+       stage('Print variables') {
+            steps {
+                echo "STACK_RELEASE: $STACK_RELEASE"
+            }   
+        }
+
 //        stage('Install Python Environment') {
 //            steps {
 //                sh '${JENKINS_SCRIPTS_PATH}/update_production_configuration.sh'
