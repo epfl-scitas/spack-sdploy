@@ -20,33 +20,47 @@ pipeline {
     }
 
     stages {
-        stage('Install Python Environment') {
+//        stage('Install Python Environment') {
+//            steps {
+//                sh '${JENKINS_SCRIPTS_PATH}/update_production_configuration.sh'
+//            }
+//        }
+//
+//        stage('Clone Spack') {
+//            steps {
+//                sh '${JENKINS_SCRIPTS_PATH}/install_spack.sh'
+//            }
+//        }
+//
+//        stage('Clone spack-sdploy') {
+//            steps {
+//                sh '${JENKINS_SCRIPTS_PATH}/install_spack_sdploy.sh'
+//            }
+//        }
+//
+//        stage('Configure spack-sdploy') {
+//            steps {
+//                sh '${JENKINS_SCRIPTS_PATH}/configure_spack_sdploy.sh'
+//            }
+//        }
+//
+//        stage('Create Spack environments') {
+//            steps {
+//                sh '${JENKINS_SCRIPTS_PATH}/create_spack_environments.sh'
+//            }
+//        }
+
+       stage('Print environment') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/update_production_configuration.sh'
-            }
+                script {
+                    sh "env"
+                }
+            }   
         }
 
-        stage('Clone Spack') {
+        stage('Install compilers') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/install_spack.sh'
-            }
-        }
-
-        stage('Clone spack-sdploy') {
-            steps {
-                sh '${JENKINS_SCRIPTS_PATH}/install_spack_sdploy.sh'
-            }
-        }
-
-        stage('Configure spack-sdploy') {
-            steps {
-                sh '${JENKINS_SCRIPTS_PATH}/configure_spack_sdploy.sh'
-            }
-        }
-
-        stage('Create Spack environments') {
-            steps {
-                sh '${JENKINS_SCRIPTS_PATH}/create_spack_environments.sh'
+                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
             }
         }
 
