@@ -1,11 +1,10 @@
 #!/bin/bash -l
-set -euo pipefail
 
 echo 'Activating Python virtual environment'
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate
 
 echo 'Load variables'
-. $JENKINS_SCRIPTS_PATH/config.sh
+# . $JENKINS_SCRIPTS_PATH/config.sh
 
 if [ -e ${SPACK_USER_CONFIG_PATH} ]; then
     echo 'Previous configuration directory detected, removing...'
