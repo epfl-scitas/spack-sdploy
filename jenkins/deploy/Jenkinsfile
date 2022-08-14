@@ -31,7 +31,7 @@ pipeline {
                 echo "STACK_RELEASE: $STACK_RELEASE"
                 echo "WORK_DIR: $WORK_DIR"
                 echo "STACK_PREFIX: $STACK_PREFIX"
-                echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUAL_ENV_PATH}"
+                echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUALENV_PATH}"
                 echo "JENKINS_SCRIPTS_PATH: ${JENKINS_SCRIPTS_PATH}"
             }   
         }
