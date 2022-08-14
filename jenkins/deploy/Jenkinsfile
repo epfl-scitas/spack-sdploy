@@ -115,7 +115,11 @@ pipeline {
                     var3 = sh 'jenkins/deploy/scripts/run.sh which python'
                     var4 = sh "jenkins/deploy/scripts/run.sh which python"
                 }
-            }   
+            echo $var1
+            echo $var2
+            echo $var3
+            echo $var4
+            }
         }
 
 
