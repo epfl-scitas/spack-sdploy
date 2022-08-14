@@ -59,19 +59,18 @@ pipeline {
         }
 
 
-      stage('Which python') {
+      stage('Echo') {
             steps {
-                script {
-                    sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
-                    sh "echo $PATH"
-                }
+                // env. is optional, but good practice
+                echo "BUILD_NUMBER = ${env.BUILD_NUMBER}"
+                sh "echo PATH = $PATH"
             }   
         }
 
       stage('Which python 2') {
             steps {
                     sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
-                    sh "echo $PATH"
+                    echo $PATH"
             }   
         }
 
