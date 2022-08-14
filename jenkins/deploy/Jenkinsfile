@@ -113,7 +113,7 @@ pipeline {
                     python_path = "${sh (script: 'jenkins/deploy/scripts/run.sh which python', returnStdout: true).trim()}".split('\n')
                     yareed_path = "${sh (script: 'jenkins/deploy/scripts/run.sh which yareed', returnStdout: true).trim()}".split('\n')
                     environemnts = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
-                    $environemnts.first()
+                    print $environments.first()
                 }
             echo "python: $python_path"
             echo "yareed: $yareed_path.first()"
