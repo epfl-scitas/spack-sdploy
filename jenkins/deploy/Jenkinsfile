@@ -76,15 +76,19 @@ pipeline {
 
       stage('Export variables') {
             steps {
-                    sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
-                    sh 'echo $PATH'
+                sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
+                sh 'echo $PATH'
+                script {
+                    some_var = "dog"
+                }
             }   
         }
 
       stage('Export variables 2') {
             steps {
-                    sh "${JENKINS_SCRIPTS_PATH}/config.sh"
-                    sh 'echo $PATH'
+                sh "${JENKINS_SCRIPTS_PATH}/config.sh"
+                sh 'echo $PATH'
+                echo "some_var: $some_var"
             }   
         }
 
