@@ -27,7 +27,7 @@ pipeline {
         STACK_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_PATH}.${STACK_RELEASE_VER}"
         SPACK_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_PATH}.${STACK_RELEASE_VER}"
         SPACK_EXTENSION = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys extensions').trim()
-        SPACK_USER_CONFIG_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_EXTENSION}
+        SPACK_USER_CONFIG_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_EXTENSION}"
 }
 
     // A variable defined in a stage is bound to that stage.
