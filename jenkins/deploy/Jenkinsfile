@@ -97,8 +97,10 @@ def my_groovy_script(my_param) {
 
     println("print a simple string")
     println("1" + param1)
-    println("2" + $param1)
     println("3" + ${param1})
+
+    println("3" + param2)
+
 }
 
 def get_prefix(branch_name, stack_name) {
