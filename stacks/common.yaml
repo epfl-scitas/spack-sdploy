@@ -7,6 +7,7 @@ work_directory: /home/scitasbuildpr
 python_venv: py3-venv
 spack_external: external
 jenkins_scripts_path: jenkins/deploy/scripts
+spack: spack
 
 python_eecutable: python3
 
