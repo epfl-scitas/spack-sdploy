@@ -93,17 +93,9 @@ pipeline {
             }   
         }
 
-      stage('Python Env') {
-          steps {
-              withPythonEnv('/home/scitasbuildpr/${STACK_RELEASE}/py3-venv') {
-                  sh 'python --version'
-              }
-          }
-      }
-
       stage('Error') {
             steps {
-                catchError {
+                catchError(message:'Error, but ok', buildResult:'Unstable', stageResult:'unstable') {
                     sh "which python"
                 }
             }
