@@ -62,11 +62,8 @@ pipeline {
       stage('Which python') {
             steps {
                 script {
-                    sh "echo Eduardo"
-                    sh "echo Eduardo"
                     sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
-                    sh "which spack"
-                    sh "which python"
+                    sh "echo $PATH"
                 }
             }   
         }
