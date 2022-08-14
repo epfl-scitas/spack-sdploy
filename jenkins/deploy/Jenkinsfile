@@ -71,14 +71,14 @@ pipeline {
       stage('Export variables') {
             steps {
                     sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
-                    echo $PATH
+                    sh 'echo $PATH'
             }   
         }
 
       stage('Export variables 2') {
             steps {
                     sh "${JENKINS_SCRIPTS_PATH}/config.sh"
-                    echo $PATH
+                    sh 'echo $PATH'
             }   
         }
 
