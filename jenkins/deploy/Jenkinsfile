@@ -62,7 +62,7 @@ pipeline {
       stage('Which python') {
             steps {
                 script {
-                    sh "which python"
+                    sh "echo Eduardo"
                 }
             }   
         }
