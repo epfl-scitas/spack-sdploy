@@ -2,9 +2,6 @@ spack_release: v0.18.1
 stack_release: syrah-lite
 stack_version: v1
 
-# export SPACK_CONFIG_PATH=spack-config
-# export SPACK_USER_CONFIG_PATH=${STACK_PREFIX}/${SPACK_CONFIG_PATH}
-
 # Path definitions
 work_directory: /home/scitasbuildpr
 python_venv: py3-venv
@@ -12,6 +9,7 @@ spack_external: external
 jenkins_scripts_path: jenkins/deploy/scripts
 extensions: spack-config
 spack: spack
+spack_sdploy: spack-sdploy
 
 environments: # platforms
   - ph02-avx
