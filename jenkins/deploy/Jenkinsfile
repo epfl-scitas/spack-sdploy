@@ -109,7 +109,7 @@ pipeline {
       stage('Use run.sh') {
             steps {
                 sh '${JENKINS_SCRIPTS_PATH}/run.sh which python'
-                def var = "sh '${JENKINS_SCRIPTS_PATH}/run.sh which python'"
+                //def var = "sh '${JENKINS_SCRIPTS_PATH}/run.sh which python'"
             }   
         }
 
