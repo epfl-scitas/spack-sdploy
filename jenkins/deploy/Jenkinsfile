@@ -116,7 +116,7 @@ pipeline {
             print("python: $python_path")
             print("yareed: $yareed_path")
             print("environments: $environemnts")
-            echo ${TEST_SPACK_ROOT}
+            echo "${TEST_SPACK_ROOT}"
             }
         }
 
