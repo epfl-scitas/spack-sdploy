@@ -19,7 +19,7 @@ PYTHON_VIRTUALENV_PATH=/home/scitasbuildpr/syrah/py3-env
 SPACK_INSTALL_PATH=/home/scitasbuildpr/syrah/spack.v1
 
 # 'Load variables'
-. ${JENKINS_SCRIPTS_PATH}/config.sh
+#. ${JENKINS_SCRIPTS_PATH}/config.sh
 
 # 'Activating Python virtual environment'
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate
