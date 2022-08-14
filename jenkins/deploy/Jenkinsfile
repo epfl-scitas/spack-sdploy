@@ -115,7 +115,8 @@ pipeline {
                     environemnts = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
                 }
             echo "python: $python_path"
-            echo "yareed: $yareed_path"
+            echo "yareed: $yareed_path.first()"
+
             echo "environments: $environemnts"
             print("environments: $environemnts")
             }
