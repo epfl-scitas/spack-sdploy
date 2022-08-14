@@ -14,6 +14,7 @@ pipeline {
     // A variable defined in environment block is available through all stages
     // and its value cannot be changed later.
     environment {
+        SPACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys spack_release').trim()
         STACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys stack_release').trim()
         WORK_DIR = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys work_directory').trim()
         STACK_PREFIX = "${WORK_DIR}/${STACK_RELEASE}"
