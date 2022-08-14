@@ -2,8 +2,13 @@ spack_release: v0.18.1
 stack_release: syrah-lite
 stack_version: v1
 
-spack_root: /ssoft/spack
+# Path definitions
+work_directory: /home/scitasbuildpr
+python_venv: py3-venv
 spack_external: external
+
+
+python_eecutable: python3
 
 environments: # platforms
   - ph02-avx
