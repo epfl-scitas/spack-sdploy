@@ -78,9 +78,7 @@ pipeline {
             steps {
                 sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
                 sh 'echo $PATH'
-                script {
-                    some_var = "dog"
-                }
+                some_var = "dog"
             }   
         }
 
