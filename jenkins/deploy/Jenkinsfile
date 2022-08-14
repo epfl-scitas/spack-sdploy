@@ -1,4 +1,4 @@
-def some_var = "cat"
+def animal = "cat"
 
 pipeline {
     agent {
@@ -70,7 +70,7 @@ pipeline {
                 echo "BUILD_NUMBER = ${env.BUILD_NUMBER}"
                 sh 'echo PATH = $PATH'
                 sh "echo PATH = $PATH"
-                echo "some_var: $some_var"
+                echo "animal: $animal"
             }
         }
 
@@ -78,7 +78,10 @@ pipeline {
             steps {
                 sh "${JENKINS_SCRIPTS_PATH}/activate_spack.sh"
                 sh 'echo $PATH'
-                some_var = "dog"
+                // This variable must be changed inside a script block !
+                script {
+                    animal = "dog"
+                }
             }   
         }
 
@@ -86,7 +89,7 @@ pipeline {
             steps {
                 sh "${JENKINS_SCRIPTS_PATH}/config.sh"
                 sh 'echo $PATH'
-                echo "some_var: $some_var"
+                echo "animal: $animal"
             }   
         }
 
