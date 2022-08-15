@@ -16,11 +16,10 @@ pipeline {
     environment {
 
         // Variables read using simple bash tools needed to activate python environment
-        WORK_DIR=sh(returnStdout:true, script:'cat stacks/common.yaml |grep work_directory: | cut -n -d " " -f 2').trim()
+        WORK_DIR=sh(returnStdout:true,
+            script:'cat stacks/common.yaml |grep work_directory: | cut -n -d " " -f 2').trim()
         STACK_RELEASE=sh(returnStdout:true,
-                        script:'cat stacks/common.yaml |grep work_directory: | cut -n -d " " -f 2').trim()
-
-
+            script:'cat stacks/common.yaml |grep stack_release: | cut -n -d " " -f 2').trim()
 
 //STACK_RELEASE="syrah-lite"
 //        PYTHON_VIRTUALENV_PATH="${WORK_DIR}/${STACK_RELEASE}/py3-venv"
@@ -55,7 +54,7 @@ pipeline {
             steps {
                 echo "The following values are read from common.yaml"
 //                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
-//                echo "STACK_RELEASE: $STACK_RELEASE"
+                echo "STACK_RELEASE: $STACK_RELEASE"
                 echo "WORK_DIR: $WORK_DIR"
 //                echo "STACK_PREFIX: $STACK_PREFIX"
 //                echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUALENV_PATH}"
