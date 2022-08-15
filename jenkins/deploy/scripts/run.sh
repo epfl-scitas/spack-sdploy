@@ -14,13 +14,7 @@
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-PYTHON_VIRTUALENV_PATH=/home/scitasbuildpr/syrah/py3-venv
-SPACK_INSTALL_PATH=/home/scitasbuildpr/syrah/spack.v1
-
 # 'Activating Python virtual environment'
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate
-
-# 'Source Spack'
-. $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 
 $@

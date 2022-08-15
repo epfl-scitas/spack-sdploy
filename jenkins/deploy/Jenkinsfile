@@ -16,13 +16,16 @@ pipeline {
     environment {
 
         // Hardcoded variables (needed to use run.sh and yareed)
-        PYTHON_VIRTUALENV_PATH=/home/scitasbuildpr/syrah/py3-venv
-        SPACK_INSTALL_PATH=/home/scitasbuildpr/syrah/spack.v1
+
+        WORK_DIR=sh(returnStdout:true, script:'cat stacks/common.yaml |grep workdir: | cut -n -d " " -f 2').trim()
+        STACK_RELEASE=syrah-lite
+        PYTHON_VIRTUALENV_PATH=${WORK_DIR}/${STACK_RELEASE}/py3-venv
+        SPACK_INSTALL_PATH=${WORK_DIR}/${STACK_RELEASE}/spack.v1
 
         // Variables read from common.yaml
         SPACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys spack_release').trim()
-        STACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys stack_release').trim()
-        WORK_DIR = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys work_directory').trim()
+        // STACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys stack_release').trim()
+        // WORK_DIR = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys work_directory').trim()
         SPACK_EXTENSION = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys extensions').trim()
         PYTHON_VENV = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys python_venv').trim()
         ENVIRONMENTS = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments').trim()
