@@ -15,6 +15,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # 'Activating Python virtual environment'
+echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUALENV_PATH}"
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate
 
 $@
