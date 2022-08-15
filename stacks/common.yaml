@@ -5,7 +5,7 @@ stack_release: syrah-lite
 work_directory: /home/scitasbuildpr
 python_venv: py3-venv
 spack_external: external
-jenkins_scripts_path: jenkins/deploy/scripts
+jenkins: jenkins/deploy/scripts
 extensions: spack-config
 spack: spack
 spack_sdploy: spack-sdploy

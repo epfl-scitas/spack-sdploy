@@ -22,6 +22,8 @@ pipeline {
             script:'cat stacks/common.yaml |grep stack_release: | cut -n -d " " -f 2').trim()
         PYTHON_VENV=sh(returnStdout:true,
             script:'cat stacks/common.yaml |grep python_venv: | cut -n -d " " -f 2').trim()
+        JENKINS=sh(returnStdout:true,
+            script:'cat stacks/common.yaml |grep jenkins: | cut -n -d " " -f 2').trim()
 
         PYTHON_VIRTUALENV_PATH="${WORK_DIR}/${STACK_RELEASE}/${PYTHON_VENV}"
 
@@ -57,9 +59,9 @@ pipeline {
                 echo "WORK_DIR: $WORK_DIR"
                 echo "STACK_RELEASE: $STACK_RELEASE"
                 echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUALENV_PATH}"
-                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
+                echo "JENKINS: ${JENKINS}"
+//                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
 //                echo "STACK_PREFIX: $STACK_PREFIX"
-//                echo "JENKINS_SCRIPTS_PATH: ${JENKINS_SCRIPTS_PATH}"
 //                echo "STACK_INSTALL_PATH: ${STACK_INSTALL_PATH}"
 //                echo "SPACK_INSTALL_PATH: ${SPACK_INSTALL_PATH}"
 //                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
@@ -70,7 +72,7 @@ pipeline {
 
         stage('Install Python Environment') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/update_production_configuration.sh'
+                sh '${JENKINS}/update_production_configuration.sh'
             }
         }
 
