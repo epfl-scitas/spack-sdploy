@@ -16,11 +16,9 @@ pipeline {
     // and its value cannot be changed later.
     environment {
 
-        SOURCE = "stacks/common.yaml"
-
         // Variables read from commons.yaml using cat, grep and cut.
         WORK_DIR=sh(returnStdout:true,
-            script:'cat ${SOURCE} |grep work_directory: | cut -n -d " " -f 2').trim()
+            script:'cat stacks/common.yaml |grep work_directory: | cut -n -d " " -f 2').trim()
         STACK_RELEASE=sh(returnStdout:true,
             script:'cat stacks/common.yaml |grep stack_release: | cut -n -d " " -f 2').trim()
         PYTHON_VENV=sh(returnStdout:true,
