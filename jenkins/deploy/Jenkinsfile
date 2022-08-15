@@ -74,31 +74,31 @@ pipeline {
 
         stage('Clone Spack') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/install_spack.sh'
+                sh '${JENKINS}/install_spack.sh'
             }
         }
 
         stage('Clone spack-sdploy') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/install_spack_sdploy.sh'
+                sh '${JENKINS}/install_spack_sdploy.sh'
             }
         }
 
         stage('Configure spack-sdploy') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/configure_spack_sdploy.sh'
+                sh '${JENKINS}/configure_spack_sdploy.sh'
             }
         }
 
         stage('Create Spack environments') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/create_spack_environments.sh'
+                sh '${JENKINS}/create_spack_environments.sh'
             }
         }
 
         stage('Install compilers') {
             steps {
-                sh '${JENKINS_SCRIPTS_PATH}/install_compilers.sh'
+                sh '${JENKINS}/install_compilers.sh'
             }
         }
 
