@@ -1,6 +1,5 @@
 spack_release: v0.18.1
 stack_release: syrah-lite
-stack_version: v1
 
 # Path definitions
 work_directory: /home/scitasbuildpr
@@ -10,6 +9,7 @@ jenkins_scripts_path: jenkins/deploy/scripts
 extensions: spack-config
 spack: spack
 spack_sdploy: spack-sdploy
+stack_version: v1
 
 environments: # platforms
   - ph02-avx
