@@ -15,6 +15,10 @@ pipeline {
     // and its value cannot be changed later.
     environment {
 
+        // Hardcoded variables (needed to use run.sh and yareed)
+        PYTHON_VIRTUALENV_PATH=/home/scitasbuildpr/syrah/py3-venv
+        SPACK_INSTALL_PATH=/home/scitasbuildpr/syrah/spack.v1
+
         // Variables read from common.yaml
         SPACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys spack_release').trim()
         STACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys stack_release').trim()
