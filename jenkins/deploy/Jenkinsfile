@@ -26,7 +26,6 @@ pipeline {
             script:'cat stacks/common.yaml |grep jenkins: | cut -n -d " " -f 2').trim()
 
         PYTHON_VIRTUALENV_PATH="${WORK_DIR}/${STACK_RELEASE}/${PYTHON_VENV}"
-        echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUALENV_PATH}"
 
         // Now we can use yareed
 //        SPACK_RELEASE = sh(returnStdout:true,
