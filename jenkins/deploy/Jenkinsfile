@@ -29,8 +29,7 @@ pipeline {
 
         // Now we can use yareed
         SPACK_RELEASE = sh(returnStdout:true,
-            script:'jenkins/deploy/scripts/yareed.sh yareed -file stacks/common.yaml \
-                   -keys spack_release').trim()
+            script:'jenkins/deploy/scripts/yareed.sh yareed -file stacks/common.yaml -keys spack_release').trim()
 
 //        SPACK_EXTENSION = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys extensions').trim()
 //        PYTHON_VENV = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys python_venv').trim()
