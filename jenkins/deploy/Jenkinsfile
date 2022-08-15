@@ -49,14 +49,16 @@ pipeline {
 
     }
 
-    // A variable defined in a stage is bound to that stage.
-    stages {
-
-       environment {
+   environment {
            SPACK_RELEASE = sh(returnStdout:true,
             script:'jenkins/deploy/scripts/yareed.sh yareed -file stacks/common.yaml -keys spack_release').trim()
 
-       }
+   }
+
+
+    // A variable defined in a stage is bound to that stage.
+    stages {
+
 
        stage('Print variables') {
             steps {
