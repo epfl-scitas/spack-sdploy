@@ -50,17 +50,17 @@ pipeline {
        stage('Print variables') {
             steps {
                 echo "The following values are read from common.yaml"
-                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
-                echo "STACK_RELEASE: $STACK_RELEASE"
+//                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
+//                echo "STACK_RELEASE: $STACK_RELEASE"
                 echo "WORK_DIR: $WORK_DIR"
-                echo "STACK_PREFIX: $STACK_PREFIX"
-                echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUALENV_PATH}"
-                echo "JENKINS_SCRIPTS_PATH: ${JENKINS_SCRIPTS_PATH}"
-                echo "STACK_INSTALL_PATH: ${STACK_INSTALL_PATH}"
-                echo "SPACK_INSTALL_PATH: ${SPACK_INSTALL_PATH}"
-                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
-                echo "SPACK_USER_CONFIG_PATH: ${SPACK_USER_CONFIG_PATH}"
-                echo "SPACK_SDPLOY_INSTALL_PATH: ${SPACK_SDPLOY_INSTALL_PATH}"
+//                echo "STACK_PREFIX: $STACK_PREFIX"
+//                echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUALENV_PATH}"
+//                echo "JENKINS_SCRIPTS_PATH: ${JENKINS_SCRIPTS_PATH}"
+//                echo "STACK_INSTALL_PATH: ${STACK_INSTALL_PATH}"
+//                echo "SPACK_INSTALL_PATH: ${SPACK_INSTALL_PATH}"
+//                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
+//                echo "SPACK_USER_CONFIG_PATH: ${SPACK_USER_CONFIG_PATH}"
+//                echo "SPACK_SDPLOY_INSTALL_PATH: ${SPACK_SDPLOY_INSTALL_PATH}"
             }   
         }
 
