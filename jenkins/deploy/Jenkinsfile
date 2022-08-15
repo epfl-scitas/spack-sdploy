@@ -1,4 +1,5 @@
 def animal = "cat"
+def SOURCE = "stacks/common.yaml"
 
 pipeline {
     agent {
