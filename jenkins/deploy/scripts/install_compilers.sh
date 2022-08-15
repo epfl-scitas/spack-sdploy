@@ -5,4 +5,4 @@ echo 'Activating Spack'
 
 echo "Running in environment: ${environment}"
 
-spack --env ${environment} install-c
+spack --env ${environment} install-c -s stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml
