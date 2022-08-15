@@ -80,12 +80,19 @@ def install_compilers(parser, args):
     data['pe_defs'] = stack.pe_defs
     data['pe_specs'] = stack.pe_specs
 
+    compilers = []
+    for pkg in data['pe_defs']:
+        if pkg.endswith('compiler'):
+            compilers.append(data['pe_defs'][pkg])
+
+
+    st()
     # Jinja setup
     file_loader = FileSystemLoader(config.templates_path)
     jinja_env = Environment(loader = file_loader, trim_blocks = True)
 
     # Render and write spack.yaml
-    template = jinja_env.get_template(config.spack_yaml_template)
+    template = jinja_env.get_template(config.spack_compilers_yaml_template)
     output = template.render(stack = data)
 
     tty.msg(config.spack_yaml)

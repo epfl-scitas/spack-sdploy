@@ -79,7 +79,7 @@ class SpackYaml(ReadYaml):
                 # compiler is defined by default
                 self.pe_specs[pe + '_' + stack_name].pop(0)
 
-    def create_pe_definitions_dict(self, filter = 1):
+    def create_pe_definitions_dict(self, filter = 1, core = True):
         """Regroup PE definitions in a single dictionary"""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
@@ -87,9 +87,10 @@ class SpackYaml(ReadYaml):
         self.pe_stack = self.group_sections(deepcopy(self.data), 'pe')
 
         # Hack for adding core_compiler definition
-        core_compiler = self.group_sections(deepcopy(self.data), 'core')
-        for k,v in core_compiler.items():
-            self.pe_stack[k] = v
+        if core:
+            core_compiler = self.group_sections(deepcopy(self.data), 'core')
+            for k,v in core_compiler.items():
+                self.pe_stack[k] = v
 
         # Check for filters presence and applies filters
         for pe, stack in self.pe_stack.items():

@@ -34,6 +34,7 @@ class Config(object):
         self.platform_yaml = None
         self.templates_path = None
         self.spack_yaml_template = None
+        self.spack_compilers_yaml_template = None
         self.packages_yaml_template = None
         self.modules_yaml_template = None
         self.spack_yaml = None
@@ -95,6 +96,11 @@ class Config(object):
         if 'spack_yaml_template' in config.data['config']:
                 if config.data['config']['spack_yaml_template'] is not None:
                     self.spack_yaml_template = config.data['config']['spack_yaml_template']
+
+        # FILENAME: template for spack-compilers.yaml, for example, 'spack-compilers.yaml.j2'
+        if 'spack_compilers_yaml_template' in config.data['config']:
+                if config.data['config']['spack_compilers_yaml_template'] is not None:
+                    self.spack_compilers_yaml_template = config.data['config']['spack_compilers_yaml_template']
 
         # FILENAME: template for packages.yaml, for example, 'packages.yaml.j2'
         if 'packages_yaml_template' in config.data['config']:

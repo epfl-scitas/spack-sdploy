@@ -47,6 +47,7 @@ config:
   # template, but they are gathered here under the same directory.
   templates_path:
   spack_yaml_template: spack.yaml.j2
+  spack_compilers_yaml_template: spack-compilers.yaml.j2
   packages_yaml_template: packages.yaml.j2
   modules_yaml_template: modules.yaml.j2
   # There is no reason why the spack configuration files would have
