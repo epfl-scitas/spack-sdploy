@@ -97,16 +97,6 @@ pipeline {
             }
         }
 
-        stage('Prepare production stack') {
-            // Ensure that all the compilers that are needed in
-            // production are in place.
-            steps {
-                script {
-                    parallel(prepare_compilers())
-                }
-            }
-        }
-
        stage('Test my groovy function') {
             steps {
                 script {
