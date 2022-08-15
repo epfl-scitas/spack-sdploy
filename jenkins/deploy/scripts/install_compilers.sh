@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 echo 'Activating Spack'
-. $JENKINS_SCRIPTS_PATH/activate_spack.sh
+. $JENKINS/activate_spack.sh
 
 yareed -file stacks/common.yaml -keys environments
 
