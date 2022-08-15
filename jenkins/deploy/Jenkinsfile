@@ -18,29 +18,29 @@ pipeline {
         // Hardcoded variables (needed to use run.sh and yareed)
 
         WORK_DIR=sh(returnStdout:true, script:'cat stacks/common.yaml |grep workdir: | cut -n -d " " -f 2').trim()
-        STACK_RELEASE="syrah-lite"
-        PYTHON_VIRTUALENV_PATH="${WORK_DIR}/${STACK_RELEASE}/py3-venv"
-        SPACK_INSTALL_PATH="${WORK_DIR}/${STACK_RELEASE}/spack.v1"
-
-        // Variables read from common.yaml
-        SPACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys spack_release').trim()
-        // STACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys stack_release').trim()
-        // WORK_DIR = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys work_directory').trim()
-        SPACK_EXTENSION = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys extensions').trim()
-        PYTHON_VENV = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys python_venv').trim()
-        ENVIRONMENTS = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments').trim()
-        JENKINS_SCRIPTS_PATH = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys jenkins_scripts_path').trim()
-        STACK_RELEASE_VER = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys stack_version').trim()
-        SPACK_PATH = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys spack').trim()
-        SPACK_SDPLOY = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys spack_sdploy').trim()
-
-        // Composed variables (from above values)
-        // PYTHON_VIRTUALENV_PATH = "${WORK_DIR}/${STACK_RELEASE}/${PYTHON_VENV}"
-        STACK_PREFIX = "${WORK_DIR}/${STACK_RELEASE}"
-        STACK_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_PATH}.${STACK_RELEASE_VER}"
-        // SPACK_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_PATH}.${STACK_RELEASE_VER}"
-        SPACK_USER_CONFIG_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_EXTENSION}"
-        SPACK_SDPLOY_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_SDPLOY}"
+//        STACK_RELEASE="syrah-lite"
+//        PYTHON_VIRTUALENV_PATH="${WORK_DIR}/${STACK_RELEASE}/py3-venv"
+//        SPACK_INSTALL_PATH="${WORK_DIR}/${STACK_RELEASE}/spack.v1"
+//
+//        // Variables read from common.yaml
+//        SPACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys spack_release').trim()
+//        // STACK_RELEASE = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys stack_release').trim()
+//        // WORK_DIR = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys work_directory').trim()
+//        SPACK_EXTENSION = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys extensions').trim()
+//        PYTHON_VENV = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys python_venv').trim()
+//        ENVIRONMENTS = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments').trim()
+//        JENKINS_SCRIPTS_PATH = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys jenkins_scripts_path').trim()
+//        STACK_RELEASE_VER = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys stack_version').trim()
+//        SPACK_PATH = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys spack').trim()
+//        SPACK_SDPLOY = sh(returnStdout:true, script:'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys spack_sdploy').trim()
+//
+//        // Composed variables (from above values)
+//        // PYTHON_VIRTUALENV_PATH = "${WORK_DIR}/${STACK_RELEASE}/${PYTHON_VENV}"
+//        STACK_PREFIX = "${WORK_DIR}/${STACK_RELEASE}"
+//        STACK_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_PATH}.${STACK_RELEASE_VER}"
+//        // SPACK_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_PATH}.${STACK_RELEASE_VER}"
+//        SPACK_USER_CONFIG_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_EXTENSION}"
+//        SPACK_SDPLOY_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_SDPLOY}"
 
     }
 
