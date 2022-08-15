@@ -316,22 +316,18 @@ def install_c(parser, args, **kwargs):
     # Create PE definitions dictionary
     stack.create_pe_definitions_dict(core = False)
 
-    # Create PE matrix dictionary
-    # stack.create_pe_compiler_specs_dict()
-
     compilers = []
     for pkg in stack.pe_defs:
         if pkg.endswith('compiler'):
             compilers.append(stack.pe_defs[pkg])
 
-    st()
     tty.msg(f'Found the following specs:')
     for compiler in compilers:
         print(f'    - {compiler}')
 
     args.spec = compilers
 
-    # TODO: unify args.verbose?
+    # CONTINUE WITH SPACK CODE
     tty.set_verbose(args.verbose or args.install_verbose)
 
     if args.help_cdash:
