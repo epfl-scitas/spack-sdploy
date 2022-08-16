@@ -1,18 +1,18 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                                                                       #
-# SCITAS STACK DEPLOYMENT 2022, EPFL                                    #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                                             #
+# SCITAS STACK DEPLOYMENT 2022, EPFL                                          #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 from .yaml_manager import ReadYaml
 from .util import *
 from .config import *
@@ -30,6 +30,7 @@ class Config(object):
         """Only function in the class"""
 
         self.debug = False
+        self.stacks = None
         self.stack_yaml = None
         self.platform_yaml = None
         self.templates_path = None
