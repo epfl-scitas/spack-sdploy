@@ -6,7 +6,7 @@ echo 'Activating Python virtual environment'
 echo 'Source Spack'
 . $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 
-repo=`yareed -file ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK_RELEASE}/commons.yaml -keys extra_repos scitas-external repo`
+repo=`yareed -file ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK_RELEASE}/common.yaml -keys extra_repos scitas-external repo`
 
 echo repo
 
