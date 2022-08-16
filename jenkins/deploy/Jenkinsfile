@@ -111,13 +111,13 @@ pipeline {
             }   
         }
 
-        stage('Install compilers') {
-            steps {
-                script {
-                    parallel(do_install_compilers())
-                }
-            }
-        }
+//        stage('Install compilers') {
+//            steps {
+//                script {
+//                    parallel(do_install_compilers())
+//                }
+//            }
+//                    }
 
 
     }
