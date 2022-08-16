@@ -6,15 +6,4 @@ echo 'Activating Python virtual environment'
 echo 'Source Spack'
 . $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 
-# repo=`yareed -file ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK_RELEASE}/common.yaml -keys extra_repos scitas-external repo`
-
-repo=`yareed -file ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK_RELEASE}/common.yaml -keys extra_repos scitas-external`
-
-echo "Repository: ${repo}"
-
-# if [ -e ${SPACK_SDPLOY_INSTALL_PATH} ]; then
-#     echo 'Previous installation of spack-sdploy detected, removing...'
-#     rm -rf ${SPACK_SDPLOY_INSTALL_PATH}
-# fi
-# 
-# git clone --branch debug https://github.com/epfl-scitas/spack-sdploy ${SPACK_SDPLOY_INSTALL_PATH}
+spack repos-yaml -s ${STACK_RELEASE}

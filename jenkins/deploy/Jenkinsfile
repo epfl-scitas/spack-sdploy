@@ -67,12 +67,6 @@ pipeline {
             }   
         }
 
-        stage('Install external repositories') {
-            steps {
-                sh '${JENKINS}/clone_external_repos.sh'
-            }
-        }
-
         stage('Install Python Environment') {
             steps {
                 sh '${JENKINS}/update_production_configuration.sh'
@@ -103,7 +97,13 @@ pipeline {
             }
         }
 
-       stage('Test my groovy function') {
+        stage('Install external repositories') {
+            steps {
+                sh '${JENKINS}/clone_external_repos.sh'
+            }
+        }
+
+        stage('Test my groovy function') {
             steps {
                 script {
                     my_groovy_script('edu')
