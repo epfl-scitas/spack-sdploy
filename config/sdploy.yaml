@@ -50,7 +50,9 @@ config:
   spack_compilers_yaml_template: spack-compilers.yaml.j2
   packages_yaml_template: packages.yaml.j2
   modules_yaml_template: modules.yaml.j2
-  # There is no reason why the spack configuration files would have
+  repos_yaml_template: repos.yaml.j2
+  mirrors_yaml_template: mirrors.yaml.j2
+# There is no reason why the spack configuration files would have
   # different names than those defined in spack itself, but because
   # we don't like things hardcoded, we set here variables for these
   # names. Remember that contrary to the paths defined above, these

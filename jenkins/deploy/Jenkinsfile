@@ -67,6 +67,12 @@ pipeline {
             }   
         }
 
+        stage('Install external repositories') {
+            steps {
+                sh '${JENKINS}/clone_external_repos.sh'
+            }
+        }
+
         stage('Install Python Environment') {
             steps {
                 sh '${JENKINS}/update_production_configuration.sh'

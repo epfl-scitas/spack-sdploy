@@ -51,6 +51,11 @@ class ReadYaml(object):
         self.data = yaml.load(open(filename))
         return self.data
 
+    def get_data(self, filename):
+        """Returns the data read"""
+
+        return(yaml.load(open(filename)))
+
     def list(self):
         """Display configuration"""
 
