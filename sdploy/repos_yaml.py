@@ -15,9 +15,11 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import os
+import shutil
 import inspect
 import llnl.util.tty as tty
 from llnl.util.filesystem import mkdirp, working_dir
+from spack.util.executable import ProcessError, which
 
 from .yaml_manager import ReadYaml
 from .util import *
@@ -54,16 +56,16 @@ class ReposYaml(ReadYaml):
     def clone(self):
         """Read repositories declared in commons.yaml to be cloned and call clone method"""
 
-        for repo in self.commons['extra_repos']:
-            repo_url = repo['repo']
-            repo_path = repo['path']
-            repo_tag = repo['tag']
-            prefix = os.path.join(self.commons['working_directory'],
+        for repo in self.commons['extra_repos'].keys():
+            repo_url = self.commons['extra_repos'][repo]['repo']
+            repo_path = self.commons['extra_repos'][repo]['path']
+            repo_tag = self.commons['extra_repos'][repo]['tag']
+            prefix = os.path.join(self.commons['work_directory'],
                                   self.commons['stack_release'],
                                   self.commons['spack_external'])
-            _clone(repo_url, repo_path, repo_tag, prefix)
+            self._clone(repo_url, repo_path, repo_tag, os.path.join(prefix,repo_path))
 
-    def _clone(url, path, tag, prefix):
+    def _clone(self, url, path, tag, prefix):
         """Clone repository"""
 
         origin_url = url
@@ -75,13 +77,15 @@ class ReposYaml(ReadYaml):
         if os.path.isfile(prefix):
             tty.die("There is already a file at %s" % prefix)
 
+        if os.path.exists(os.path.join(prefix)):
+            tty.warn("There already seems to be repository in %s" % prefix)
+            tty.warn("Deleting the repository in %s" % prefix)
+            try:
+                shutil.rmtree(prefix)
+            except:
+                pass
+
         mkdirp(prefix)
-
-        if os.path.exists(os.path.join(prefix, '.git')):
-            tty.die("There already seems to be a git repository in %s" % prefix)
-
-        if files_in_the_way:
-            tty.die("There are already files there!")
 
         with working_dir(prefix):
             git = which('git', required=True)
@@ -92,7 +96,7 @@ class ReposYaml(ReadYaml):
             git('reset', '--hard', 'origin/%s' % branch, '-q')
             git('checkout', '-B', branch, 'origin/%s' % branch, '-q')
 
-            tty.msg("Successfully created a new spack in %s" % prefix,
-                    "Run %s/bin/spack to use this installation." % prefix)
+            tty.msg("Successfully created a new repository in %s" % prefix)
+
 
 

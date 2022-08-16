@@ -68,30 +68,12 @@ def write_repos_yaml(parser, args):
     if config.debug:
         config.info()
 
-    # Process Programming Environment section.
-    stack = SpackYaml(config.platform_yaml, config.stack_yaml, config.debug)
 
-    # Create PE definitions dictionary
-    stack.create_pe_definitions_dict()
+    read_configuration()
 
-    # Create packages definitions dictionary
-    stack.create_pkgs_definitions_dict()
+    create_diectories()
 
-    # Create PE matrix dictionary
-    stack.create_pe_compiler_specs_dict()
-
-    # Create PE support libraries matrix dictionary
-    stack.create_pe_libraries_specs_dict()
-
-    # Create package lists matrix dictionary
-    stack.create_pkgs_specs_dict()
-
-    # Concatenate all dicts
-    data = {}
-    data['pe_defs'] = stack.pe_defs
-    data['pkgs_defs'] = stack.pkgs_defs
-    data['pe_specs'] = stack.pe_specs
-    data['pkgs_specs'] = stack.pkgs_specs
+    clone_repos()
 
     # Jinja setup
     file_loader = FileSystemLoader(config.templates_path)

@@ -91,15 +91,15 @@ pipeline {
             }
         }
 
-        stage('Create Spack environments') {
-            steps {
-                sh '${JENKINS}/create_spack_environments.sh'
-            }
-        }
-
         stage('Install external repositories') {
             steps {
                 sh '${JENKINS}/clone_external_repos.sh'
+            }
+        }
+
+        stage('Create Spack environments') {
+            steps {
+                sh '${JENKINS}/create_spack_environments.sh'
             }
         }
 

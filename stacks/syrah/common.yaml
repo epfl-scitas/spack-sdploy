@@ -1,9 +1,15 @@
 spack_release: v0.18.1
 stack_release: syrah-lite
-stack_version: v1
 
-spack_root: /ssoft/spack
+# Path definitions
+work_directory: /work/stack
+python_venv: py3-venv
 spack_external: external
+jenkins: jenkins/deploy/scripts
+extensions: spack-config
+spack: spack
+spack_sdploy: spack-sdploy
+stack_version: v1
 
 environments: # platforms
   - ph02-avx
