@@ -8,7 +8,9 @@ echo 'Source Spack'
 
 repo=`yareed -file ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK_RELEASE}/common.yaml -keys extra_repos scitas-external repo`
 
-echo ${repo}
+repo=`yareed -file ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK_RELEASE}/common.yaml -keys extra_repos scitas-external`
+
+echo "Repository: ${repo}"
 
 # if [ -e ${SPACK_SDPLOY_INSTALL_PATH} ]; then
 #     echo 'Previous installation of spack-sdploy detected, removing...'
