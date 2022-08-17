@@ -95,7 +95,6 @@ def write_spack_yaml(parser, args):
 
     # Jinja setup
     file_loader = FileSystemLoader(config.templates_path)
-
     jinja_env = Environment(loader = file_loader, trim_blocks = True)
 
     # Render and write spack.yaml
