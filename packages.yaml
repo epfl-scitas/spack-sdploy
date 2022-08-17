@@ -1,0 +1,65 @@
+packages:
+  cmake:
+    variants: +ownlibs ~ncurses ~qt
+  eigen:
+    variants: +ipo
+  hdf5:
+    variants: +szip +hl +fortran +cxx +ipo
+  libfabric:
+    variants: fabrics=mrail,tcp,udp,sockets,mlx
+  metis:
+    variants: +real64
+  scotch:
+    variants: +esmumps ~metis
+  hwloc:
+    variants: ~cairo ~cuda ~rocm ~nvml
+  llvm:
+    variants: +ipo ~cuda
+  ucx:
+    variants: +knem +cma +rdmacm +threads_multiple ~cuda ~rocm ~gdrcopy +verbs
+  python:
+    version: [3.10.4]
+    variants: +tkinter +optimizations ~debug
+  rdma-core:
+    variants: +ipo
+  cairo:
+    variants: +png +pdf +fc +ft
+  boost:
+    variants: cxxstd=14 +icu +python +numpy
+  py-torch:
+    variants: ~cuda ~cudnn ~nccl
+  arpack-ng:
+    variants: +mpi
+  fftw:
+    variants: +mpi ~openmp
+  hypre:
+    variants: ~cuda
+  plumed:
+    variants: +mpi +gsl
+  mumps:
+    variants: +mpi +parmetis +metis +scotch +ptscotch
+  adios2:
+    variants: +hdf5 +mpi +python
+  petsc:
+    variants: ~int64 +double +hdf5 +metis +mpi +mumps +superlu-dist +hypre +suite-sparse
+      ~cuda
+  slepc:
+    variants: +arpack
+  py-tensorflow:
+    variants: +mpi ~cuda ~nccl
+  openssl:
+    version: [1.1.1k]
+    buildable: false
+    externals:
+    - {spec: openssl@1.1.1k, prefix: /usr}
+  openjdk:
+    buildable: false
+    externals:
+    - {spec: openjdk@1.8.0.342.b07-2, prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-2.el8_6.x86_64/jre}
+  all:
+    providers:
+      blas: [openblas, intel-mkl]
+      fftw-api: [fftw]
+      uuid: [util-linux-uuid]
+      gl: [mesa]
+      glu: [mesa-glu]

@@ -6,4 +6,9 @@ echo 'Activating Python virtual environment'
 echo 'Source Spack'
 . $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 
-spack repos-yaml -s ${STACK_RELEASE}
+echo "Installing external repos for:"
+echo "STACK: ${STACK_RELEASE}"
+echo "PLATFORM: ${environment}"
+
+spack write-repos-yaml -s ${STACK_RELEASE} -p environment
+

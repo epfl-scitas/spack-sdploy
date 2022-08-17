@@ -105,7 +105,6 @@ def write_spack_yaml(parser, args):
     tty.msg(config.spack_yaml)
     print(output)
 
-    st()
     env = ev.active_environment()
     if env:
         _write_yaml(output, os.path.realpath(env.manifest_path))
