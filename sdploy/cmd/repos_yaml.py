@@ -29,7 +29,6 @@ section = "Sdploy"
 level = "short"
 
 # spack sdploy imports
-from jinja2 import Environment, FileSystemLoader
 from pdb import set_trace as st
 
 from ..repos_yaml import ReposYaml
@@ -101,11 +100,14 @@ def repos_yaml(parser, args):
     if config.debug:
         config.info()
 
+    st()
     # <!> CAVEATS <!>
     # In this particular case, stack_yaml is the name of the stack and not the
     # fully qualified name of the stack.yaml file. This will be the standard
     # behaviour in future developments.
-    repos = ReposYaml(config.stack_yaml)
+
+    repos = ReposYaml(config)
 
     repos.clone()
 
+    repos.write_yaml()

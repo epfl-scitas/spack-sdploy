@@ -17,35 +17,71 @@
 import os
 import shutil
 import inspect
-import llnl.util.tty as tty
-from llnl.util.filesystem import mkdirp, working_dir
+import spack.schema.env
+import spack.config
+import spack.util.spack_yaml as syaml
 from spack.util.executable import ProcessError, which
+import llnl.util.tty as tty
+import llnl.util.filesystem as fs
+from llnl.util.filesystem import mkdirp, working_dir
+
+from jinja2 import Environment, FileSystemLoader
+from pdb import set_trace as st
 
 from .yaml_manager import ReadYaml
 from .util import *
 
-from pdb import set_trace as st
-
-class FilterException(Exception):
-    """Exception raised when filter evaluation fails"""
-    def __init__(self, filter, filter_value):
-        self.filter = filter
-        self.filter_value = filter_value
-
-
 class ReposYaml(ReadYaml):
     """Manage the packages section in stack.yaml"""
 
-    def __init__(self, stack, debug=False):
+    def __init__(self, config, debug=False):
         """Declare class structs"""
 
         # Configuration files
-        self.stack_file = os.path.join(get_prefix(), 'stacks', stack, stack + '.yaml')
-        self.commons_file = os.path.join(get_prefix(), 'stacks', stack, 'common.yaml')
+        self.config = config
+        self.stack_file = os.path.join(get_prefix(), 'stacks',
+                                       config.stack_yaml, config.stack_yaml + '.yaml')
+        self.commons_file = os.path.join(get_prefix(), 'stacks',
+                                         config.stack_yaml, 'common.yaml')
         self.debug = debug
-
-        # Load files into dicts
+        # Placement for repos dictionary needed for repos.yaml
+        self.repos = {}
+        # Load files contents into dictionaries
         self._load_data()
+
+    def _write_yaml(output, filename):
+        with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
+            yaml = syaml.load_config(output)
+            spack.config.validate(yaml, spack.schema.env.schema, filename)
+            syaml.dump_config(yaml, f, default_flow_style=False)
+
+    def write_yaml(self):
+        """Write repos.yaml"""
+
+        # Jinja setup
+        file_loader = FileSystemLoader(self.config.templates_path)
+        jinja_env = Environment(loader = file_loader, trim_blocks = True)
+
+        # Check that template file exists
+        path = os.path.join(get_prefix(), 'stacks', self.config.stack_yaml,
+                            'templates', self.config.repos_yaml_template)
+        if not os.path.exists(path):
+            tty.die(f'Template file {self.config.repos_yaml_template} does not exist ',
+                    f'in {path}')
+
+        st()
+        # Render and write repos.yaml
+        template = jinja_env.get_template(self.config.repos_yaml_template)
+        output = template.render(repos = self.repos)
+
+        tty.msg(self.config.repos_yaml)
+        print(output)
+
+        env = ev.active_environment()
+        if env:
+            _write_yaml(output, os.path.realpath(env.manifest_path))
+        else:
+            _write_yaml(output, self.config.repos_yaml)
 
     def _load_data(self):
         """Read configuration"""
@@ -63,6 +99,9 @@ class ReposYaml(ReadYaml):
             prefix = os.path.join(self.commons['work_directory'],
                                   self.commons['stack_release'],
                                   self.commons['spack_external'])
+
+            # self.repos will be needed later for creating repos.yaml
+            self.repos[repo_path] = os.path.join(prefix,repo_path)
             self._clone(repo_url, repo_path, repo_tag, os.path.join(prefix,repo_path))
 
     def _clone(self, url, path, tag, prefix):

@@ -38,6 +38,8 @@ class Config(object):
         self.spack_compilers_yaml_template = None
         self.packages_yaml_template = None
         self.modules_yaml_template = None
+        self.repos_yaml_template = None
+        self.mirrors_yaml_template = None
         self.spack_yaml = None
         self.spack_yaml_path = None
         self.packages_yaml = None
@@ -63,6 +65,12 @@ class Config(object):
             self.debug = True
 
         # PATH/FILENAME: stack file, for example, '/path/to/stack.yaml'
+        #
+        # <!>  CAVEATS  <!>
+        #
+        # In repos.yaml, this parameter is supposed to be the name of the stack
+        # and not the path to the spack.yaml file. This will be the desired
+        # behaviour in future developments.
         if not args.stack:
             if 'stack_yaml' in config.data['config']:
                 if config.data['config']['stack_yaml'] is None:
@@ -113,6 +121,16 @@ class Config(object):
                 if config.data['config']['modules_yaml_template'] is not None:
                     self.modules_yaml_template = config.data['config']['modules_yaml_template']
 
+        # FILENAME: template for repos.yaml, for example, 'repos.yaml.j2'
+        if 'repos_yaml_template' in config.data['config']:
+                if config.data['config']['repos_yaml_template'] is not None:
+                    self.repos_yaml_template = config.data['config']['repos_yaml_template']
+
+        # FILENAME: template for mirrors.yaml, for example, 'mirrors.yaml.j2'
+        if 'mirrors_yaml_template' in config.data['config']:
+                if config.data['config']['mirrors_yaml_template'] is not None:
+                    self.mirrors_yaml_template = config.data['config']['mirrors_yaml_template']
+
         # FILENAME: spack.yaml, for example, 'spack.yaml'
         if 'spack_yaml' in config.data['config']:
                 if config.data['config']['spack_yaml'] is not None:
@@ -156,6 +174,8 @@ class Config(object):
         print(f'spack_yaml_template : {self.spack_yaml_template}')
         print(f'packages_yaml_template: {self.packages_yaml_template}')
         print(f'modules_yaml_template: {self.modules_yaml_template}')
+        print(f'repos_yaml_template: {self.repos_yaml_template}')
+        print(f'mirrors_yaml_template: {self.mirrors_yaml_template}')
         print(f'spack_yaml: {self.spack_yaml}')
         print(f'spack_yaml_path: {self.spack_yaml_path}')
         print(f'packages_yaml: {self.packages_yaml}')
