@@ -13,6 +13,8 @@
 #                                                                       #
 #                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+import os
+
 import spack
 import spack.cmd
 import spack.config
@@ -29,7 +31,7 @@ section = "Sdploy"
 level = "short"
 
 from ..packages_yaml import PackagesYaml
-from ..util import *
+from ..util import st
 from ..config import *
 from ..config_manager import Config
 
@@ -43,8 +45,8 @@ def setup_parser(subparser):
         help='path to the platform file.'
     )
     subparser.add_argument(
-        '-t', '--templates-path',
-        help='where to find jinja templates'
+        '--prefix', type=str,
+        help='path to the stacks directory.'
     )
     subparser.add_argument(
         '-d', '--debug', action='store_true', default=False,

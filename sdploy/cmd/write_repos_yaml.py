@@ -1,42 +1,48 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                                                                       #
-# SCITAS STACK DEPLOYMENT 2022, EPFL                                    #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-#                                                                       #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                                             #
+# SCITAS STACK DEPLOYMENT 2022, EPFL                                          #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+#                                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import os
 
-import spack
-import spack.cmd
-import spack.config
-import spack.environment as ev
-import spack.schema.env
-import spack.util.spack_yaml as syaml
-import llnl.util.filesystem as fs
 import llnl.util.tty as tty
+from llnl.util.filesystem import mkdirp, working_dir
 
-from jinja2 import Environment, FileSystemLoader
+import spack.paths
+from spack.util.executable import ProcessError, which
 
-description = "write spack.yaml file"
+_SPACK_UPSTREAM = 'https://github.com/spack/spack'
+
+description = "install external repositories"
 section = "Sdploy"
 level = "short"
 
-from ..spack_yaml import SpackYaml
+# spack sdploy imports
+from pdb import set_trace as st
+
+from ..repos_yaml import ReposYaml
 from ..util import *
 from ..config import *
 from ..config_manager import Config
 
 def setup_parser(subparser):
+
+    # Default spack-sdploy arguments
+
+    # spack-sdploy will look for a stack after the name given in the parameter
+    # stack under the stacks directory. If it doesn't find, it will assume that
+    # the parameter stack is a fully qualified file name to a stack.yaml file.
     subparser.add_argument(
         '-s', '--stack',
         help='path to the stack file'
@@ -46,49 +52,50 @@ def setup_parser(subparser):
         help='path to the platform file.'
     )
     subparser.add_argument(
-        '-t', '--templates-path',
-        help='where to find jinja templates'
+        '--prefix', type=str,
+        help='path to the stacks directory.'
     )
     subparser.add_argument(
         '-d', '--debug', action='store_true', default=False,
         help='print debug information.'
     )
 
-def _write_yaml(output, filename):
-    with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
-        yaml = syaml.load_config(output)
-        spack.config.validate(yaml, spack.schema.env.schema, filename)
-        syaml.dump_config(yaml, f, default_flow_style=False)
+def get_origin_info(remote):
+    git_dir = os.path.join(spack.paths.prefix, '.git')
+    git = which('git', required=True)
+    try:
+        branch = git('symbolic-ref', '--short', 'HEAD', output=str)
+    except ProcessError:
+        branch = 'develop'
+        tty.warn('No branch found; using default branch: %s' % branch)
+    if remote == 'origin' and \
+       branch not in ('master', 'develop'):
+        branch = 'develop'
+        tty.warn('Unknown branch found; using default branch: %s' % branch)
+    try:
+        origin_url = git(
+            '--git-dir=%s' % git_dir,
+            'config', '--get', 'remote.%s.url' % remote,
+            output=str)
+    except ProcessError:
+        origin_url = _SPACK_UPSTREAM
+        tty.warn('No git repository found; '
+                 'using default upstream URL: %s' % origin_url)
+    return (origin_url.strip(), branch.strip())
 
 
 def write_repos_yaml(parser, args):
-    """Create spack.yaml file"""
 
+    # spack-sdploy setup
     config = Config(args)
     if config.debug:
         config.info()
 
+    # Instantiate ReposYaml class
+    repos = ReposYaml(config)
 
-    read_configuration()
+    # Clone external repositories as configured in commons.yaml
+    repos.clone()
 
-    create_diectories()
-
-    clone_repos()
-
-    # Jinja setup
-    file_loader = FileSystemLoader(config.templates_path)
-
-    jinja_env = Environment(loader = file_loader, trim_blocks = True)
-
-    # Render and write spack.yaml
-    template = jinja_env.get_template(config.spack_yaml_template)
-    output = template.render(stack = data)
-
-    tty.msg(config.spack_yaml)
-    print(output)
-
-    env = ev.active_environment()
-    if env:
-        _write_yaml(output, os.path.realpath(env.manifest_path))
-    else:
-        _write_yaml(output, config.spack_yaml)
+    # Write repos.yaml file
+    repos.write_yaml()

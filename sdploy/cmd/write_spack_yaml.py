@@ -32,22 +32,22 @@ section = "Sdploy"
 level = "short"
 
 from ..spack_yaml import SpackYaml
-from ..util import *
+from ..util import st
 from ..config import *
 from ..config_manager import Config
 
 def setup_parser(subparser):
     subparser.add_argument(
         '-s', '--stack',
-        help='path to the stack file'
+        help='name of the stack to install.'
     )
     subparser.add_argument(
         '-p', '--platform',
-        help='path to the platform file.'
+        help='name of the platform.'
     )
     subparser.add_argument(
-        '-t', '--templates-path',
-        help='where to find jinja templates'
+        '--prefix', type=str,
+        help='path to the stacks directory.'
     )
     subparser.add_argument(
         '-d', '--debug', action='store_true', default=False,
@@ -105,6 +105,7 @@ def write_spack_yaml(parser, args):
     tty.msg(config.spack_yaml)
     print(output)
 
+    st()
     env = ev.active_environment()
     if env:
         _write_yaml(output, os.path.realpath(env.manifest_path))

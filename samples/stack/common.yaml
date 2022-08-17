@@ -1,8 +1,8 @@
 spack_release: v0.18.1
-stack_release: syrah
+stack_release: stack
 
 # Path definitions
-work_directory: /work/stack
+work_directory: /home/erothe
 python_venv: py3-venv
 spack_external: external
 jenkins: jenkins/deploy/scripts
