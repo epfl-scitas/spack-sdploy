@@ -49,6 +49,12 @@ pipeline {
     // A variable defined in a stage is bound to that stage.
     stages {
 
+        stage('Do a fresh restart') {
+            steps {
+                sh 'rm -rf ${STACK_PREFIX}'
+            }
+        }
+
        stage('Print variables') {
             steps {
                 echo "The following values were read from common.yaml"
@@ -117,7 +123,7 @@ pipeline {
                     parallel(do_install_compilers())
                 }
             }
-                    }
+        }
 
 
     }

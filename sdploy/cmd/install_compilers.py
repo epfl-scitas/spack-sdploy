@@ -306,6 +306,10 @@ def install_specs(cli_args, kwargs, specs):
 
 def install_compilers(parser, args, **kwargs):
 
+    # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+    # spack-sdploy: start
+    # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
     config = Config(args)
     if config.debug:
         config.info()
@@ -327,7 +331,10 @@ def install_compilers(parser, args, **kwargs):
 
     args.spec = compilers
 
-    # CONTINUE WITH SPACK CODE
+    # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+    # spack-sdploy: end
+    # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
     tty.set_verbose(args.verbose or args.install_verbose)
 
     if args.help_cdash:
