@@ -331,8 +331,8 @@ def install_compilers(parser, args, **kwargs):
 
     args.spec = compilers
 
-    with open('compilers.txt', 'w') as f:
-        f.write(compilers)
+    with open('compilers.list', 'w') as f:
+        f.write(' '.join(compilers))
 
     # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     # spack-sdploy: end
