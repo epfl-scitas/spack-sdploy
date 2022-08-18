@@ -52,13 +52,22 @@ def setup_parser(subparser):
         help='path to the platform file.'
     )
     subparser.add_argument(
-        '--prefix', type=str,
-        help='path to the stacks directory.'
+        '-t', '--templates-path',
+        help='where to find jinja templates'
     )
     subparser.add_argument(
         '-d', '--debug', action='store_true', default=False,
         help='print debug information.'
     )
+
+    # spack clone.py standard arguments
+#     subparser.add_argument(
+#         '-r', '--remote', action='store', dest='remote',
+#         help="name of the remote to clone from", default='origin')
+#     subparser.add_argument(
+#         'prefix',
+#         help="name of prefix where we should install spack")
+
 
 def get_origin_info(remote):
     git_dir = os.path.join(spack.paths.prefix, '.git')
@@ -91,11 +100,14 @@ def write_repos_yaml(parser, args):
     if config.debug:
         config.info()
 
-    # Instantiate ReposYaml class
+    st()
+    # <!> CAVEATS <!>
+    # In this particular case, stack_yaml is the name of the stack and not the
+    # fully qualified name of the stack.yaml file. This will be the standard
+    # behaviour in future developments.
+
     repos = ReposYaml(config)
 
-    # Clone external repositories as configured in commons.yaml
     repos.clone()
 
-    # Write repos.yaml file
     repos.write_yaml()
