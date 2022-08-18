@@ -114,7 +114,7 @@ config:
   # variable will be given the value of the environment variable
   # SPACK_SYSTEM_CONFIG_PATH.
   spack_config_path:
-  #
+  # All other files
   spack_yaml: spack.yaml
   spack_yaml_path:
   packages_yaml: packages.yaml

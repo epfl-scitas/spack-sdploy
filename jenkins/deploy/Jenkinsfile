@@ -112,6 +112,12 @@ pipeline {
             }
         }
 
+        stage('Deploy spack configuration') {
+            steps {
+                sh '${JENKINS}/deploy_spack_environment.sh'
+            }
+        }
+
         stage('Test my groovy function') {
             steps {
                 script {
