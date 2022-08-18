@@ -18,3 +18,6 @@ fi
 
 echo "Installing compilers in environment: ${environment}"
 spack --env ${environment} install-compilers -s ${STACK_RELEASE} -p ${environment} -v --log-format=junit --log-file=compilers.${environment}.xml
+
+echo "Add newly installed compilers in environment: ${environment}"
+spack compiler find
