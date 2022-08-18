@@ -100,7 +100,6 @@ def write_repos_yaml(parser, args):
     if config.debug:
         config.info()
 
-    st()
     # <!> CAVEATS <!>
     # In this particular case, stack_yaml is the name of the stack and not the
     # fully qualified name of the stack.yaml file. This will be the standard
