@@ -331,7 +331,7 @@ def install_compilers(parser, args, **kwargs):
 
     args.spec = compilers
 
-    with open(os.path.join(config.stack_path, 'compilers.list'), 'w') as f:
+    with open(os.path.join(config.spack_config_path, 'compilers.list'), 'w') as f:
         f.write(' '.join(compilers))
 
     # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --

@@ -108,6 +108,13 @@ config:
   # names. Remember that contrary to the paths defined above, these
   # are paths where spack-sdploy will write to, where paths defined
   # above are paths where spack-sdploy will be reading from.
+  #
+  # The spack config path is read from the environment. This is where
+  # all the other files will be written to. In config_manager, this
+  # variable will be given the value of the environment variable
+  # SPACK_SYSTEM_CONFIG_PATH.
+  spack_config_path:
+  #
   spack_yaml: spack.yaml
   spack_yaml_path:
   packages_yaml: packages.yaml

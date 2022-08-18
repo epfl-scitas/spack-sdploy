@@ -71,6 +71,7 @@ pipeline {
                 echo "SPACK_INSTALL_PATH: ${SPACK_INSTALL_PATH}"
                 echo "SPACK_RELEASE: ${SPACK_RELEASE}"
                 echo "SPACK_USER_CONFIG_PATH: ${SPACK_USER_CONFIG_PATH}"
+                echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
                 echo "SPACK_SDPLOY_INSTALL_PATH: ${SPACK_SDPLOY_INSTALL_PATH}"
             }   
         }

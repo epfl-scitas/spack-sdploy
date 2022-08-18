@@ -13,8 +13,8 @@
 #                                                                             #
 #                                                                             #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-import os
 
+import os
 from .yaml_manager import ReadYaml
 from .util import *
 from .config import *
@@ -183,6 +183,17 @@ class Config(object):
                 self.mirrors_yaml_template = config.data['config']['mirrors_yaml_template']
             else:
                 self.mirrors_yaml_template = mirrors_yaml_template
+
+        # From now on, the following variables deal with output.
+
+        # <!> SPECIAL CASE <!>
+        # This variable is read from the environment (highest priority)
+        if os.environ.get('SPACK_SYSTEM_CONFIG_PATH') is not None:
+            self.spack_config_path = os.environ.get('SPACK_SYSTEM_CONFIG_PATH')
+        elif config.data['config']['spack_config_path'] is not None:
+            self.spack_config_path = config.data['config']['spack_config_path']
+        else:
+            self.spack_config_path = spack_config_path
 
         # FILENAME: spack.yaml, for example, 'spack.yaml'
         if 'spack_yaml' in config.data['config']:
