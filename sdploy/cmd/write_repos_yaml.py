@@ -52,8 +52,8 @@ def setup_parser(subparser):
         help='path to the platform file.'
     )
     subparser.add_argument(
-        '-t', '--templates-path',
-        help='where to find jinja templates'
+        '--prefix',
+        help='path to the stacks directory.'
     )
     subparser.add_argument(
         '-d', '--debug', action='store_true', default=False,
