@@ -314,6 +314,8 @@ def install_compilers(parser, args, **kwargs):
     if config.debug:
         config.info()
 
+    config.info()
+
     # Process Programming Environment section.
     stack = SpackYaml(config.platform_yaml, config.stack_yaml, config.debug)
 
@@ -331,6 +333,7 @@ def install_compilers(parser, args, **kwargs):
 
     args.spec = compilers
 
+    print(f'Writing compilers list to {config.spack_config_path}')
     with open(os.path.join(config.spack_config_path, 'compilers.list'), 'w') as f:
         f.write(' '.join(compilers))
 

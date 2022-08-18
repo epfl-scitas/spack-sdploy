@@ -293,6 +293,7 @@ class Config(object):
         print(f'modules_yaml_template: {self.modules_yaml_template}')
         print(f'repos_yaml_template: {self.repos_yaml_template}')
         print(f'mirrors_yaml_template: {self.mirrors_yaml_template}')
+        print(f'spack_config_path: {self.spack_config_path}')
         print(f'spack_yaml: {self.spack_yaml}')
         print(f'spack_yaml_path: {self.spack_yaml_path}')
         print(f'packages_yaml: {self.packages_yaml}')
