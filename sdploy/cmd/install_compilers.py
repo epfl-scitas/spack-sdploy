@@ -314,7 +314,6 @@ def install_compilers(parser, args, **kwargs):
     if config.debug:
         config.info()
 
-    st()
     # Process Programming Environment section.
     stack = SpackYaml(config.platform_yaml, config.stack_yaml, config.debug)
 
