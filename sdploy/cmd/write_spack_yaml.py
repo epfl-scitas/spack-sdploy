@@ -108,4 +108,5 @@ def write_spack_yaml(parser, args):
     if env:
         _write_yaml(output, os.path.realpath(env.manifest_path))
     else:
-        _write_yaml(output, config.spack_yaml)
+        filename = os.path.join(config.spack_config_path, config.repos_yaml)
+        _write_yaml(output, filename)

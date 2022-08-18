@@ -102,5 +102,6 @@ class ModulesYaml(ReadYaml):
         if env:
             self._write_yaml(output, os.path.realpath(env.manifest_path))
         else:
-            self._write_yaml(output, self.config.modules_yaml)
+            filename = os.path.join(self.config.spack_config_path, self.config.modules_yaml)
+            self._write_yaml(output, filename)
 

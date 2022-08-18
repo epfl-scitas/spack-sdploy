@@ -99,4 +99,5 @@ def write_packages_yaml(parser, args):
                                 config.packages_yaml)
         _write_yaml(output, filename)
     else:
-        _write_yaml(output, config.packages_yaml)
+        filename = os.path.join(config.spack_config_path, config.packages_yaml)
+        _write_yaml(output, filename)

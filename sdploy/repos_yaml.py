@@ -53,6 +53,7 @@ class ReposYaml(ReadYaml):
         self._load_data()
 
     def _write_yaml(self, output, filename):
+
         with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
             yaml = syaml.load_config(output)
             # spack.config.validate(yaml, spack.schema.env.schema, filename)
@@ -82,7 +83,8 @@ class ReposYaml(ReadYaml):
         if env:
             self._write_yaml(output, os.path.realpath(env.manifest_path))
         else:
-            self._write_yaml(output, self.config.repos_yaml)
+            filename = os.path.join(self.config.spack_config_path, self.config.repos_yaml)
+            self._write_yaml(output, filename)
 
     def _load_data(self):
         """Read configuration"""
