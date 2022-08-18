@@ -331,7 +331,7 @@ def install_compilers(parser, args, **kwargs):
 
     args.spec = compilers
 
-    with open('compilers.txt') as f:
+    with open('compilers.txt', 'w') as f:
         f.write(compilers)
 
     # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
