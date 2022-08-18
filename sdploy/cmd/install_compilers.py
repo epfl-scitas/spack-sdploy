@@ -71,9 +71,9 @@ def update_kwargs_from_args(args, kwargs):
 
 def setup_parser(subparser):
 
-#                                                                               
-# spack-sdploy specific options
-#                                                                               
+    #                                                                               
+    # spack-sdploy specific options
+    #                                                                               
 
     subparser.add_argument(
         '-s', '--stack',
@@ -314,6 +314,7 @@ def install_compilers(parser, args, **kwargs):
     if config.debug:
         config.info()
 
+    st()
     # Process Programming Environment section.
     stack = SpackYaml(config.platform_yaml, config.stack_yaml, config.debug)
 
@@ -330,6 +331,9 @@ def install_compilers(parser, args, **kwargs):
         print(f'    - {compiler}')
 
     args.spec = compilers
+
+    with open('compilers.txt') as f:
+        f.write(compilers)
 
     # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
     # spack-sdploy: end

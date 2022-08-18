@@ -19,5 +19,8 @@ fi
 echo "Installing compilers in environment: ${environment}"
 spack --env ${environment} install-compilers -s ${STACK_RELEASE} -p ${environment} -v --log-format=junit --log-file=compilers.${environment}.xml
 
+echo 'Create modules for newly installed compilers'
+spack --env ${environment} module lmod refresh -y ${compilers_to_install}
+
 echo "Add newly installed compilers in environment: ${environment}"
 spack compiler find
