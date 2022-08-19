@@ -271,6 +271,14 @@ class Config(object):
                 self.mirrors_yaml_path = mirrors_yaml_path
 
 
+    def info_to_file(self, file=None):
+        """Print debug information to file"""
+
+        if file is None:
+            file = get_prefix()
+        with open(file, 'w'):
+            self.info()
+
     def info(self):
         """Print debug information"""
 
@@ -304,3 +312,5 @@ class Config(object):
         print(f'repos_yaml_path: {self.repos_yaml_path}')
         print(f'mirrors_yaml: {self.mirrors_yaml}')
         print(f'mirrors_yaml_path: {self.mirrors_yaml_path}')
+
+
