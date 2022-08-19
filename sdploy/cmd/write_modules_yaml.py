@@ -2,11 +2,11 @@
 #                                                                             #
 # SCITAS STACK DEPLOYMENT 2022, EPFL                                          #
 #                                                                             #
+# This command write the modules.yaml file. The platform argument is          #
+# mandatory because it will read from the platform the core compiler.         #
 #                                                                             #
-#                                                                             #
-#                                                                             #
-#                                                                             #
-#                                                                             #
+# The stack is also mandatory, because it is under the stack directory        #
+# that the commons.yaml file will be found as well as the platform directory. #
 #                                                                             #
 #                                                                             #
 #                                                                             #
@@ -56,6 +56,9 @@ def setup_parser(subparser):
     )
 
 def write_modules_yaml(parser, args):
+    """Write modules.yaml file"""
+
+
 
     # spack-sdploy setup
     config = Config(args)

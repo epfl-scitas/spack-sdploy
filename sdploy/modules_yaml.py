@@ -59,7 +59,9 @@ class ModulesYaml(ReadYaml):
     def _add_core_compiler(self):
         """Add core compiler to the modules dictionary"""
 
-        self.modules['core_compiler'] = 'gcc@8.5.0'
+        platform = ReadYaml()
+        platform.read(os.path.join(self.config.platform_yaml))
+        self.modules['core_compiler'] = platform.data['platform']['tokens']['core_compiler']
 
     def _add_module_roots(self):
         """Add modules installation paths. Note that These
