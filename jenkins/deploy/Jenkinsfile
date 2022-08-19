@@ -44,22 +44,22 @@ pipeline {
         SPACK_DEFAULT_CONFIG_PATH = "${SPACK_INSTALL_PATH}/etc/spack"
     }
 
-
     // A variable defined in a stage is bound to that stage.
     stages {
 
 //        stage('Do a fresh restart') {
 //            steps {
+
 //                sh 'rm -rf ${STACK_PREFIX}'
 //            }
 //        }
 
-        stage('Temporary clear file') {
-            steps {
-                sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx2.xml'
-                sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx.xml'
-            }
-        }
+//        stage('Temporary clear file') {
+//            steps {
+//                sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx2.xml'
+//                sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx.xml'
+//            }
+//        }
 
        stage('Print variables') {
             steps {
