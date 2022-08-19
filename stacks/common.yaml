@@ -1,0 +1,10 @@
+# Variables needed to jenkins
+work_directory: /work/scitas-ge/erothe/stack
+stack_release: sizar
+python_venv: py3-venv
+jenkins: jenkins/deploy/script
+spack_release: v0.18.1
+extensions: spack-config
+stack_version: v1
+spack: spack
+spack_sdploy: spack-sdploy
