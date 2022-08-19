@@ -14,4 +14,4 @@ echo 'Installing Jinja2'
 pip install jinja2
 
 echo 'Installing yareed'
-pip install ${SPACK_SDPLOY_INSTALL_PATH}/yareed/
+pip install yareed/
