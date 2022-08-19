@@ -13,7 +13,7 @@ pipeline {
     // and its value cannot be changed later.
     environment {
 
-        STACK=syrah-lite
+        STACK="syrah-lite"
 
         // Variables read from commons.yaml using cat, grep and cut.
         WORK_DIR=sh(returnStdout:true,
