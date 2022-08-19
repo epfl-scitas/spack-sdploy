@@ -109,4 +109,5 @@ def write_spack_yaml(parser, args):
         _write_yaml(output, os.path.realpath(env.manifest_path))
     else:
         filename = os.path.join(config.spack_config_path, config.spack_yaml)
+        tty.msg(f'Writing file {filename}')
         _write_yaml(output, filename)

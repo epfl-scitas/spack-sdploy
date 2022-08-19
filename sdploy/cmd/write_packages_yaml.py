@@ -100,4 +100,5 @@ def write_packages_yaml(parser, args):
         _write_yaml(output, filename)
     else:
         filename = os.path.join(config.spack_config_path, config.packages_yaml)
+        tty.msg(f'Writing file {filename}')
         _write_yaml(output, filename)

@@ -60,7 +60,7 @@ def write_config_yaml(parser, args):
     if config.debug:
         config.info()
 
-    # Instantiate ModulesYaml class
+    # Instantiate ConfigYaml class
     conf = ConfigYaml(config, config.debug)
 
     # Write modules file

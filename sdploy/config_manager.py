@@ -312,5 +312,3 @@ class Config(object):
         print(f'repos_yaml_path: {self.repos_yaml_path}')
         print(f'mirrors_yaml: {self.mirrors_yaml}')
         print(f'mirrors_yaml_path: {self.mirrors_yaml_path}')
-
-

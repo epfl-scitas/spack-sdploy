@@ -84,6 +84,7 @@ class ReposYaml(ReadYaml):
             self._write_yaml(output, os.path.realpath(env.manifest_path))
         else:
             filename = os.path.join(self.config.spack_config_path, self.config.repos_yaml)
+            tty.msg(f'Writing file {filename}')
             self._write_yaml(output, filename)
 
     def _load_data(self):
