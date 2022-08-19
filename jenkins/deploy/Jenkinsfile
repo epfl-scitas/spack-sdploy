@@ -56,7 +56,7 @@ pipeline {
 
         stage('Temporary clear file') {
             steps {
-                sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx2.xml
+                sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx2.xml'
 
             }
         }
