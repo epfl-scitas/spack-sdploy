@@ -36,6 +36,7 @@ class Config(object):
         """Only function in the class"""
 
         self.debug = False
+        self.stack_ver = None
         self.prefix = None
         self.stack = None
         self.stack_path = None
@@ -78,6 +79,13 @@ class Config(object):
 
         if args.debug == True:
             self.debug = True
+
+#        # stack_ver:
+#        if 'stack_ver' in config.data['config']:
+#            if config.data['config']['stack_ver'] is None:
+#                self.stack_ver = stack_ver
+#            else:
+#                self.stack_ver = config.data['config']['stack_ver']
 
         # prefix:
         # - it includes the 'samples' or 'stacks' subdir defined in util.py;
@@ -283,6 +291,7 @@ class Config(object):
         """Print debug information"""
 
         print(f'debug: {self.debug}')
+        print(f'stack_ver: {self.stack_ver}')
         print(f'prefix: {self.prefix}')
         print(f'stack: {self.stack}')
         print(f'stack_path: {self.stack_path}')

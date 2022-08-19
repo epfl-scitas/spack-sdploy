@@ -22,5 +22,7 @@ spack --env ${environment} install-compilers -s ${STACK_RELEASE} -p ${environmen
 echo 'Create modules for newly installed compilers'
 spack --env ${environment} module lmod refresh -y ${SPACK_SYSTEM_CONFIG_PATH}/compilers.list
 
+# rm ${SPACK_SYSTEM_CONFIG_PATH}/compilers.list
+
 echo "Add newly installed compilers in environment: ${environment}"
 spack --env ${environment} compiler find

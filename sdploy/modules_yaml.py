@@ -62,10 +62,19 @@ class ModulesYaml(ReadYaml):
         self.modules['core_compiler'] = 'gcc@8.5.0'
 
     def _add_module_roots(self):
-        """Add modules installation paths"""
+        """Add modules installation paths. Note that These
+        are read from commons.yaml and not from sdploy.yaml."""
 
-        self.modules['lmod_roots'] = '/path/to/some/thing/good'
-        self.modules['tcl_roots'] = '/path/to/some/thing/better'
+        commons = ReadYaml()
+        commons.read(os.path.join(self.config.commons_yaml))
+        self.modules['lmod_roots'] = (commons.data['work_directory'] + os.path.sep
+                                      + commons.data['stack_release'] + os.path.sep
+                                      + commons.data['stack_version'] + os.path.sep
+                                      + commons.data['lmod_roots'])
+        self.modules['lmod_roots'] = (commons.data['work_directory'] + os.path.sep
+                                      + commons.data['stack_release'] + os.path.sep
+                                      + commons.data['stack_version'] + os.path.sep
+                                      + commons.data['tcl_roots'])
 
     def _add_suffixes(self):
         """Add modules suffixes from stack.yaml"""

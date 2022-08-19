@@ -53,6 +53,7 @@ else:
 
 # Set reasonable default values for first run. This values can be changed
 # through the sdploy.yaml file or direcly from the command line.
+v = 1
 prefix = os.path.join(get_prefix(), stack_dir)
 stack_yaml = os.path.join(prefix, 'stack', 'stack.yaml')
 platforms_dir = 'platforms'
