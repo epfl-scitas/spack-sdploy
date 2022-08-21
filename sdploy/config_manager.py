@@ -80,12 +80,7 @@ class Config(object):
         if args.debug == True:
             self.debug = True
 
-#        # stack_ver:
-#        if 'stack_ver' in config.data['config']:
-#            if config.data['config']['stack_ver'] is None:
-#                self.stack_ver = stack_ver
-#            else:
-#                self.stack_ver = config.data['config']['stack_ver']
+        # First we process the argument that may come from the command line
 
         # prefix:
         # - it includes the 'samples' or 'stacks' subdir defined in util.py;
@@ -144,6 +139,13 @@ class Config(object):
         # Once we know the name of the platform, we can compute the fully qualified
         # plaform yaml file name
         self.platform_yaml = os.path.join(self.platforms_path, self.platform + '.yaml')
+
+        # stack_ver:
+        if 'stack_ver' in config.data['config']:
+            if config.data['config']['stack_ver'] is None:
+                self.stack_ver = stack_ver
+            else:
+                self.stack_ver = config.data['config']['stack_ver']
 
         # templated_dir:
         # - name of the templates subdirectory under the stack
