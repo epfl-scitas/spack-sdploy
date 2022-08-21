@@ -1,3 +1,4 @@
+
 pipeline {
     agent {
         label 'ph02-syrah-rhel8'
@@ -32,6 +33,8 @@ pipeline {
             script:'cat stacks/${STACK}/common.yaml |grep spack: | cut -n -d " " -f 2').trim()
         SPACK_SDPLOY = sh(returnStdout:true,
             script:'cat stacks/${STACK}/common.yaml |grep spack_sdploy: | cut -n -d " " -f 2').trim()
+
+        JENKINS = "EDUARDO"
 
         // Composed variables (from above values).
         PYTHON_VIRTUALENV_PATH = "${WORK_DIR}/${STACK_RELEASE}/${PYTHON_VENV}"
