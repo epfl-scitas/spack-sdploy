@@ -14,6 +14,8 @@ pipeline {
     // and its value cannot be changed later.
     environment {
 
+        // <!> can't figure out where the ${STACK} variable comes from <!>
+
         // Variables read from commons.yaml using cat, grep and cut.
         WORK_DIR=sh(returnStdout:true,
             script:'cat stacks/${STACK}/common.yaml |grep work_directory: | cut -n -d " " -f 2').trim()
@@ -21,8 +23,6 @@ pipeline {
             script:'cat stacks/${STACK}/common.yaml |grep stack_release: | cut -n -d " " -f 2').trim()
         PYTHON_VENV=sh(returnStdout:true,
             script:'cat stacks/${STACK}/common.yaml |grep python_venv: | cut -n -d " " -f 2').trim()
-//        JENKINS=sh(returnStdout:true,
-//            script:'cat stacks/${STACK}/common.yaml |grep jenkins: | cut -n -d " " -f 2').trim()
         SPACK_RELEASE = sh(returnStdout:true,
             script:'cat stacks/${STACK}/common.yaml |grep spack_release: | cut -n -d " " -f 2').trim()
         SPACK_EXTENSION = sh(returnStdout:true,
@@ -34,6 +34,7 @@ pipeline {
         SPACK_SDPLOY = sh(returnStdout:true,
             script:'cat stacks/${STACK}/common.yaml |grep spack_sdploy: | cut -n -d " " -f 2').trim()
 
+        // This variable makes sens to be hardcoded here.
         JENKINS = "jenkins/deploy/scripts"
 
         // Composed variables (from above values).
