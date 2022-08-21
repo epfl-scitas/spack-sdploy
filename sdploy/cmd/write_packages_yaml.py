@@ -34,24 +34,25 @@ from ..packages_yaml import PackagesYaml
 from ..util import st
 from ..config import *
 from ..config_manager import Config
+from ..common_parser import setup_parser
 
-def setup_parser(subparser):
-    subparser.add_argument(
-        '-s', '--stack',
-        help='path to the stack file'
-    )
-    subparser.add_argument(
-        '-p', '--platform',
-        help='path to the platform file.'
-    )
-    subparser.add_argument(
-        '--prefix', type=str,
-        help='path to the stacks directory.'
-    )
-    subparser.add_argument(
-        '-d', '--debug', action='store_true', default=False,
-        help='print debug information.'
-    )
+#def setup_parser(subparser):
+#    subparser.add_argument(
+#        '-s', '--stack',
+#        help='name of the stack.'
+#    )
+#    subparser.add_argument(
+#        '-p', '--platform',
+#        help='name of the platform.'
+#    )
+#    subparser.add_argument(
+#        '--prefix', type=str,
+#        help='path to the stacks directory.'
+#    )
+#    subparser.add_argument(
+#        '-d', '--debug', action='store_true', default=False,
+#        help='print debug information.'
+#    )
 
 def _write_yaml(output, filename):
     with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
