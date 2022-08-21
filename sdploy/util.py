@@ -42,6 +42,7 @@ def get_subdir(path, level = 1, sep = None):
 
 # If the user does not specify any arguments after the command, we believe
 # he is just trying some commands out-of-the-box and we use the samples directory.
+# THIS DOES NOT WORK BECAUSE OF `-d` for debug
 if len(sys.argv) <= 2:
     stack_dir = 'samples'
 else:
@@ -53,6 +54,7 @@ else:
 
 # Set reasonable default values for first run. This values can be changed
 # through the sdploy.yaml file or direcly from the command line.
+stack = 'laptop'
 stack_ver = 'v1'
 prefix = os.path.join(get_prefix(), stack_dir)
 stack_yaml = os.path.join(prefix, 'stack', 'stack.yaml')
