@@ -1,4 +1,5 @@
 #!/bin/bash -l
+set -euo pipefail
 
 echo 'Activating Spack'
 . $JENKINS/activate_spack.sh
@@ -19,10 +20,12 @@ fi
 echo "Installing compilers in environment: ${environment}"
 spack --env ${environment} install-compilers -s ${STACK_RELEASE} -p ${environment}
 
-echo 'Create modules for newly installed compilers'
-spack --env ${environment} module lmod refresh -y ${SPACK_SYSTEM_CONFIG_PATH}/compilers.list
+spack --env ${environment} add-compilers find -s ${STACK_RELEASE} --scope system
 
-# rm ${SPACK_SYSTEM_CONFIG_PATH}/compilers.list
-
-echo "Add newly installed compilers in environment: ${environment}"
-spack --env ${environment} compiler find
+# echo 'Create modules for newly installed compilers'
+# spack --env ${environment} module lmod refresh -y ${SPACK_SYSTEM_CONFIG_PATH}/compilers.list
+# 
+# # rm ${SPACK_SYSTEM_CONFIG_PATH}/compilers.list
+# 
+# echo "Add newly installed compilers in environment: ${environment}"
+# spack --env ${environment} compiler find
