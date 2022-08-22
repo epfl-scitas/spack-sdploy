@@ -65,11 +65,11 @@ pipeline {
 //            }
 //        }
 
-          stage('Clear spack-config modules.yaml file') {
-              steps {
-                  sh 'rm -rf /home/scitasbuildpr/syrah-lite/spack-config/modules.yaml'
-              }
-          }
+//          stage('Clear spack-config modules.yaml file') {
+//              steps {
+//                  sh 'rm -rf /home/scitasbuildpr/syrah-lite/spack-config/modules.yaml'
+//              }
+//          }
 
        stage('Print variables') {
             steps {
