@@ -35,28 +35,8 @@ from ..config import *
 from ..config_manager import Config
 from ..common_parser import setup_parser
 
-#def setup_parser(subparser):
-#    subparser.add_argument(
-#        '-s', '--stack',
-#        help='name of the stack.'
-#    )
-#    subparser.add_argument(
-#        '-p', '--platform',
-#        help='name of the platform.'
-#    )
-#    subparser.add_argument(
-#        '--prefix', type=str,
-#        help='path to the stacks directory.'
-#    )
-#    subparser.add_argument(
-#        '-d', '--debug', action='store_true', default=False,
-#        help='print debug information.'
-#    )
-
 def write_modules_yaml(parser, args):
     """Write modules.yaml file"""
-
-
 
     # spack-sdploy setup
     config = Config(args)
@@ -68,35 +48,4 @@ def write_modules_yaml(parser, args):
 
     # Write modules file
     modules.write_yaml()
-
-    # WHAT WE ARE GOING TO DO IS TO CONSTRUCT THE `modules` DICTIONARY
-    # THAT WILL IN THE END FEED THE `modules.yaml.j2` TEMPLATE.
-    #
-    # 1. modules['core_compiler'] (str)
-    # 2. modules['lmod_roots'] (str)
-    # 3. modules['tcl_roots'] (str)
-    # 4. modules['tcl_roots'] (dictionary read from stack.yaml)
-
-    # STACK.YAML
-    #
-    # Check for section modules:
-    #                     blacklist:true
-    #                     activated:true
-
-    # Think about introducing `suffix` in stack.yaml
-
-# modules:
-#   all:
-#     suffixes:
-#       +mpi: mpi
-#       +openmp: openmp
-#       threads=openmp: openmp
-#       ^fftw+openmp: openmp
-#       +cuda: cuda
-#       +nvptx: cuda
-#       hdf5=parallel: h5
-#       ^python@:2.99: py2
-#     environment:
-#       set:
-#         ${PACKAGE}_ROOT: ${PREFIX}
 
