@@ -37,24 +37,6 @@ from ..config import *
 from ..config_manager import Config
 from ..common_parser import setup_parser
 
-#def setup_parser(subparser):
-#    subparser.add_argument(
-#        '-s', '--stack',
-#        help='name of the stack.'
-#    )
-#    subparser.add_argument(
-#        '-p', '--platform',
-#        help='name of the platform.'
-#    )
-#    subparser.add_argument(
-#        '--prefix', type=str,
-#        help='path to the stacks directory.'
-#    )
-#    subparser.add_argument(
-#        '-d', '--debug', action='store_true', default=False,
-#        help='print debug information.'
-#    )
-
 def get_origin_info(remote):
     git_dir = os.path.join(spack.paths.prefix, '.git')
     git = which('git', required=True)
@@ -86,13 +68,7 @@ def write_repos_yaml(parser, args):
     if config.debug:
         config.info()
 
-    # <!> CAVEATS <!>
-    # In this particular case, stack_yaml is the name of the stack and not the
-    # fully qualified name of the stack.yaml file. This will be the standard
-    # behaviour in future developments.
-
+    # Do the thing
     repos = ReposYaml(config)
-
     repos.clone()
-
     repos.write_yaml()

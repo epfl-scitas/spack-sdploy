@@ -9,7 +9,6 @@ echo 'Source Spack'
 
 echo "Installing external repos for:"
 echo "STACK: ${STACK_RELEASE}"
-echo "PLATFORM: ${environment}"
 
-spack write-repos-yaml -s ${STACK_RELEASE} -p environment
+spack write-repos-yaml -s ${STACK_RELEASE}
 
