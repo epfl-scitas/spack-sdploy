@@ -65,6 +65,12 @@ pipeline {
 //            }
 //        }
 
+          stage('Clear spack-config modules.yaml file') {
+              steps {
+                  sh 'rm -rf /home/scitasbuildpr/syrah-lite/spack-config/modules.yaml'
+              }
+          }
+
        stage('Print variables') {
             steps {
                 echo "The following values were read from common.yaml"
