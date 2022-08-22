@@ -13,8 +13,8 @@ modules:
       hierarchy:
       - mpi
       blacklist_implicits: true
-    all:
-      suffixes:
+      all:
+        suffixes:
 {% for variant, suffix in modules['suffixes'].items() %}
-        {{ variant }}: {{ suffix }}
+          {{ variant }}: {{ suffix }}
 {% endfor %}
