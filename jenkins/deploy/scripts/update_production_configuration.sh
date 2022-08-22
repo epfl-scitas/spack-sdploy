@@ -1,4 +1,5 @@
 #!/bin/bash -l
+set -euo pipefail
 
 echo 'Installing Python virtual environment'
 mkdir -p ${PYTHON_VIRTUALENV_PATH}

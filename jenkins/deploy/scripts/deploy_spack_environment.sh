@@ -1,4 +1,5 @@
 #!/bin/bash -l
+set -euo pipefail
 
 echo 'Activating Spack'
 . $JENKINS/activate_spack.sh
