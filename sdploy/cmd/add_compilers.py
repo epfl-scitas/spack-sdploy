@@ -206,7 +206,7 @@ def compiler_list(args):
         colify(reversed(sorted(c.spec for c in compilers)))
 
 
-def ed_compiler(parser, args):
+def add_compilers(parser, args):
     action = {'add': compiler_find,
               'find': compiler_find,
               'remove': compiler_remove,
