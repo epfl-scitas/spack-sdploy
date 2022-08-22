@@ -73,7 +73,7 @@ class ModulesYaml(ReadYaml):
                                       + commons.data['stack_release'] + os.path.sep
                                       + commons.data['stack_version'] + os.path.sep
                                       + commons.data['lmod_roots'])
-        self.modules['lmod_roots'] = (commons.data['work_directory'] + os.path.sep
+        self.modules['tcl_roots'] = (commons.data['work_directory'] + os.path.sep
                                       + commons.data['stack_release'] + os.path.sep
                                       + commons.data['stack_version'] + os.path.sep
                                       + commons.data['tcl_roots'])
