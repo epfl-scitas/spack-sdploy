@@ -10,8 +10,8 @@ extensions: spack-config
 spack: spack
 spack_sdploy: spack-sdploy
 stack_version: v1
-lmod_roots:
-tcl_roots:
+lmod_roots: share/spack/lmod
+tcl_roots: share/spack/modules
 
 environments: # platforms
   - ph02-avx
