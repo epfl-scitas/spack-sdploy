@@ -52,12 +52,16 @@ class ModulesYaml(ReadYaml):
         """Populates dictionary with the values it will
         need to write the modules.yaml file"""
 
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
         self._add_core_compiler()
         self._add_module_roots()
         self._add_suffixes()
 
     def _add_core_compiler(self):
         """Add core compiler to the modules dictionary"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         platform = ReadYaml()
         platform.read(os.path.join(self.config.platform_yaml))
@@ -66,6 +70,8 @@ class ModulesYaml(ReadYaml):
     def _add_module_roots(self):
         """Add modules installation paths. Note that These
         are read from commons.yaml and not from sdploy.yaml."""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         commons = ReadYaml()
         commons.read(os.path.join(self.config.commons_yaml))
@@ -81,10 +87,13 @@ class ModulesYaml(ReadYaml):
     def _add_suffixes(self):
         """Add modules suffixes from stack.yaml"""
 
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         self.modules['suffixes'] = {'+mpi': 'mpi', '+openmp': 'openmp'}
 
     def _write_yaml(self, output, filename):
         """Docstring"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
             yaml = syaml.load_config(output)
             # spack.config.validate(yaml, spack.schema.env.schema, filename)
@@ -92,6 +101,8 @@ class ModulesYaml(ReadYaml):
 
     def write_yaml(self):
         """Write modules.yaml"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         # Jinja setup
         file_loader = FileSystemLoader(self.config.templates_path)
