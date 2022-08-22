@@ -60,6 +60,12 @@ class ReadLeaf(ReadYaml):
         # Gather compilers in compilers list
         self._leafs_from_dict(data, key)
 
+    def report_leafs(self):
+        """Report findings"""
+        tty.info(f'The following items were found in {self.stack_file}')
+        for leaf in self.leafs:
+            print(f'- {leaf}')
+            
     def _leafs_from_dict(self, dic, key):
         """Returns list of values whose key is a string named key"""
 
