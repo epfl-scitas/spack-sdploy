@@ -247,19 +247,19 @@ serial_packages_python_blas:
     - py-scikit-learn
     - py-statsmodels
 
-external_packages:
-  metadata:
-    section: packages
-    cloud: False
-  pe:
-    - core
-  packages:
-    - openjdk:
-        default:
-          buildable: False
-        externals:
-          - spec: openjdk@1.8.0.342.b07-2
-            prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-2.el8_6.x86_64/jre
+#external_packages:
+#  metadata:
+#    section: packages
+#    cloud: False
+#  pe:
+#    - core
+#  packages:
+#    - openjdk:
+#        default:
+#          buildable: False
+#        externals:
+#          - spec: openjdk@1.8.0.342.b07-2
+#            prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-2.el8_6.x86_64/jre
 
 mpi_packages:
   metadata:
