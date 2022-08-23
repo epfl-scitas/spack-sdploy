@@ -24,6 +24,6 @@ echo "Adding stack compilers"
 spack --env ${environment} add-compilers find -s ${STACK_RELEASE} --scope system
 
 echo "Adding system compiler"
-spack --env ${environment} compilers find --scope system
+spack --env ${environment} compiler find --scope system
 
 sed -i 's/intel@19.1.3.304/intel@20.0.4/' ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
