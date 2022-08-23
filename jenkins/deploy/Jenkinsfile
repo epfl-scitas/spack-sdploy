@@ -218,7 +218,7 @@ def _define_stages(prefix, script, message, do_junit = true) {
         println('Agent Name: ' + agent_name)
         println('Environment: ' + environment)
 
-        jobs["${prefix}-${agent_name}-${environment}"] = {
+        jobs["${prefix}-${agent_name}"] = {
 
             stage("${prefix}-${agent_name}") {
                 node(agent_name) {
