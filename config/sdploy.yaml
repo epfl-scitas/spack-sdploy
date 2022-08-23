@@ -33,7 +33,7 @@
 config:
   # Version of the stack. This value is used across the entire directories
   # structure.
-  stack_ver: 1
+  stack_ver: v1
   # Path to the directory where the stacks are stored. The contents of
   # this directory must follow a precise structure. An exaple fo This
   # directory is located at the root of spack-sdploy extension.

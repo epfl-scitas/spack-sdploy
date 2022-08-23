@@ -35,6 +35,7 @@ from ..common_parser import setup_parser
 
 def write_config_yaml(parser, args):
 
+    st()
     # spack-sdploy setup
     config = Config(args)
     if config.debug:

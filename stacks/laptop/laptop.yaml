@@ -30,6 +30,34 @@ gcc:
     gpu:
       nvidia: cuda@11.7.0
       none: ""
+  future:
+    compiler: gcc@13.1.0
+    mpi:
+      infiniband: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
+      ethernet: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
+    blas: openblas@0.3.20 threads=none +locking
+    blas_parallel: openblas@0.3.20 threads=openmp +locking
+    python3: python@<python3> +tkinter +optimizations ~debug
+    python2: python@2.7.18 +tkinter ~debug
+    gpu:
+      nvidia: cuda@11.7.0
+      none: ""
+intel:
+  metadata:
+    section: pe
+  stable:
+    compiler: intel@20.0.4
+    mpi:
+      infiniband: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
+      ethernet: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
+    blas: openblas@0.3.20 threads=none +locking
+    blas_parallel: openblas@0.3.20 threads=openmp +locking
+    python3: python@<python3> +tkinter +optimizations ~debug
+    python2: python@2.7.18 +tkinter ~debug
+    gpu:
+      nvidia: cuda@11.7.0
+      none: ""
+
 
 # ------------------------------------------------------------------------------
 # PACKAGES SECTION
