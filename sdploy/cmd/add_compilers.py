@@ -15,6 +15,7 @@ from llnl.util.lang import index_by
 from llnl.util.tty.colify import colify
 from llnl.util.tty.color import colorize
 
+import spack.cmd
 import spack.environment as ev
 import spack.compilers
 import spack.config
@@ -74,6 +75,7 @@ def compiler_find(args):
    # START OF SPACK-SDPLOY CODE
    # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --             
 
+    tty.debug(f'Reading configuration')   
     config = Config(args)
     if config.debug:
         config.info()
@@ -82,13 +84,14 @@ def compiler_find(args):
     compiler_specs = ReadLeaf(config.platform_yaml, config.stack_yaml, config.debug)
 
     # Gather leafs from tree
+    tty.debug(f'Gathering compilers from stack file')
     compiler_specs.read_key('compiler')
     compiler_specs.report_leafs()
-    
+
     paths = []
     for compiler in compiler_specs.leafs:
         specs = spack.cmd.parse_specs(compiler)
-        env = ev.active_environment()
+        env = None
         spec = spack.cmd.disambiguate_spec(specs[0], env) # Returs the concrete spec
         paths.append(spec.prefix)
 
