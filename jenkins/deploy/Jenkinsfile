@@ -157,7 +157,7 @@ pipeline {
        // - modules.yaml
        // - mirrors.yaml
 
-       stage('Conctretize') {
+       stage('Concretize') {
            steps {
                script {
                    parallel(do_concretize())
