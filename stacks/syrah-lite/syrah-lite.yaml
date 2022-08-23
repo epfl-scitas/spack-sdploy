@@ -93,7 +93,7 @@ serial_packages:
           version: 1.1.1k
           buildable: False
         externals:
-          - spec: openssl
+          - spec: openssl@1.1.1k
             prefix: /usr
     - scotch ~mpi:
         default: { variants: +esmumps ~metis }
