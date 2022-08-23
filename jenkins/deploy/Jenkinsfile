@@ -161,6 +161,15 @@ pipeline {
                sh 'jenkins/deploy/scripts/add_mirror.sh'
            }
        }
+
+       stage('Deploy software') {
+           steps {
+               script {
+                   parallel(do_deploy())
+               }
+           }
+       }
+
     }
 }
 
@@ -276,4 +285,10 @@ def do_concretize() {
     return _define_stages('Concretize',
                           'jenkins/deploy/scripts/concretize.sh',
                           'Concretization of stack')
+}
+
+def do_deploy() {
+    return _define_stages('Deploy',
+                          'jenkins/deploy/scripts/install_stack.sh',
+                          'Deployement of production stack')
 }
