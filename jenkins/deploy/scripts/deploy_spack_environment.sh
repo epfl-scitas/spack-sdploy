@@ -13,5 +13,5 @@ spack write-packages-yaml -s ${STACK_RELEASE} -p ${environment}
 echo "Installing modules configuration: ${environment}"
 spack write-modules-yaml -s ${STACK_RELEASE} -p ${environment}
 
-#echo "Installing repos configuration: ${environment}"
-#spack write-repos-yaml -s ${STACK_RELEASE} -p ${environment}
+echo "Installing mirrors configuration: ${environment}"
+spack write-mirrors-yaml -s ${STACK_RELEASE} -p ${environment}
