@@ -5,4 +5,4 @@ set -euo pipefail
 . $JENKINS/activate_spack.sh
 
 echo "Concretizing environment ${environment}"
-spack -ddd --env ${environment} concretize
+spack --env ${environment} concretize
