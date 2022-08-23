@@ -17,6 +17,8 @@ environments: # platforms
   - ph02-avx
   - ph02-avx2
 
+# The mirrors paths are common to all stacks.
+# They are created under `work_directory`.
 mirrors:
   local: spack-mirror
   restricted: spack-mirror-restricted
