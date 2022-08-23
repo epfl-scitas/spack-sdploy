@@ -51,27 +51,27 @@ pipeline {
     // A variable defined in a stage is bound to that stage.
     stages {
 
-//        stage('Do a fresh restart') {
-//            steps {
+//      stage('Do a fresh restart') {
+//          steps {
 
-//                sh 'rm -rf ${STACK_PREFIX}'
-//            }
-//        }
-
-//        stage('Temporary clear file') {
-//            steps {
-//                sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx2.xml'
-//                sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx.xml'
-//            }
-//        }
-
-//          stage('Clear spack-config modules.yaml file') {
-//              steps {
-//                  sh 'rm -rf /home/scitasbuildpr/syrah-lite/spack-config/modules.yaml'
-//              }
+//              sh 'rm -rf ${STACK_PREFIX}'
 //          }
+//      }
 
-       stage('Print variables') {
+//      stage('Temporary clear file') {
+//          steps {
+//              sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx2.xml'
+//              sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx.xml'
+//          }
+//      }
+
+//      stage('Clear spack-config modules.yaml file') {
+//          steps {
+//              sh 'rm -rf /home/scitasbuildpr/syrah-lite/spack-config/modules.yaml'
+//          }
+//      }
+
+        stage('Print variables') {
             steps {
                 echo "The following values were read from common.yaml"
                 echo "WORK_DIR: $WORK_DIR"
@@ -158,13 +158,13 @@ pipeline {
        // - modules.yaml
        // - mirrors.yaml
 
-//        stage('Conctretize') {
-//            steps {
-//                script {
-//                    parallel(concretize())
-//                }
-//            }
-//        }
+       stage('Conctretize') {
+           steps {
+               script {
+                   parallel(concretize())
+               }
+           }
+       }
     }
 }
 
@@ -276,3 +276,8 @@ def some_stuff() {
                           "Run a stage in parallel")
 }
 
+def concretize() {
+    return _define_stages('concretize',
+                          'jenkins/deploy/scripts/concretize.sh',
+                          'Concretization of stack')
+}
