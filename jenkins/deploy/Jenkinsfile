@@ -161,7 +161,7 @@ pipeline {
        stage('Conctretize') {
            steps {
                script {
-                   parallel(concretize())
+                   parallel(do_concretize())
                }
            }
        }
@@ -218,7 +218,7 @@ def _define_stages(prefix, script, message, do_junit = true) {
         println('Agent Name: ' + agent_name)
         println('Environment: ' + environment)
 
-        jobs["${prefix}-${agent_name}"] = {
+        jobs["${prefix}-${agent_name}-${environment}"] = {
 
             stage("${prefix}-${agent_name}") {
                 node(agent_name) {
@@ -276,8 +276,8 @@ def some_stuff() {
                           "Run a stage in parallel")
 }
 
-def concretize() {
-    return _define_stages('concretize',
+def do_concretize() {
+    return _define_stages('Concretize',
                           'jenkins/deploy/scripts/concretize.sh',
                           'Concretization of stack')
 }
