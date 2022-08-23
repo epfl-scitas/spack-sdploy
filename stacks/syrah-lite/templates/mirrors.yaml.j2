@@ -1,4 +1,5 @@
----                                                             mirrors:
-/ssoft/spack/arvine/spack.v1/etc/spack/defaults/mirrors.yaml:2    spack-public: https://spack-llnl-mirror.s3-us-west-2.amazonaws.com/
-/ssoft/spack/arvine/spack.v1/etc/spack/mirrors.yaml:2             restricted: /ssoft/spack/spack-mirror-restricted
-/ssoft/spack/arvine/spack.v1/etc/spack/mirrors.yaml:3             local: /ssoft/spack/spack-mirror
+mirrors:
+  spack-public: https://spack-llnl-mirror.s3-us-west-2.amazonaws.com/
+{% for mirror, path in mirrors['paths'].items() %}
+  {{ mirror }}: {{ path }}
+{% endfor %}
