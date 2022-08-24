@@ -127,7 +127,7 @@ pipeline {
         stage('Deploy spack configuration') {
             steps {
                 script {
-                    parallel(do_deploy_spack_environment())
+                    parallel(do_deploy_spack_configuration())
                 }
             }
         }
@@ -197,29 +197,29 @@ def get_prefix(branch_name, stack_name) {
     return ""
 }
 
-def get_agent_name(environment) {
-    agent_name = 'ph02-syrah-rhel8'   
+def get_agent_name(platform) {
+    agent_name = platform + '-' + env.STACK_RELEASE + '-' + env.STACK_RELEASE_VER
     return agent_name
 }
 
 def _define_stages(prefix, script, message, do_junit = true) {
 
-    def environments = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
+    def platforms = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
 
     def jobs = [:]
-    for (def environment in environments) {
+    for (def platform in platforms) {
 
-        def agent_name = get_agent_name(environment)
+        def agent_name = get_agent_name(platform)
 
         // Reporting
         println('Agent Name: ' + agent_name)
-        println('Environment: ' + environment)
+        println('Platform: ' + platform)
 
         jobs["${prefix}-${agent_name}"] = {
 
             stage("${prefix}-${agent_name}") {
                 node(agent_name) {
-                    env.environment = environment
+                    env.environment = platform
                     env.script = script
                     def result = ''
                     checkout scm
@@ -231,7 +231,7 @@ def _define_stages(prefix, script, message, do_junit = true) {
                         result = error
                         currentBuild.result = 'FAILURE'
                         mattermostSend color: 'warning',
-                            message: "${message} failed for ${environment}. ${env.BUILD_URL} with error ${error}"
+                            message: "${message} failed for ${platform}. ${env.BUILD_URL} with error ${error}"
                     }
                     archiveArtifacts artifacts:'*.txt, *.xml',
                         allowEmptyArchive: true
@@ -255,8 +255,8 @@ def do_install_compilers() {
                           "Run a stage in parallel")
 }
 
-def do_deploy_spack_environment() {
-    return _define_stages("Deploy spack environment",
+def do_deploy_spack_configuration() {
+    return _define_stages("Deploy spack Configuration",
                           "${env.JENKINS}/deploy_spack_environment.sh",
                           "Run a stage in parallel")
 }
