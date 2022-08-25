@@ -14,7 +14,9 @@
 #                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-from ruamel import yaml
+import spack
+import spack.util
+import spack.util.spack_yaml as spyaml
 import collections.abc
 from pdb import set_trace as st
 
@@ -45,10 +47,10 @@ class ReadYaml(object):
         self.platform = None
         self.tokens = None
 
-    def read(self, filename):
+    def read(self, filename, **kwargs):
         """Read yaml file into data object"""
-
-        self.data = yaml.load(open(filename))
+        with open(filename) as f:
+            self.data = spyaml.load_config(f, **kwargs)
         return self.data
 
     def get_data(self, filename):
@@ -59,7 +61,7 @@ class ReadYaml(object):
     def list(self):
         """Display configuration"""
 
-        print(yaml.round_trip_dump(self.data))
+        print(spyaml.round_trip_dump(self.data))
 
     #
     #

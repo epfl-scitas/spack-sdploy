@@ -15,6 +15,8 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 import os
 
+import llnl.util.tty as tty
+
 import spack
 import spack.cmd
 import spack.config
@@ -36,10 +38,11 @@ from ..config import *
 from ..config_manager import Config
 from ..common_parser import setup_parser
 
-def _write_yaml(output, filename):
+def _write_yaml(output, filename, scheme=None):
     with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
         yaml = syaml.load_config(output)
-        spack.config.validate(yaml, spack.schema.packages.schema, filename)
+        if scheme:
+            spack.config.validate(yaml, schema, filename)
         syaml.dump_config(yaml, f, default_flow_style=False)
 
 
@@ -47,11 +50,10 @@ def write_packages_yaml(parser, args):
     """Create spack.yaml file"""
 
     config = Config(args)
-    if config.debug:
-        config.info()
+    tty.debug(config.info())
 
     # Initiates variables and does initial processing
-    pkgs = PackagesYaml(config.platform_yaml, config.stack_yaml, config.debug)
+    pkgs = PackagesYaml(config.platform_yaml, config.stack_yaml)
 
     # Create default packages dictionary
     pkgs.packages_yaml_packages()
@@ -80,7 +82,7 @@ def write_packages_yaml(parser, args):
     if env:
         filename = os.path.join(os.path.dirname(os.path.realpath(env.manifest_path)),
                                 config.packages_yaml)
-        _write_yaml(output, filename)
+        _write_yaml(output, filename, spack.schema.packages.scheme)
     else:
         filename = os.path.join(config.spack_config_path, config.packages_yaml)
         tty.msg(f'Writing file {filename}')

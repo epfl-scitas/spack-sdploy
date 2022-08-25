@@ -19,39 +19,24 @@ import llnl.util.tty as tty
 from copy import deepcopy
 import inspect
 
-from .yaml_manager import ReadYaml
+from .stack_file import StackFile, FilterException
 
 
-class PackagesYaml(ReadYaml):
+class PackagesYaml(StackFile):
     """Manage the packages section in stack.yaml"""
 
-    def __init__(self, platform_file, stack_file, debug):
+    def __init__(self, platform_file, stack_file):
         """Declare class structs"""
+        super().__init__(platform_file, stack_file)
 
         # Used to create packages.yaml:
         self.defaults = {}
         self.externals = {}
-        # Configuration files
-        self.platform_file = platform_file
-        self.stack_file = stack_file
-        self.debug = debug
-        # Original data
-        self.data = {} # The original data 
-        self.stack = {} # The data grouped by `section = packages`
-        # Tokens are set in yaml_manager
-        self.filters = {}
-
-        # Read stack.yaml into self.data attribute
-        self.read(self.stack_file)
-
-        # Replace tokens
-        self.replace_tokens(self.data)
 
         # Groups entries whose section = <section> in self.stack
+        self.stack = {} # The data grouped by `section = packages`
         self.stack = self.group_sections(deepcopy(self.data), 'packages')
 
-        # Read filters
-        self.filters = self.read_filters(self.platform_file)
 
     def packages_yaml_packages(self):
         """Creates a sub-dictionary containing the packages and their specs that
@@ -66,70 +51,61 @@ class PackagesYaml(ReadYaml):
             tty.debug(f'Entering package list: {pkg_list_name}')
 
             for pkg_list in pkg_list_cfg.get('packages'):
+                if not isinstance(pkg_list, dict):
+                    continue
 
-                if isinstance(pkg_list, dict):
-                    for pkg_name, pkg_attributes in pkg_list.items():
+                if len(pkg_list.keys()) > 1:
+                    raise KeyError()
 
-                        if self.debug:
-                            print(f'Reading package: {pkg_name}')
+                pkg_name = list(pkg_list.keys())[0]
+                pkg_attributes = pkg_list[pkg_name]
 
-                        if not 'default' in pkg_attributes:
-                            continue
+                tty.debug(f'Reading package: {pkg_name}')
 
-                        self.defaults[pkg_name] = {}
-                        defaults = pkg_attributes.get('default')
+                if not 'default' in pkg_attributes:
+                    continue
 
-                        if 'version' in defaults:
-                            self._packages_yaml_packages_version(pkg_name,
-                                                                 defaults['version'])
+                defaults = pkg_attributes['default']
 
-                        if 'variants' in defaults:
-                            self._packages_yaml_packages_variants(pkg_name,
-                                                                  defaults['variants'])
+                self.defaults[pkg_name] = {}
+                for attr in ['version', 'variants', 'buildable']:
+                    result = None
+                    if attr not in defaults:
+                        continue
 
-                        if 'buildable' in defaults:
-                            self.defaults[pkg_name]['buildable'] = defaults['buildable']
+                    tty.debug(f'Reading "{attr}": {defaults[attr]}')
+                    try:
+                        _packages_yaml_pkg = getattr(PackagesYaml, '_packages_yaml_packages_' + attr, )
+                        result =  _packages_yaml_pkg(self, defaults[attr])
+                    except FilterException as fe:
+                        tty.debug(f'Ignoring package {pkg_name} in `packages.yaml` due to missing value for {fe.filter_value} in filter {fe.filter}')
 
-    def _packages_yaml_packages_version(self, pkg_name, version_attributes):
+                    if result:
+                        self.defaults[pkg_name][attr] = result
+
+    def _packages_yaml_packages_version(self, version_attributes):
         """Adds version to dictionary"""
 
-        version = []
-        if isinstance(version_attributes, dict):
+        version = self._handle_filter(version_attributes)
 
-            # Check for filters presence
-            for filter in self.filters.keys():
-                if filter in version_attributes:
-                    version.append(version_attributes.get(filter).get(self.filters.get(filter)))
+        return version
 
-        # We are just checking that version_attributes is not a structure (dict, list, etc)
-        if not isinstance(version_attributes, dict):
-            # We need to cast version to str because of ' '.join in next step
-            version.append(str(version_attributes))
 
-        if version:
-            self.defaults[pkg_name]['version'] = version
-
-    def _packages_yaml_packages_variants(self, pkg_name, variants_attributes):
+    def _packages_yaml_packages_variants(self, variants_attributes):
         """Adds variants to dictionary"""
 
         variants = []
         if 'common' in variants_attributes:
             variants.append(variants_attributes.get('common'))
 
-        if isinstance(variants_attributes, dict):
+        variants.extend(self._handle_filter(variants_attributes))
+        return self._remove_newline(' '.join(variants))
 
-            # Check for filters presence
-            for filter in self.filters.keys():
-                if filter in variants_attributes:
-                    if variants_attributes.get(filter).get(self.filters.get(filter)) is not None:
-                        variants.append(variants_attributes.get(filter).get(self.filters.get(filter)))
-        # We are just checking that version_attributes is not a structure (dict, list, etc)
-        if not isinstance(variants_attributes, dict):
-            # We need to cast version to str because of ' '.join in next step
-            variants.append(str(variants_attributes))
+    def _packages_yaml_packages_buildable(self, buildable):
+        """Adds version to dictionary"""
 
-        if variants:
-            self.defaults[pkg_name]['variants'] = ' '.join(variants)
+        return buildable
+
 
     def packages_yaml_external(self):
         """Creates a sub-dictionary containing the packages and their specs that
@@ -147,6 +123,6 @@ class PackagesYaml(ReadYaml):
                         if not 'externals' in pkg_attributes:
                             continue
 
-                        self.externals[pkg_name] = pkg_attributes['externals']
+                        self.externals[pkg_name] = [dict(x) for x in pkg_attributes['externals']]
                         # externals = pkg_attributes.get('external')
 

@@ -16,6 +16,7 @@
 
 import os
 
+import llnl.util.tty as tty
 import spack
 import spack.cmd
 import spack.config
@@ -35,6 +36,7 @@ from ..spack_yaml import SpackYaml
 from ..util import st
 from ..config import *
 from ..config_manager import Config
+<<<<<<< Updated upstream
 from ..common_parser import setup_parser
 
 #def setup_parser(subparser):
@@ -54,6 +56,22 @@ from ..common_parser import setup_parser
 #        '-d', '--debug', action='store_true', default=False,
 #        help='print debug information.'
 #    )
+=======
+
+def setup_parser(subparser):
+    subparser.add_argument(
+        '-s', '--stack',
+        help='path to the stack file'
+    )
+    subparser.add_argument(
+        '-p', '--platform',
+        help='path to the platform file.'
+    )
+    subparser.add_argument(
+        '-t', '--templates-path',
+        help='where to find jinja templates'
+    )
+>>>>>>> Stashed changes
 
 def _write_yaml(output, filename):
     with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
@@ -66,11 +84,10 @@ def write_spack_yaml(parser, args):
     """Create spack.yaml file"""
 
     config = Config(args)
-    if config.debug:
-        config.info()
+    tty.debug(config.info())
 
     # Process Programming Environment section.
-    stack = SpackYaml(config.platform_yaml, config.stack_yaml, config.debug)
+    stack = SpackYaml(config.platform_yaml, config.stack_yaml)
 
     # Create PE definitions dictionary
     stack.create_pe_definitions_dict()
@@ -93,7 +110,9 @@ def write_spack_yaml(parser, args):
     data['pkgs_defs'] = stack.pkgs_defs
     data['pe_specs'] = stack.pe_specs
     data['pkgs_specs'] = stack.pkgs_specs
+    data['definitions_list'] = stack.definitions_list
 
+    print(stack.definitions_list)
     # Jinja setup
     file_loader = FileSystemLoader(config.templates_path)
     jinja_env = Environment(loader = file_loader, trim_blocks = True)
