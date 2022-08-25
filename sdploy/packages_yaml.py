@@ -15,6 +15,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import llnl.util.tty as tty
+import spack.schema
 
 from copy import deepcopy
 import inspect
@@ -25,9 +26,13 @@ from .stack_file import StackFile, FilterException
 class PackagesYaml(StackFile):
     """Manage the packages section in stack.yaml"""
 
-    def __init__(self, platform_file, stack_file):
+    def __init__(self, config):
         """Declare class structs"""
-        super().__init__(platform_file, stack_file)
+        super().__init__(config)
+
+        self.template = config.packages_yaml_template
+        self.yaml_file = config.packages_yaml
+        self.schema = spack.schema.packages.schema
 
         # Used to create packages.yaml:
         self.defaults = {}

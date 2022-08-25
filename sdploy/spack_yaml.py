@@ -18,6 +18,7 @@ from copy import deepcopy
 import inspect
 
 import llnl.util.tty as tty
+import spack.schema
 
 from .stack_file import StackFile, FilterException
 
@@ -25,9 +26,9 @@ from .stack_file import StackFile, FilterException
 class SpackYaml(StackFile):
     """Manage the packages section in stack.yaml"""
 
-    def __init__(self, platform_file, stack_file):
+    def __init__(self, config):
         """Declare class structs"""
-        super().__init__(platform_file, stack_file)
+        super().__init__(config)
 
         # The 4 dictionaries to give to jinja. The whole
         # purpose of this class is to construct these dicts.
@@ -36,6 +37,11 @@ class SpackYaml(StackFile):
         self.pe_specs = {}
         self.pkgs_specs = {}
         self.definitions_list = []
+
+        self.template = config.spack_yaml_template
+        self.yaml_file = config.spack_yaml
+        self.schema = spack.schema.env.schema
+
 
     def create_pe_libraries_specs_dict(self):
         pass
@@ -102,7 +108,8 @@ class SpackYaml(StackFile):
                     package.append(_spack_yaml_pkg(self, pkg_attributes[attr]))
             return package
         except FilterException as fe:
-            tty.debug(f'Ignoring package {pkg_name} in `spack.yaml` due to missing value for {fe.filter_value} in filter {fe.filter}')
+            tty.debug(f'Ignoring package {pkg_name} in `spack.yaml` due to'
+                      f'missing value for {fe.filter_value} in filter {fe.filter}')
             return None
 
 

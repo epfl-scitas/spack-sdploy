@@ -44,8 +44,7 @@ def write_modules_yaml(parser, args):
         config.info()
 
     # Instantiate ModulesYaml class
-    modules = ModulesYaml(config, config.debug)
+    modules = ModulesYaml(config)
 
     # Write modules file
-    modules.write_yaml()
-
+    modules.write_yaml(modules = modules.modules)

@@ -48,6 +48,10 @@ class ModulesYaml(ReadYaml):
         # Call method that will populate dict
         self._create_dictionary()
 
+        self.template = config.modules_yaml_template
+        self.yaml = config.modules + '.yaml'
+        self.schema = spack.schema.modules.schema
+
     def _create_dictionary(self):
         """Populates dictionary with the values it will
         need to write the modules.yaml file"""

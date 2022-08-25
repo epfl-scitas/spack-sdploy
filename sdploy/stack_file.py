@@ -1,4 +1,15 @@
+import os
+import inspect
+from jinja2 import Environment, FileSystemLoader
+
 import llnl.util.tty as tty
+import llnl.util.filesystem as fs
+import spack.config
+import spack.util.spack_yaml as syaml
+import spack.environment as ev
+
+
+from spack.util.executable import ProcessError, which
 
 from .yaml_manager import ReadYaml
 
@@ -13,12 +24,13 @@ class FilterException(Exception):
 class StackFile(ReadYaml):
     """Common opertation for stack file managers"""
 
-    def __init__(self, platform_file, stack_file):
+    def __init__(self, config):
         """Declare class structs"""
+        self.config = config
 
         # Configuration files
-        self.platform_file = platform_file
-        self.stack_file = stack_file
+        self.platform_file = config.platform_yaml
+        self.stack_file = config.stack_yaml
 
         # Original data
         self.data = {} # The original data
@@ -34,6 +46,8 @@ class StackFile(ReadYaml):
 
         # Read filters
         self.filters = self.read_filters(self.platform_file)
+
+        self.schema = None
 
 
     def _remove_newline(self, values):
@@ -57,3 +71,41 @@ class StackFile(ReadYaml):
             # We need to cast version to str because of ' '.join in next step
             result.append(str(attributes))
         return result
+
+    def _write_yaml(self, output, filename):
+        with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
+            yaml = syaml.load_config(output)
+            if self.schema:
+                spack.config.validate(yaml, self.schema, filename)
+            syaml.dump_config(yaml, f, default_flow_style=False)
+
+    def write_yaml(self, **kwargs):
+        """Write yaml file"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        # Jinja setup
+        file_loader = FileSystemLoader(self.config.templates_path)
+        jinja_env = Environment(loader = file_loader, trim_blocks = True)
+
+        # Check that template file exists
+        path = os.path.join(self.config.templates_path, self.template)
+        if not os.path.exists(path):
+            tty.die(f'Template file {self.config.mirrors_yaml_template} does not exist ',
+                    f'in {path}')
+
+        jinja_template = jinja_env.get_template(self.template)
+        output = jinja_template.render(**kwargs)
+
+        tty.msg(self.yaml_file)
+        tty.debug(output)
+
+        env = ev.active_environment()
+        if env:
+            filename = os.path.join(os.path.dirname(os.path.realpath(env.manifest_path)),
+                                    self.yaml_file)
+            self._write_yaml(output, filename)
+        else:
+            filename = os.path.join(self.config.spack_config_path, self.yaml_file)
+            tty.msg(f'Writing file {filename}')
+            self._write_yaml(output, filename)
