@@ -261,18 +261,6 @@ def do_deploy_spack_configuration() {
                           "Run a stage in parallel")
 }
 
-def do_parallel_stage_1() {
-    return _define_stages("stage_1",
-                          "${env.JENKINS_SCRIPTS_PATH}/parallel_stage1.sh",
-                          "Run a stage in parallel")
-}
-
-def some_stuff() {
-    return _define_stages("stage_1",
-                          "${env.JENKINS_SCRIPTS_PATH}/some_test.sh",
-                          "Run a stage in parallel")
-}
-
 def do_concretize() {
     return _define_stages('Concretize',
                           'jenkins/deploy/scripts/concretize.sh',
