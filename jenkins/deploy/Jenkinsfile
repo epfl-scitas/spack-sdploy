@@ -88,13 +88,22 @@ pipeline {
             }   
         }
 
+        stage('Test print Groovy vars') {
+            steps {
+                script {
+                   groovy_script()
+                }
+            }
+        }
+
+
         stage('Install Python Environment') {
             steps {
                 sh '${JENKINS}/update_production_configuration.sh'
             }
         }
 
-        stage('Clone Spack') {
+        stage('Clone Spack') {  
             steps {
                 sh '${JENKINS}/install_spack.sh'
             }
@@ -154,7 +163,7 @@ pipeline {
            }
        }
 
-       stage('Deploy software') {
+       stage('Deploy software') { 
            steps {
                script {
                    parallel(do_deploy())
@@ -166,7 +175,7 @@ pipeline {
 }
 
 
-def my_groovy_script(my_param) {
+def groovy_script(my_param) {
 
     param1 = "eduardo"
     def param2 = "eduardo2"
@@ -212,6 +221,8 @@ def _define_stages(prefix, script, message, do_junit = true) {
         def agent_name = get_agent_name(platform)
 
         // Reporting
+        println('Agent Name: ' + agent_name)
+        println('Platform: ' + platform)
         println('Agent Name: ' + agent_name)
         println('Platform: ' + platform)
 
