@@ -8,11 +8,11 @@ import spack.config
 import spack.util.spack_yaml as syaml
 import spack.environment as ev
 
-
 from spack.util.executable import ProcessError, which
 
 from .yaml_manager import ReadYaml
 
+from pdb import set_trace as st
 
 class FilterException(Exception):
     """Exception raised when filter evaluation fails"""
@@ -22,10 +22,11 @@ class FilterException(Exception):
 
 
 class StackFile(ReadYaml):
-    """Common opertation for stack file managers"""
+    """Common opertations for Yaml files"""
 
     def __init__(self, config):
         """Declare class structs"""
+
         self.config = config
 
         # Configuration files
@@ -85,20 +86,21 @@ class StackFile(ReadYaml):
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         # Jinja setup
-        file_loader = FileSystemLoader(self.config.templates_path)
+        file_loader = FileSystemLoader(self.templates_path)
         jinja_env = Environment(loader = file_loader, trim_blocks = True)
 
-        # Check that template file exists
-        path = os.path.join(self.config.templates_path, self.template)
+        # Check that template file exists in given path
+        path = os.path.join(self.templates_path, self.template_file)
         if not os.path.exists(path):
-            tty.die(f'Template file {self.config.mirrors_yaml_template} does not exist ',
-                    f'in {path}')
+            tty.die(f'Template file {self.template_file} does not exist ',
+                    f'in {self.templates_path}')
 
-        jinja_template = jinja_env.get_template(self.template)
-        output = jinja_template.render(**kwargs)
+        # Render and write self.yaml_file
+        jinja_template = jinja_env.get_template(self.template_file)
+        output = jinja_template.render(data = kwargs['data'])
 
         tty.msg(self.yaml_file)
-        tty.debug(output)
+        print(output)
 
         env = ev.active_environment()
         if env:
@@ -106,6 +108,6 @@ class StackFile(ReadYaml):
                                     self.yaml_file)
             self._write_yaml(output, filename)
         else:
-            filename = os.path.join(self.config.spack_config_path, self.yaml_file)
+            filename = os.path.join(self.yaml_path, self.yaml_file)
             tty.msg(f'Writing file {filename}')
             self._write_yaml(output, filename)
