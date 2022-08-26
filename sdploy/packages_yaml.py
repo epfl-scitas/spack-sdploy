@@ -21,7 +21,9 @@ from copy import deepcopy
 import inspect
 
 from .stack_file import StackFile, FilterException
+from .yaml_manager import ReadYaml
 
+from pdb import set_trace as st
 
 class PackagesYaml(StackFile):
     """Manage the packages section in stack.yaml"""
@@ -37,6 +39,7 @@ class PackagesYaml(StackFile):
         # Used to create packages.yaml:
         self.defaults = {}
         self.externals = {}
+        self.providers = {}
 
         # Groups entries whose section = <section> in self.stack
         self.stack = {} # The data grouped by `section = packages`
@@ -114,7 +117,6 @@ class PackagesYaml(StackFile):
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         return buildable
 
-
     def packages_yaml_external(self):
         """Creates a sub-dictionary containing the packages and their specs that
         will be given to jinja2 template.
@@ -134,3 +136,14 @@ class PackagesYaml(StackFile):
                         self.externals[pkg_name] = [dict(x) for x in pkg_attributes['externals']]
                         # externals = pkg_attributes.get('external')
 
+    def packages_yaml_providers(self):
+        """Creates a sub-dictionary containing the providers section that will
+        be given to jinja2 template.
+
+            pkgs_providers - this dict
+        """
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+        platform = ReadYaml()
+        platform.read(self.config.platform_yaml)
+        self.providers = platform.data['platform']['providers']

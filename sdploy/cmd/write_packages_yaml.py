@@ -40,10 +40,14 @@ def write_packages_yaml(parser, args):
     # Create external packages dictionary
     pkgs.packages_yaml_external()
 
+    # Create providers section dictionary
+    pkgs.packages_yaml_providers()
+
     # Group dictionaries together. Further dictionaries can be added later
     # if new features are needed.
     data = {}
     data['defaults'] = pkgs.defaults
     data['externals'] = pkgs.externals
+    data['providers'] = pkgs.providers
 
     pkgs.write_yaml(packages = data)

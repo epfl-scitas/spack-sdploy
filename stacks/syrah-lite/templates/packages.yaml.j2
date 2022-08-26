@@ -36,3 +36,11 @@ packages:
       uuid: [util-linux-uuid]
       gl: [mesa]
       glu: [mesa-glu]
+{#                                                          #}
+{#                                                          #}
+{#                                                PROVIDERS #}
+{#                                                          #}
+{#                                                          #}
+{% for lib, provider in packages['providers'].items() %}
+      {{ lib }}: {{ provider }}
+{% endfor %}

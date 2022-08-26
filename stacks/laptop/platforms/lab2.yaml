@@ -5,4 +5,5 @@ platform:
   tokens:
     core_compiler: gcc@9.4.0
     python3: 3.9.12
-    arch: x86_64_v2
+  providers:
+    target: [x86_64_v2]
