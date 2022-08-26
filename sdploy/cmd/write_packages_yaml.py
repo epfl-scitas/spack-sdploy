@@ -28,8 +28,8 @@ from ..common_parser import setup_parser
 def write_packages_yaml(parser, args):
     """Create spack.yaml file"""
 
+    # spack-sdploy setup
     config = Config(args)
-    tty.debug(config.info())
 
     # Initiates variables and does initial processing
     pkgs = PackagesYaml(config)
@@ -54,4 +54,4 @@ def write_packages_yaml(parser, args):
     data['providers'] = pkgs.providers
     data['preferences'] = pkgs.all_prefs
 
-    pkgs.write_yaml(packages = data)
+    pkgs.write_yaml(data = data)

@@ -22,19 +22,25 @@ import inspect
 
 from .stack_file import StackFile, FilterException
 from .yaml_manager import ReadYaml
-
-from pdb import set_trace as st
+from .util import *
 
 class PackagesYaml(StackFile):
     """Manage the packages section in stack.yaml"""
 
     def __init__(self, config):
         """Declare class structs"""
+
         super().__init__(config)
 
-        self.template = config.packages_yaml_template
-        self.yaml_file = config.packages_yaml
-        self.schema = spack.schema.packages.schema
+        # These variables will be used in StackFile class.
+        # Each command that write an Yaml file must define these 4 variables.
+        # This technique allows for individual command customization of each
+        # one of these parameters and at the same time the reuse of the functions
+        # all gathered in a single module.
+        self.templates_path = self.config.templates_path
+        self.template_file = self.config.packages_yaml_template
+        self.yaml_path = self.config.spack_config_path
+        self.yaml_file = self.config.packages_yaml
 
         # Used to create packages.yaml:
         self.defaults = {}
