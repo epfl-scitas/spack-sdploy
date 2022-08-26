@@ -29,8 +29,6 @@ section = "Sdploy"
 level = "short"
 
 # spack sdploy imports
-from pdb import set_trace as st
-
 from ..repos_yaml import ReposYaml
 from ..util import *
 from ..config import *
