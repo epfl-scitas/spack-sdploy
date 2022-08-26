@@ -49,6 +49,7 @@ class ReadYaml(object):
 
     def read(self, filename, **kwargs):
         """Read yaml file into data object"""
+
         with open(filename) as f:
             self.data = spyaml.load_config(f, **kwargs)
         return self.data
@@ -56,7 +57,8 @@ class ReadYaml(object):
     def get_data(self, filename):
         """Returns the data read"""
 
-        return(yaml.load(open(filename)))
+        with open(filename) as f:
+            return(spyaml.load_config(f))
 
     def list(self):
         """Display configuration"""
