@@ -124,6 +124,15 @@ pipeline {
             }
         }
 
+        stage('Parallel stage') {
+            steps {
+                script {
+                    parallel(do_parallel_stage())
+                }
+            }
+        }
+
+        
         stage('Deploy spack configuration') {
             steps {
                 script {
@@ -210,7 +219,7 @@ def get_agent_name(platform) {
 def _define_stages(prefix, script, message, do_junit = true) {
 
     //def platforms = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
-    platforms = ['ph02-avx ph02-avx2']
+    platforms = ['ph02-avx', 'ph02-avx2']
 
     def jobs = [:]
     for (def platform in platforms) {
@@ -280,5 +289,11 @@ def do_concretize() {
 def do_deploy() {
     return _define_stages('Deploy',
                           '${env.JENKINS}/install_stack.sh',
+                          'Deployement of production stack')
+}
+
+def do_parallel_stage() {
+    return _define_stages('Deploy',
+                          '${env.JENKINS}/parallel_stage1.sh',
                           'Deployement of production stack')
 }
