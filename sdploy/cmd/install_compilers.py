@@ -317,7 +317,7 @@ def install_compilers(parser, args, **kwargs):
     config.info()
 
     # Process Programming Environment section.
-    stack = SpackYaml(config.platform_yaml, config.stack_yaml, config.debug)
+    stack = SpackYaml(config)
 
     # Create PE definitions dictionary
     stack.create_pe_definitions_dict(core = False)
