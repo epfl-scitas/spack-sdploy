@@ -14,8 +14,8 @@ lmod_roots:
 tcl_roots:
 
 environments: # platforms
-  - ph02-avx
   - ph02-avx2
+  - ph02-avx
 
 mirrors:
   local: spack-mirror

@@ -209,7 +209,7 @@ def get_agent_name(platform) {
 
 def _define_stages(prefix, script, message, do_junit = true) {
 
-    //def platforms = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
+    def platforms = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
     //platforms = ['ph02-avx', 'ph02-avx2']
 
     def jobs = [:]
