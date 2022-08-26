@@ -50,12 +50,12 @@ pipeline {
 
     // A variable defined in a stage is bound to that stage.
     stages {
-    
-//     stage('Do a fresh restart') {
-//         steps {
-//             sh 'rm -rf ${STACK_PREFIX}'
-//         }
-//     }
+
+        stage('Do a fresh restart') {
+            steps {
+                sh 'rm -rf ${STACK_PREFIX}'
+            }
+         }
 //
 //     stage('Temporary clear file') {
 //         steps {
@@ -87,13 +87,6 @@ pipeline {
                 echo "SPACK_SDPLOY_INSTALL_PATH: ${SPACK_SDPLOY_INSTALL_PATH}"
             }   
         }
-
-        stage('Test print Groovy vars') {
-            steps {
-                   groovy_script('spl45')
-            }
-        }
-
 
         stage('Install Python Environment') {
             steps {
@@ -169,6 +162,11 @@ pipeline {
            }
        }
 
+       stage('Test print Groovy vars') {
+           steps {
+                  groovy_script('spl45')
+           }
+       }
     }
 }
 
