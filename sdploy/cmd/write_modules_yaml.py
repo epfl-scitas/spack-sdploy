@@ -47,4 +47,4 @@ def write_modules_yaml(parser, args):
     modules = ModulesYaml(config)
 
     # Write modules file
-    modules.write_yaml(modules = modules.modules)
+    modules.write_yaml()
