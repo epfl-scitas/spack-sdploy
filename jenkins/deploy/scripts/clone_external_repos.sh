@@ -10,5 +10,7 @@ echo 'Source Spack'
 echo "Installing external repos for:"
 echo "STACK: ${STACK_RELEASE}"
 
-spack write-repos-yaml -s ${STACK_RELEASE}
-
+# This is a workaround, we must specify an existing
+# platform, because SpackFile will do stuff, even if
+# not needed for this command.
+spack write-repos-yaml -s ${STACK_RELEASE} -p ph02-avx
