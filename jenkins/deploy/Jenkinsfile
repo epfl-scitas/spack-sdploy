@@ -210,11 +210,13 @@ def get_agent_name(platform) {
 def _define_stages(prefix, script, message, do_junit = true) {
 
     //def platforms = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
-    platforms = ['ph02-avx2', 'ph02-avx', 'ph02-avx3']
+    platforms = ['ph02-avx2', 'ph02-avx1', 'ph02-avx3']
 
     def jobs = [:]
     for (def platform in platforms) {
 
+        // THIS FUNCTIONS RETURNS THE CORRECT AGENT NAMES
+        // - ONE AGENT NAME PER PLATFORM
         def agent_name = get_agent_name(platform)
 
         // Reporting
