@@ -50,7 +50,8 @@ spack:
 {#                                                 PACKAGES #}
 {#                                                          #}
 {#                                                          #}
-{% for list_name, pe in stack['pkgs_specs'].items() %}
+{% for list_name in stack['definitions_list'] %}
+{% set pe = stack['pkgs_specs'][list_name] %}
 {% for compiler in pe['compilers'] %}
   - matrix:
     - [ ${{ list_name }} ]
