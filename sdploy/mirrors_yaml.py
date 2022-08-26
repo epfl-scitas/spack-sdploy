@@ -36,10 +36,18 @@ class MirrorsYaml(StackFile):
 
     def __init__(self, config):
         """Declare class structs"""
+
         super().__init__(config)
 
-        self.template = self.config.mirrors_yaml_template
-        self.output_yaml = self.config.mirrors_yaml
+        # These variables will be used in StackFile class.
+        # Each command that write an Yaml file must define these 4 variables.
+        # This technique allows for individual command customization of each
+        # one of these parameters and at the same time the reuse of the functions
+        # all gathered in a single module.
+        self.templates_path = self.config.templates_path
+        self.template_file = self.config.mirrors_yaml_template
+        self.yaml_path = self.config.spack_config_path
+        self.yaml_file = self.config.mirrors_yaml
 
         self.mirrors = {}
         self._create_dictionary()
@@ -61,5 +69,5 @@ class MirrorsYaml(StackFile):
 
         self.mirrors['paths'] = {}
         for k,v in commons.data['mirrors'].items():
-            self.mirrors['paths'][k] = (commons.data['work_directory'] + os.path.sep
-                                        + v)
+            self.mirrors['paths'][k] = (commons.data['work_directory'] +
+                                        os.path.sep + v)

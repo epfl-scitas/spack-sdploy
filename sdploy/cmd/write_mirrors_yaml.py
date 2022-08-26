@@ -41,12 +41,11 @@ def write_mirrors_yaml(parser, args):
 
     # spack-sdploy setup
     config = Config(args)
-    if config.debug:
-        config.info()
 
     # Instantiate ModulesYaml class
     mirrors = MirrorsYaml(config)
 
-    # Write mirrors file
-    mirrors.write_yaml()
+    # Write mirrors file.
+    # Each commend must pass the dictionary in the contents variable.
+    mirrors.write_yaml(data = mirrors.mirrors)
 
