@@ -4,8 +4,8 @@ packages:
 {#                                         DEFAULT PACKAGES #}
 {#                                                          #}
 {#                                                          #}
-{% for pkg, definition in packages['defaults'].items() %}
-{% if pkg not in packages['externals'] %}
+{% for pkg, definition in data['defaults'].items() %}
+{% if pkg not in data['externals'] %}
   {{ pkg }}:
 {% for key, value in definition.items() %}
     {{ key }}: {{ value }}
@@ -17,10 +17,10 @@ packages:
 {#                                        EXTERNAL PACKAGES #}
 {#                                                          #}
 {#                                                          #}
-{% for pkg, definition in packages['externals'].items() %}
+{% for pkg, definition in data['externals'].items() %}
   {{ pkg }}:
-{% if pkg in packages['defaults'] %}
-{% for key, value in packages['defaults'][pkg].items() %}
+{% if pkg in data['defaults'] %}
+{% for key, value in data['defaults'][pkg].items() %}
     {{ key }}: {{ value }}
 {% endfor %}
 {% endif %}
@@ -35,7 +35,7 @@ packages:
 {#                                          ALL PREFERENCES #}
 {#                                                          #}
 {#                                                          #}
-{% for pref, value in packages['preferences'].items() %}
+{% for pref, value in data['preferences'].items() %}
     {{ pref }}: {{value}}
 {% endfor %}
     providers:
@@ -48,6 +48,6 @@ packages:
 {#                                                PROVIDERS #}
 {#                                                          #}
 {#                                                          #}
-{% for lib, provider in packages['providers'].items() %}  
+{% for lib, provider in data['providers'].items() %}
       {{ lib }}: {{ provider }}                           
 {% endfor %}                                              

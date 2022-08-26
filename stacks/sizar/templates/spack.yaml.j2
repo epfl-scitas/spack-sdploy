@@ -10,7 +10,7 @@ spack:
 {#                                  PROGRAMMING ENVIRONMENT #}
 {#                                                          #}
 {#                                                          #}
-{% for definition, spec  in stack['pe_defs'].items() %}
+{% for definition, spec  in data['pe_defs'].items() %}
   - {{ definition }}: [ {{ spec }} ]
 {% endfor %}
 {#                                                          #}
@@ -18,8 +18,8 @@ spack:
 {#                                                 PACKAGES #}
 {#                                                          #}
 {#                                                          #}
-{% if 'pkgs_defs' in stack.keys() %}
-{% for list_name, pkg_list in stack['pkgs_defs'].items() %}
+{% if 'pkgs_defs' in data.keys() %}
+{% for list_name, pkg_list in data['pkgs_defs'].items() %}
   - {{ list_name }}:
 {% for pkg in pkg_list %}
     - {{ pkg }}
@@ -37,7 +37,7 @@ spack:
 {#                                  PROGRAMMING ENVIRONMENT #}
 {#                                                          #}
 {#                                                          #}
-{% for pe, stack in stack['pe_specs'].items() %}
+{% for pe, stack in data['pe_specs'].items() %}
   - matrix:
     - [ ${{ pe }}_compiler]
     - [ $%core_compiler ]
@@ -52,8 +52,8 @@ spack:
 {#                                                 PACKAGES #}
 {#                                                          #}
 {#                                                          #}
-{% if 'pkgs_specs' in stack.keys() %}
-{% for list_name, pe in stack['pkgs_specs'].items() %}
+{% if 'pkgs_specs' in data.keys() %}
+{% for list_name, pe in data['pkgs_specs'].items() %}
 {% for compiler in pe['compilers'] %}
   - matrix:
     - [ ${{ list_name }} ]

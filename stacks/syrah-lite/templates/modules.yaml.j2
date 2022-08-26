@@ -1,20 +1,20 @@
 modules:
   default:
     roots:
-      lmod: {{ modules['lmod_roots'] }}
-      tcl: {{ modules['tcl_roots'] }}
+      lmod: {{ data['lmod_roots'] }}
+      tcl: {{ data['tcl_roots'] }}
     enable:
     - lmod
     - tcl
     lmod:
       hash_length: 0
       core_compilers:
-      - {{ modules['core_compiler'] }}
+      - {{ data['core_compiler'] }}
       hierarchy:
       - mpi
       blacklist_implicits: true
-      all:
-        suffixes:
-{% for variant, suffix in modules['suffixes'].items() %}
-          {{ variant }}: {{ suffix }}
+    all:
+      suffixes:
+{% for variant, suffix in data['suffixes'].items() %}
+        {{ variant }}: {{ suffix }}
 {% endfor %}
