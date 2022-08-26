@@ -37,19 +37,19 @@ from .util import *
 class ModulesYaml(ReadYaml):
     """Provides methods to write the modules.yaml configuration"""
 
-    def __init__(self, config, debug=False):
+    def __init__(self, config):
         """Declare class structs"""
 
         # Configuration files
         self.config = config
-        self.debug = debug
+        self.debug = config.debug
         self.modules = {}
 
         # Call method that will populate dict
         self._create_dictionary()
 
         self.template = config.modules_yaml_template
-        self.yaml = config.modules + '.yaml'
+        self.yaml = config.modules_yaml
         self.schema = spack.schema.modules.schema
 
     def _create_dictionary(self):
