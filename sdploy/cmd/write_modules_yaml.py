@@ -40,11 +40,10 @@ def write_modules_yaml(parser, args):
 
     # spack-sdploy setup
     config = Config(args)
-    if config.debug:
-        config.info()
 
     # Instantiate ModulesYaml class
     modules = ModulesYaml(config)
 
-    # Write modules file
-    modules.write_yaml()
+    # Write modules file.
+    # Each commend must pass the dictionary in the contents variable.
+    modules.write_yaml(data = modules.modules)

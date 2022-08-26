@@ -31,26 +31,29 @@ from llnl.util.filesystem import mkdirp, working_dir
 from spack.util.executable import ProcessError, which
 from jinja2 import Environment, FileSystemLoader
 
-from .yaml_manager import ReadYaml
+from .stack_file import StackFile
 from .util import *
 
-class ModulesYaml(ReadYaml):
+class ModulesYaml(StackFile):
     """Provides methods to write the modules.yaml configuration"""
 
     def __init__(self, config):
         """Declare class structs"""
 
-        # Configuration files
-        self.config = config
-        self.debug = config.debug
+        super().__init__(config)
+
+        # These variables will be used in StackFile class.
+        # Each command that write an Yaml file must define these 4 variables.
+        # This technique allows for individual command customization of each
+        # one of these parameters and at the same time the reuse of the functions
+        # all gathered in a single module.
+        self.templates_path = self.config.templates_path
+        self.template_file = self.config.modules_yaml_template
+        self.yaml_path = self.config.spack_config_path
+        self.yaml_file = self.config.modules_yaml
+
         self.modules = {}
-
-        # Call method that will populate dict
         self._create_dictionary()
-
-        self.template = config.modules_yaml_template
-        self.yaml = config.modules_yaml
-        self.schema = spack.schema.modules.schema
 
     def _create_dictionary(self):
         """Populates dictionary with the values it will
@@ -93,42 +96,4 @@ class ModulesYaml(ReadYaml):
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         self.modules['suffixes'] = {'+mpi': 'mpi', '+openmp': 'openmp'}
-
-    def _write_yaml(self, output, filename):
-        """Docstring"""
-
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-        with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
-            yaml = syaml.load_config(output)
-            # spack.config.validate(yaml, spack.schema.env.schema, filename)
-            syaml.dump_config(yaml, f, default_flow_style=False)
-
-    def write_yaml(self):
-        """Write modules.yaml"""
-
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-
-        # Jinja setup
-        file_loader = FileSystemLoader(self.config.templates_path)
-        jinja_env = Environment(loader = file_loader, trim_blocks = True)
-
-        # Check that template file exists
-        path = os.path.join(self.config.templates_path, self.config.modules_yaml_template)
-        if not os.path.exists(path):
-            tty.die(f'Template file {self.config.modules_yaml_template} does not exist ',
-                    f'in {path}')
-
-        template = jinja_env.get_template(self.config.modules_yaml_template)
-        output = template.render(modules = self.modules)
-
-        tty.msg(self.config.modules_yaml)
-        print(output)
-
-        env = ev.active_environment()
-        if env:
-            self._write_yaml(output, os.path.realpath(env.manifest_path))
-        else:
-            filename = os.path.join(self.config.spack_config_path, self.config.modules_yaml)
-            tty.msg(f'Writing file {filename}')
-            self._write_yaml(output, filename)
 
