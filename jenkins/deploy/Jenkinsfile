@@ -294,6 +294,6 @@ def do_deploy() {
 
 def do_parallel_stage() {
     return _define_stages('Deploy',
-                          '${env.JENKINS}/parallel_stage1.sh',
+                          'jenkins/deploy/scripts/parallel_stage1.sh',
                           'Deployement of production stack')
 }
