@@ -31,67 +31,36 @@ from llnl.util.filesystem import mkdirp, working_dir
 from spack.util.executable import ProcessError, which
 
 from jinja2 import Environment, FileSystemLoader
-from pdb import set_trace as st
 
-from .yaml_manager import ReadYaml
+from .stack_file import StackFile
 from .util import *
 
-class ReposYaml(ReadYaml):
+class ReposYaml(StackFile):
     """Manage the packages section in stack.yaml"""
 
-    def __init__(self, config, debug=False):
+    def __init__(self, config):
         """Declare class structs"""
 
-        # Configuration files
-        self.config = config
-        self.stack_file = os.path.join(config.stack_yaml)
-        self.commons_file = os.path.join(config.commons_yaml)
-        self.debug = debug
-        # Placement for repos dictionary needed for repos.yaml
+        super().__init__(config)
+
+        # These variables will be used in StackFile class.
+        # Each command that write an Yaml file must define these 4 variables.
+        # This technique allows for individual command customization of each
+        # one of these parameters and at the same time the reuse of the functions
+        # all gathered in a single module.
+        self.templates_path = self.config.templates_path
+        self.template_file = self.config.repos_yaml_template
+        self.yaml_path = self.config.spack_config_path
+        self.yaml_file = self.config.repos_yaml
+
         self.repos = {}
-        # Load files contents into dictionaries
         self._load_data()
-
-    def _write_yaml(self, output, filename):
-
-        with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
-            yaml = syaml.load_config(output)
-            # spack.config.validate(yaml, spack.schema.env.schema, filename)
-            syaml.dump_config(yaml, f, default_flow_style=False)
-
-    def write_yaml(self):
-        """Write repos.yaml"""
-
-        # Jinja setup
-        file_loader = FileSystemLoader(self.config.templates_path)
-        jinja_env = Environment(loader = file_loader, trim_blocks = True)
-
-        # Check that template file exists
-        path = os.path.join(self.config.templates_path, self.config.repos_yaml_template)
-        if not os.path.exists(path):
-            tty.die(f'Template file {self.config.repos_yaml_template} does not exist ',
-                    f'in {path}')
-
-        # Render and write repos.yaml
-        template = jinja_env.get_template(self.config.repos_yaml_template)
-        output = template.render(repos = self.repos)
-
-        tty.msg(self.config.repos_yaml)
-        print(output)
-
-        env = ev.active_environment()
-        if env:
-            self._write_yaml(output, os.path.realpath(env.manifest_path))
-        else:
-            filename = os.path.join(self.config.spack_config_path, self.config.repos_yaml)
-            tty.msg(f'Writing file {filename}')
-            self._write_yaml(output, filename)
 
     def _load_data(self):
         """Read configuration"""
 
-        self.stack = self.get_data(self.stack_file)
-        self.commons = self.get_data(self.commons_file)
+        self.stack = self.get_data(self.config.stack_yaml)
+        self.commons = self.get_data(self.config.commons_yaml)
 
     def clone(self):
         """Read repositories declared in commons.yaml to be cloned and call clone method"""
@@ -113,9 +82,6 @@ class ReposYaml(ReadYaml):
 
         origin_url = url
         branch = tag
-        #origin_url, branch = get_origin_info(args.remote)
-        #prefix = args.prefix
-        # tty.msg("Fetching spack from '%s': %s" % (args.remote, origin_url))
 
         if os.path.isfile(prefix):
             tty.die("There is already a file at %s" % prefix)
