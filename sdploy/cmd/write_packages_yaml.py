@@ -43,11 +43,15 @@ def write_packages_yaml(parser, args):
     # Create providers section dictionary
     pkgs.packages_yaml_providers()
 
+    # Create all preferences section dictionary
+    pkgs.packages_yaml_all_preferences()
+
     # Group dictionaries together. Further dictionaries can be added later
     # if new features are needed.
     data = {}
     data['defaults'] = pkgs.defaults
     data['externals'] = pkgs.externals
     data['providers'] = pkgs.providers
+    data['preferences'] = pkgs.all_prefs
 
     pkgs.write_yaml(packages = data)

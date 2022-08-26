@@ -40,6 +40,7 @@ class PackagesYaml(StackFile):
         self.defaults = {}
         self.externals = {}
         self.providers = {}
+        self.all_prefs = {}
 
         # Groups entries whose section = <section> in self.stack
         self.stack = {} # The data grouped by `section = packages`
@@ -146,4 +147,18 @@ class PackagesYaml(StackFile):
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         platform = ReadYaml()
         platform.read(self.config.platform_yaml)
-        self.providers = platform.data['platform']['providers']
+        if 'providers' in platform.data['platform']:
+            self.providers = platform.data['platform']['providers']
+
+    def packages_yaml_all_preferences(self):
+        """Creates a sub-dictionary containing the common preferences section
+        to be given to jinja2 template.
+
+            pkgs_all_prefs - this dict
+        """
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+        platform = ReadYaml()
+        platform.read(self.config.platform_yaml)
+        if 'preferences' in platform.data['platform']:
+            self.all_prefs = platform.data['platform']['preferences']
