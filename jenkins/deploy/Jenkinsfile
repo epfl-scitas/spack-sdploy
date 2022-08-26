@@ -90,9 +90,7 @@ pipeline {
 
         stage('Test print Groovy vars') {
             steps {
-                script {
-                   groovy_script()
-                }
+                   groovy_script('spl45')
             }
         }
 
