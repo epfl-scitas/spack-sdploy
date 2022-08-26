@@ -21,14 +21,25 @@ import llnl.util.tty as tty
 import spack.schema
 
 from .stack_file import StackFile, FilterException
-
+from .util import *
 
 class SpackYaml(StackFile):
     """Manage the packages section in stack.yaml"""
 
     def __init__(self, config):
         """Declare class structs"""
+
         super().__init__(config)
+
+        # These variables will be used in StackFile class.
+        # Each command that write an Yaml file must define these 4 variables.
+        # This technique allows for individual command customization of each
+        # one of these parameters and at the same time the reuse of the functions
+        # all gathered in a single module.
+        self.templates_path = self.config.templates_path
+        self.template_file = self.config.spack_yaml_template
+        self.yaml_path = self.config.spack_config_path
+        self.yaml_file = self.config.spack_yaml
 
         # The 4 dictionaries to give to jinja. The whole
         # purpose of this class is to construct these dicts.
@@ -38,10 +49,9 @@ class SpackYaml(StackFile):
         self.pkgs_specs = {}
         self.definitions_list = []
 
-        self.template = config.spack_yaml_template
-        self.yaml_file = config.spack_yaml
-        self.schema = spack.schema.env.schema
-
+#        self.template = config.spack_yaml_template
+#        self.yaml_file = config.spack_yaml
+#        self.schema = spack.schema.env.schema
 
     def create_pe_libraries_specs_dict(self):
         pass
@@ -86,6 +96,10 @@ class SpackYaml(StackFile):
         self.pe_defs = self._flatten_dict(self.pe_stack)
 
     def _handle_package_dictionary(self, pkg_list):
+        """missing docstring"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
         if len(pkg_list.keys()) > 1:
             raise KeyError()
 
@@ -111,7 +125,6 @@ class SpackYaml(StackFile):
             tty.debug(f'Ignoring package {pkg_name} in `spack.yaml` due to'
                       f'missing value for {fe.filter_value} in filter {fe.filter}')
             return None
-
 
     def create_pkgs_definitions_dict(self):
         """Regroup package lists with their specs"""
@@ -154,6 +167,7 @@ class SpackYaml(StackFile):
     def _filters_in_package(self, dic):
         """Return list of filters found in dictionary"""
 
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         result = []
         for filter in self.filters.keys():
             if filter in dic:
@@ -163,6 +177,7 @@ class SpackYaml(StackFile):
     def _spack_yaml_pkg_version(self, version_attributes):
         """Returns package version"""
 
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         version = self._handle_filter(version_attributes)
         return(self._remove_newline(' '.join(version)))
 
@@ -170,6 +185,7 @@ class SpackYaml(StackFile):
     def _spack_yaml_pkg_variants(self, variants_attributes):
         """Returns package variants"""
 
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         variants = []
         if 'common' in variants_attributes:
             variants.append(variants_attributes.get('common'))
@@ -181,6 +197,7 @@ class SpackYaml(StackFile):
     def _spack_yaml_pkg_dependencies(self, dependencies_attributes):
         """Returns package dependencies"""
 
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         dependencies = []
         # We are just checking that version_attributes is not a structure (dict, list, etc)
         if isinstance(dependencies_attributes, list):
@@ -209,13 +226,13 @@ class SpackYaml(StackFile):
             else:
                 yield new_key, v
 
-    # METHOD IS NOT CURRENTLY USED
-    def _get_pe_list(self):
-        """Return list with PE names"""
-
-        stack = self.group_sections(deepcopy(self.data), 'pe')
-        pe_list = list(stack.keys())
-        if 'metadata' in pe_list:
-            pe_list.pop('metadata')
-
-        return(pe_list)
+#    # METHOD IS NOT CURRENTLY USED
+#    def _get_pe_list(self):
+#        """Return list with PE names"""
+#
+#        stack = self.group_sections(deepcopy(self.data), 'pe')
+#        pe_list = list(stack.keys())
+#        if 'metadata' in pe_list:
+#            pe_list.pop('metadata')
+#
+#        return(pe_list)

@@ -30,7 +30,6 @@ def write_spack_yaml(parser, args):
     """Create spack.yaml file"""
 
     config = Config(args)
-    tty.debug(config.info())
 
     # Process Programming Environment section.
     stack = SpackYaml(config)
@@ -60,4 +59,4 @@ def write_spack_yaml(parser, args):
 
     tty.debug(stack.definitions_list)
 
-    stack.write_yaml(stack = data)
+    stack.write_yaml(data = data)
