@@ -8,7 +8,7 @@ packages:
 {% if pkg not in packages['externals'] %}
   {{ pkg }}:
 {% for key, value in definition.items() %}
-    {{ key }}: {{value}}
+    {{ key }}: {{ value }}
 {% endfor %}
 {% endif %}
 {% endfor %}
@@ -21,20 +21,33 @@ packages:
   {{ pkg }}:
 {% if pkg in packages['defaults'] %}
 {% for key, value in packages['defaults'][pkg].items() %}
-    {{ key }}: {{value}}
+    {{ key }}: {{ value }}
 {% endfor %}
 {% endif %}
     externals:
 {% for spec in definition %}
-    - {{spec}}
+    - {{ spec }}
 {% endfor %}
 {% endfor %}
-
   all:
+{#                                                          #}
+{#                                                          #}
+{#                                          ALL PREFERENCES #}
+{#                                                          #}
+{#                                                          #}
+{% for pref, value in packages['preferences'].items() %}
+    {{ pref }}: {{value}}
+{% endfor %}
     providers:
       blas: [openblas, intel-mkl]
       fftw-api: [fftw]
       uuid: [util-linux-uuid]
-      gl: [mesa]
       glu: [mesa-glu]
-      java: [openjdk]
+{#                                                          #}
+{#                                                          #}
+{#                                                PROVIDERS #}
+{#                                                          #}
+{#                                                          #}
+{% for lib, provider in packages['providers'].items() %}  
+      {{ lib }}: {{ provider }}                           
+{% endfor %}                                              

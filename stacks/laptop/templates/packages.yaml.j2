@@ -30,17 +30,24 @@ packages:
 {% endfor %}
 {% endfor %}
   all:
+{#                                                          #}
+{#                                                          #}
+{#                                          ALL PREFERENCES #}
+{#                                                          #}
+{#                                                          #}
+{% for pref, value in packages['preferences'].items() %}
+    {{ pref }}: {{value}}
+{% endfor %}
     providers:
       blas: [openblas, intel-mkl]
       fftw-api: [fftw]
       uuid: [util-linux-uuid]
-      gl: [mesa]
       glu: [mesa-glu]
 {#                                                          #}
 {#                                                          #}
 {#                                                PROVIDERS #}
 {#                                                          #}
 {#                                                          #}
-{% for lib, provider in packages['providers'].items() %}
-      {{ lib }}: {{ provider }}
-{% endfor %}
+{% for lib, provider in packages['providers'].items() %}  
+      {{ lib }}: {{ provider }}                           
+{% endfor %}                                              
