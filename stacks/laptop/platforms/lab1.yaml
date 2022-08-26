@@ -5,5 +5,7 @@ platform:
   tokens:
     core_compiler: gcc@9.4.0
     python3: 3.10.4
-  providers:
+  preferences:
     target: [x86_64_v3]
+  providers:
+    gl: [mesa]
