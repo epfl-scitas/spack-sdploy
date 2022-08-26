@@ -51,11 +51,11 @@ pipeline {
     // A variable defined in a stage is bound to that stage.
     stages {
 
-//        stage('Do a fresh restart') {
-//            steps {
-//                sh 'rm -rf ${STACK_PREFIX}'
-//            }
-//         }
+        stage('Do a fresh restart') {
+            steps {
+                sh 'rm -rf ${STACK_PREFIX}'
+            }
+         }
 //
 //     stage('Temporary clear file') {
 //         steps {
@@ -210,7 +210,7 @@ def get_agent_name(platform) {
 def _define_stages(prefix, script, message, do_junit = true) {
 
     //def platforms = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
-    platforms = ['ph02-avx', 'ph02-avx2']
+    //platforms = ['ph02-avx', 'ph02-avx2']
 
     def jobs = [:]
     for (def platform in platforms) {
