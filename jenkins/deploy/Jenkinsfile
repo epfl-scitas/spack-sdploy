@@ -280,15 +280,15 @@ def do_deploy_spack_configuration() {
 }
 
 def do_concretize() {
-    return _define_stages('Concretize',
-                          '${env.JENKINS}/concretize.sh',
-                          'Concretization of stack')
+    return _define_stages("Concretize",
+                          "${env.JENKINS}/concretize.sh",
+                          "Concretization of stack")
 }
 
 def do_deploy() {
-    return _define_stages('Deploy',
-                          '${env.JENKINS}/install_stack.sh',
-                          'Deployement of production stack')
+    return _define_stages("Deploy",
+                          "${env.JENKINS}/install_stack.sh",
+                          "Deployement of production stack")
 }
 
 def do_parallel_stage() {
