@@ -166,7 +166,7 @@ pipeline {
        stage('Deploy software') { 
            steps {
                script {
-                   parallel(do_deploy())
+                  parallel(do_deploy())
                }
            }
        }
