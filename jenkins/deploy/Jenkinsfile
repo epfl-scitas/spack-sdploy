@@ -171,11 +171,6 @@ pipeline {
            }
        }
 
-       stage('Test print Groovy vars') {
-           steps {
-                  groovy_script('spl45')
-           }
-       }
     }
 }
 
