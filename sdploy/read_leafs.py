@@ -14,40 +14,34 @@
 #                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-import llnl.util.tty as tty
-
 import os
-from collections.abc import MutableMapping
-from copy import deepcopy
 import inspect
-
-from pdb import set_trace as st
-from .yaml_manager import ReadYaml
+import llnl.util.tty as tty
+from .stack_file import StackFile
+from .util import *
 
 class FilterException(Exception):
     """Exception raised when filter evaluation fails"""
+
     def __init__(self, filter, filter_value):
         self.filter = filter
         self.filter_value = filter_value
 
-
-class ReadLeaf(ReadYaml):
+class ReadLeaf(StackFile):
     """Manage the packages section in stack.yaml"""
 
-    def __init__(self, platform_file, stack_file, debug):
+    def __init__(self, config):
         """Declare class structs"""
 
         # Configuration
-        self.platform_file = platform_file
-        self.stack_file = stack_file
-        self.debug = debug
+        self.platform_file = config.platform_yaml
+        self.stack_file = config.stack_yaml
         self.leafs = []
 
     def read_key(self, key):
         """Regroup compilers for parsing in specs"""
 
-        if self.debug:
-            print(f'Entering function: {inspect.stack()[0][3]}')
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         # Read stack file
         compilers = ReadYaml()
@@ -57,20 +51,34 @@ class ReadLeaf(ReadYaml):
         # Get only PE section
         data = self.group_sections(compilers.data, 'pe')
 
-        # Gather compilers in compilers list
+        # Replace tokens found in platform file
+        self.replace_tokens(data)
+
+        # Gather compilers in leafs
         self._leafs_from_dict(data, key)
 
     def report_leafs(self):
-        """Report findings"""
+        """Report one item per line with dash"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
         tty.info(f'The following items were found in {self.stack_file}')
         for leaf in self.leafs:
             print(f'- {leaf}')
-            
+
+    def write_to_file(self, filename):
+        """Report leafs in a row to filename (to feed spack install)"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        tty.info(f'Leafs written to {filename}')
+        with open(filename, 'w') as f:
+            f.write(' '.join(self.leafs))
+
     def _leafs_from_dict(self, dic, key):
         """Returns list of values whose key is a string named key"""
 
-        if self.debug:
-            print(f'Entering function: {inspect.stack()[0][3]}')
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         for k,v in dic.items():
             if isinstance(v, dict):
