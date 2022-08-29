@@ -25,6 +25,7 @@ spack readc -s ${STACK_RELEASE} -p ${environment}
 echo "Contents of compilers.${environment}:"
 cat compilers.${environment}
 
+echo ""
 echo "Contents of compilers variable:"
 compilers=$(cat compilers.${environment})
 echo $compilers
