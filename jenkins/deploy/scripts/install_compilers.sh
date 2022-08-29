@@ -22,11 +22,14 @@ fi
 
 spack readc -s ${STACK_RELEASE} -p ${environment}
 
+echo "Contents of compilers.${environment}:"
+cat compilers.${environment}
+
 echo "Installing compilers"
-spack -env ${environment} install compilers.${environment}
+spack -v --env ${environment} install compilers.${environment}
 
 echo "Add seen in spack-packagelist"
-spack --env ${environment} module lmod refresh -y compilers.${environment}
+spack -v --env ${environment} module lmod refresh -y compilers.${environment}
 
 #echo "Adding stack compilers"
 #spack --env ${environment} add-compilers find -s ${STACK_RELEASE} --scope system
