@@ -3,7 +3,7 @@ platform:
     gpu: none
     mpi: infiniband
   tokens:
-    core_compiler: gcc@8.5.0 target=x86_64_v2
+    core_compiler: gcc@8.5.0 target=x86_64_v3
     python3: 3.10.4
     target: x86_64_v3
   preferences:
