@@ -10,10 +10,10 @@ echo "Installing stack configuration: ${environment}"
 spack --env ${environment} write-spack-yaml -s ${STACK_RELEASE} -p ${environment}
 
 echo "Installing packages configuration: ${environment}"
-spack write-packages-yaml -v -s ${STACK_RELEASE} -p ${environment} -d
+spack -v write-packages-yaml -s ${STACK_RELEASE} -p ${environment} -d
 
 echo "Installing modules configuration: ${environment}"
-spack write-modules-yaml -v -s ${STACK_RELEASE} -p ${environment} -d
+spack -v write-modules-yaml -s ${STACK_RELEASE} -p ${environment} -d
 
 echo "Installing mirrors configuration: ${environment}"
-spack write-mirrors-yaml -v-s ${STACK_RELEASE} -p ${environment} -d
+spack -v write-mirrors-yaml -s ${STACK_RELEASE} -p ${environment} -d
