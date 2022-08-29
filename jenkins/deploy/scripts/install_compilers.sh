@@ -33,7 +33,7 @@ echo "Installing compilers"
 spack -v --env ${environment} install ${compilers}
 
 echo "Add seen in spack-packagelist"
-spack -v --env ${environment} module lmod refresh -y compilers.${environment}
+spack -v --env ${environment} module lmod refresh -y ${compilers}
 
 #echo "Adding stack compilers"
 #spack --env ${environment} add-compilers find -s ${STACK_RELEASE} --scope system
