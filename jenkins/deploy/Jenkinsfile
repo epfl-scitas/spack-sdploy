@@ -133,13 +133,20 @@ pipeline {
         }
 
         
-        stage('Deploy spack configuration') {
+        stage('Deploy spack manifest') {
             steps {
                 script {
                     parallel(do_deploy_spack_configuration())
                 }
             }
         }
+
+        stage('Deploy spack configuration') {
+            steps {
+                sh '${JENKINS}/write_configuration.sh'
+            }
+        }
+
 
         stage('Install compilers') {
             steps {
