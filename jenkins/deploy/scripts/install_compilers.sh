@@ -25,8 +25,12 @@ spack readc -s ${STACK_RELEASE} -p ${environment}
 echo "Contents of compilers.${environment}:"
 cat compilers.${environment}
 
+echo "Contents of compilers variable:"
+compilers=$(cat compilers.${environment})
+echo $compilers
+
 echo "Installing compilers"
-spack -v --env ${environment} install compilers.${environment}
+spack -v --env ${environment} install ${compilers}
 
 echo "Add seen in spack-packagelist"
 spack -v --env ${environment} module lmod refresh -y compilers.${environment}
