@@ -75,7 +75,7 @@ def compiler_find(args):
    # START OF SPACK-SDPLOY CODE
    # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --             
 
-    tty.debug(f'Reading configuration')   
+    tty.debug(f'Reading configuration')
     config = Config(args)
     if config.debug:
         config.info()
@@ -91,14 +91,14 @@ def compiler_find(args):
     paths = []
     for compiler in compiler_specs.leafs:
         specs = spack.cmd.parse_specs(compiler)
-        env = None
+        env = ev.active_environment()
         spec = spack.cmd.disambiguate_spec(specs[0], env) # Returs the concrete spec
         paths.append(spec.prefix)
 
     # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --             
     # END OF SPACK-SDPLOY CODE
     # -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --             
-    
+
     # Below scope=None because we want new compilers that don't appear
     # in any other configuration.
     new_compilers = spack.compilers.find_new_compilers(paths, scope=None)
