@@ -2,6 +2,7 @@
 set -euo pipefail
 
 environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
+echo "ENVIRONMENT ${environment}"
 
 echo 'Activating Spack'
 . $JENKINS/activate_spack.sh
@@ -19,13 +20,15 @@ else
     cp ${SOURCE_PATH}/USE_SERVER.lic ${LICENSE_PATH}/license.lic
 fi
 
-echo "Installing compilers in environment: ${environment}"
-spack install-compilers -s ${STACK_RELEASE} -p ${environment}
+spack readc -s ${STACK_RELEASE} -p ${environment}
 
-echo "Adding stack compilers"
-spack --env ${environment} add-compilers find -s ${STACK_RELEASE} --scope system
+echo "Installing compilers"
+spack install-compilers compilers.list
 
-echo "Adding system compiler"
-spack --env ${environment} compiler find --scope system
-
-sed -i 's/intel@19.1.3.304/intel@20.0.4/' ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+#echo "Adding stack compilers"
+#spack --env ${environment} add-compilers find -s ${STACK_RELEASE} --scope system
+#
+#echo "Adding system compiler"
+#spack --env ${environment} compiler find --scope system
+#
+#sed -i 's/intel@19.1.3.304/intel@20.0.4/' ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
