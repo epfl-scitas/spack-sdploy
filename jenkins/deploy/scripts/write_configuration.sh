@@ -1,7 +1,9 @@
 #!/bin/bash -l
-# set -euo pipefail
+set -euo pipefail
 
 environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
+
+echo "NODE LABELS: $NODE_LABELS"
 
 # Activating Spack
 . $JENKINS/activate_spack.sh
