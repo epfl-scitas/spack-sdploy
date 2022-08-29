@@ -5,3 +5,4 @@ platform:
   tokens:
     core_compiler: gcc@9.4.0
     python3: 3.9.12
+    target: x86_64_v2

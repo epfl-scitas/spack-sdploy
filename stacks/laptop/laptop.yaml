@@ -19,7 +19,7 @@ gcc:
   metadata:
     section: pe
   stable:
-    compiler: gcc@12.1.0
+    compiler: gcc@12.1.0 arch=<target>
     mpi:
       infiniband: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
       ethernet: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
@@ -31,7 +31,7 @@ gcc:
       nvidia: cuda@11.7.0
       none: ""
   future:
-    compiler: gcc@13.1.0
+    compiler: gcc@9.3.0 arch=<target>
     mpi:
       infiniband: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
       ethernet: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
@@ -46,7 +46,7 @@ intel:
   metadata:
     section: pe
   stable:
-    compiler: intel@20.0.4
+    compiler: intel@20.0.4 arch=<target>
     mpi:
       infiniband: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
       ethernet: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
