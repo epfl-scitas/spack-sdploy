@@ -1,7 +1,7 @@
 #!/bin/bash -l
 # set -euo pipefail
 
-environment=$(echo $NODE_LABELS | cut -d '-' -f 1
+environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
 echo "NODE_LABEL: $NODE_LABELS"
 echo "ENVIRONMENT: $environment"
 
