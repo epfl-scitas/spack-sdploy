@@ -29,4 +29,4 @@ def readc(parser, args):
     compilers.report_leafs()
 
     # Write compiler to file
-    compilers.write_to_file('compilers.list')
+    compilers.write_to_file('compilers')

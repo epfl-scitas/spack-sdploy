@@ -34,6 +34,7 @@ class ReadLeaf(StackFile):
         """Declare class structs"""
 
         # Configuration
+        self.platform = config.platform
         self.platform_file = config.platform_yaml
         self.stack_file = config.stack_yaml
         self.leafs = []
@@ -71,6 +72,7 @@ class ReadLeaf(StackFile):
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
+        filename = filename + '.' + self.platform
         tty.info(f'Leafs written to {filename}')
         with open(filename, 'w') as f:
             f.write(' '.join(self.leafs))
