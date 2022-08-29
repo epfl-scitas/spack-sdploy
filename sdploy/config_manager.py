@@ -205,6 +205,15 @@ class Config(object):
         else:
             self.spack_config_path = spack_config_path
 
+        # <!> SPECIAL CASE <!>
+        # This variable is read from the environment (highest priority)
+        if os.environ.get('SPACK_INSTALL_PATH') is not None:
+            self.spack_install_path = os.environ.get('SPACK_INSTALL_PATH')
+        elif config.data['config']['spack_install_path'] is not None:
+            self.spack_install_path = config.data['config']['spack_install_path']
+        else:
+            self.spack_install_path = spack_install_path
+
         # FILENAME: spack.yaml, for example, 'spack.yaml'
         if 'spack_yaml' in config.data['config']:
             if config.data['config']['spack_yaml'] is not None:

@@ -100,7 +100,7 @@ config:
   templates_path:
   # Names of the template files (to be found under the templates path).
   spack_yaml_template: spack.yaml.j2
-  spack_compilers_yaml_template: spack-compilers.yaml.j2
+  # spack_compilers_yaml_template: spack-compilers.yaml.j2
   packages_yaml_template: packages.yaml.j2
   modules_yaml_template: modules.yaml.j2
   repos_yaml_template: repos.yaml.j2
@@ -117,6 +117,8 @@ config:
   # variable will be given the value of the environment variable
   # SPACK_SYSTEM_CONFIG_PATH.
   spack_config_path:
+  spack_system_config_path:
+  spack_install_path:
   # All other files
   spack_yaml: spack.yaml
   spack_yaml_path:

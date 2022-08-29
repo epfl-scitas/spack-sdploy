@@ -19,6 +19,12 @@ import sys
 from .yaml_manager import ReadYaml
 from .config import * # check if this is really necessary
 
+import spack
+import spack.cmd
+import spack.config
+import spack.environment as ev
+from spack.util.executable import which
+
 # The following line makes de tracer available
 # every time this module is imported.
 from pdb import set_trace as st
@@ -48,6 +54,11 @@ if len(sys.argv) <= 2:
 else:
     stack_dir = 'stacks'
 
+
+#print("UTIL.PY")
+#st()
+
+
 # We don't give a default for the stack name. Whether the user passes the name
 # of the stack as an argument or we use the samples directory, in which case
 # the name of the stack is known (stack).
@@ -70,6 +81,7 @@ modules_yaml_template = 'modules.yaml.j2'
 repos_yaml_template = 'repos.yaml.j2'
 mirrors_yaml_template = 'mirrors.yaml.j2'
 # Where to write files to
+spack_install_path = ''
 spack_config_path = get_prefix()
 spack_yaml = 'spack.yaml'
 spack_yaml_path = os.path.join(get_prefix(), 'output')
