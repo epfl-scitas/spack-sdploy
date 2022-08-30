@@ -19,6 +19,11 @@ echo 'Source Spack and show version'
 
 spack --version
 
+if [ -e ${SPACK_SYSTEM_CONFIG_PATH} ]; then
+    echo 'Previous system config directory...'
+    rm -r ${SPACK_SYSTEM_CONFIG_PATH}
+fi
+
 echo "spack compiler find --scope system:"
 spack compiler find --scope system
 
