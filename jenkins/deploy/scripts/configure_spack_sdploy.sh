@@ -4,6 +4,9 @@ set -euo pipefail
 echo 'Activating Python virtual environment'
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate
 
+echo 'Source Spack'
+. $SPACK_INSTALL_PATH/share/spack/setup-env.sh
+
 echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
 
 if [ -e ${SPACK_SYSTEM_CONFIG_PATH} ]; then
@@ -18,5 +21,5 @@ config:
   - ${SPACK_SDPLOY_INSTALL_PATH}
 EOF
 
-echo "Spack config blame config"
+echo "spack config blame config"
 spack config blame config
