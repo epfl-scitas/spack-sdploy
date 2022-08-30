@@ -19,3 +19,6 @@ spack -v --env ${environment} write-modules-yaml -s ${STACK_RELEASE} -p ${enviro
 
 echo "Installing mirrors configuration: ${environment}"
 spack -v --env ${environment} write-mirrors-yaml -s ${STACK_RELEASE} -p ${environment} -d
+
+echo "Installing config.yaml configuration: ${environment}"
+spack -v --env ${environment} write-config-yaml -s ${STACK_RELEASE} -p ${environment} -d
