@@ -18,3 +18,5 @@ echo 'Source Spack and show version'
 . $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 
 spack --version
+
+spack compiler find
