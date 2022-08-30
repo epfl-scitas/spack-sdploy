@@ -23,4 +23,4 @@ echo "spack compiler find --scope system:"
 spack compiler find --scope system
 
 echo "spack config blame compiler:"
-spack config blame compiler
+spack config blame compilers
