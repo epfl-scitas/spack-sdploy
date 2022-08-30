@@ -35,14 +35,12 @@ from ..common_parser import setup_parser
 
 def write_config_yaml(parser, args):
 
-    st()
     # spack-sdploy setup
     config = Config(args)
-    if config.debug:
-        config.info()
 
-#    # Instantiate ConfigYaml class
-#    conf = ConfigYaml(config, config.debug)
-#
-#    # Write modules file
-#    conf.write_yaml()
+    # Instantiate ConfigYaml class
+    conf = ConfigYaml(config)
+
+    st()
+    # Write config yaml file
+    conf.write_yaml(data = conf.conf)

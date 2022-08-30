@@ -31,19 +31,29 @@ from llnl.util.filesystem import mkdirp, working_dir
 from spack.util.executable import ProcessError, which
 from jinja2 import Environment, FileSystemLoader
 
-from .yaml_manager import ReadYaml
+from .stack_file import StackFile
 from .util import *
 
-class ConfigYaml(ReadYaml):
+class ConfigYaml(StackFile):
     """Provides methods to write the modules.yaml configuration"""
 
-    def __init__(self, config, debug=False):
+    def __init__(self, config):
         """Declare class structs"""
 
+        super().__init__(config)
+
+        # These variables will be used in StackFile class.
+        # Each command that write an Yaml file must define these 4 variables.
+        # This technique allows for individual command customization of each
+        # one of these parameters and at the same time the reuse of the functions
+        # all gathered in a single module.
+        self.templates_path = self.config.templates_path
+        self.template_file = self.config.config_yaml_template
+        self.yaml_path = self.config.spack_config_path
+        self.yaml_file = self.config.config_yaml
+
         # Configuration files
-        self.config = config
-        self.debug = debug
-        self.modules = {}
+        self.conf = {}
 
         # Call method that will populate dict
         self._create_dictionary()
@@ -52,55 +62,53 @@ class ConfigYaml(ReadYaml):
         """Populates dictionary with the values it will
         need to write the modules.yaml file"""
 
-        self._add_core_compiler()
+        self._add_build_stage()
         self._add_module_roots()
-        self._add_suffixes()
+        self._add_extensions()
 
-    def _add_core_compiler(self):
-        """Add core compiler to the modules dictionary"""
+    def _add_build_stage(self):
+        """Add build stages section to the dictionary"""
 
-        self.modules['core_compiler'] = 'gcc@8.5.0'
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        self.conf['build_stage'] = []
+        self.conf['build_stage'].append(
+            os.path.join('$tempdir', self.config.stack + '.' + self.config.stack_ver, 'tmp'))
+        self.conf['build_stage'].append(
+            os.path.join('$tempdir', '$user', 'spack-stage'))
+        self.conf['build_stage'].append(
+            os.path.join('~', '.spack', 'stage'))
+
+    def _add_extensions(self):
+        """Add extensions to the dictionary"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        commons = ReadYaml()
+        commons.read(os.path.join(self.config.commons_yaml))
+        self.conf['extensions'] = []
+        self.conf['extensions'].append(
+              commons.data['work_directory'] + os.path.sep
+            + commons.data['stack_release'] + os.path.sep
+            + commons.data['spack_sdploy'])
+        self.conf['extensions'].append('cartlos')
 
     def _add_module_roots(self):
         """Add modules installation paths"""
 
-        self.modules['lmod_roots'] = '/path/to/some/thing/good'
-        self.modules['tcl_roots'] = '/path/to/some/thing/better'
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
-    def _add_suffixes(self):
-        """Add modules suffixes from stack.yaml"""
-
-        self.modules['suffixes'] = {'+mpi': 'mpi', '+openmp': 'openmp'}
-
-    def _write_yaml(self, output, filename):
-        """Docstring"""
-        with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
-            yaml = syaml.load_config(output)
-            # spack.config.validate(yaml, spack.schema.env.schema, filename)
-            syaml.dump_config(yaml, f, default_flow_style=False)
-
-    def write_yaml(self):
-        """Write modules.yaml"""
-
-        # Jinja setup
-        file_loader = FileSystemLoader(self.config.templates_path)
-        jinja_env = Environment(loader = file_loader, trim_blocks = True)
-
-        # Check that template file exists
-        path = os.path.join(self.config.templates_path, self.config.modules_yaml_template)
-        if not os.path.exists(path):
-            tty.die(f'Template file {self.config.modules_yaml_template} does not exist ',
-                    f'in {path}')
-
-        template = jinja_env.get_template(self.config.modules_yaml_template)
-        output = template.render(modules = self.modules)
-
-        tty.msg(self.config.modules_yaml)
-        print(output)
-
-        env = ev.active_environment()
-        if env:
-            self._write_yaml(output, os.path.realpath(env.manifest_path))
-        else:
-            self._write_yaml(output, self.config.modules_yaml)
+        commons = ReadYaml()
+        commons.read(os.path.join(self.config.commons_yaml))
+        self.conf['module_roots'] = {}
+        self.conf['module_roots']['lmod'] = (
+                                        commons.data['work_directory'] + os.path.sep
+                                      + commons.data['stack_release'] + os.path.sep
+                                      + commons.data['stack_version'] + os.path.sep
+                                      + commons.data['lmod_roots'])
+        self.conf['module_roots']['tcl'] = (
+                                        commons.data['work_directory'] + os.path.sep
+                                      + commons.data['stack_release'] + os.path.sep
+                                      + commons.data['stack_version'] + os.path.sep
+                                      + commons.data['tcl_roots'])
 
