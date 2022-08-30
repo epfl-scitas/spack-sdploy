@@ -52,6 +52,7 @@ pipeline {
 
         stage('Do a fresh restart') {
             steps {
+                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
                 sh 'rm -rf ${STACK_PREFIX}'
             }
          }
