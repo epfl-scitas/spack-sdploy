@@ -37,15 +37,22 @@ echo "Add seen in spack-packagelist"
 spack -v --env ${environment} module lmod refresh -y ${compilers}
 
 echo "Adding stack compilers"
+#while read -r line
+#do
+#    spec_path=$(spack location -i ${line})
+#    echo ${spec_path}
+#    spack --env ${environment} compiler find ${spec_path}
+#done <<< $(cat compilers-perline.${environment})
+
 while read -r line
 do
     spec_path=$(spack location -i ${line})
-    echo ${spec_path}
-    spack --env ${environment} compiler find ${spec_path}
+    spack compiler find --scope system ${spec_path}
 done <<< $(cat compilers-perline.${environment})
 
-#spack --env ${environment} compiler find ${compilers}
-#echo "Adding system compiler"
-#spack --env ${environment} compiler find --scope system
-#
-#sed -i 's/intel@19.1.3.304/intel@20.0.4/' ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+sed -i 's/intel@19.1.3.304/intel@20.0.4/' ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+
+echo "Adding system compiler I"
+spack compiler find --scope system /usr/bin/gcc
+echo "Adding system compiler II"
+spack compiler find --scope system /usr/bin/gcc
