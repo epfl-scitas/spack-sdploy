@@ -50,7 +50,11 @@ do
     spack compiler find --scope system ${spec_path}
 done <<< $(cat compilers-perline.${environment})
 
+spack config blame compilers
+
 sed -i 's/intel@19.1.3.304/intel@20.0.4/' ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+
+spack config blame compilers
 
 echo "Adding system compiler I"
 spack compiler find --scope system
