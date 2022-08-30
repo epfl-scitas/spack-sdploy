@@ -8,6 +8,10 @@ echo "ENVIRONMENT: $environment"
 # Activating Spack
 . $JENKINS/activate_spack.sh
 
+# When doing this, all the files writen to the previous
+# location do not take effect anymore. To use the extension
+# we must copy the files over ot the new directory.
+cp ${SPACK_SYSTEM_CONFIG_PATH}/* $(spack location -e $environment)
 SPACK_SYSTEM_CONFIG_PATH=$(spack location -e $environment)
 
 echo "Installing stack configuration: ${environment}"
