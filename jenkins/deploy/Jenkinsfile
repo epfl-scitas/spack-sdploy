@@ -55,13 +55,20 @@ pipeline {
 //                sh 'rm -rf ${STACK_PREFIX}'
 //            }
 //         }
-//
+
 //     stage('Temporary clear file') {
 //         steps {
 //             sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx2.xml'
 //             sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx.xml'
 //         }
 //     }
+
+     stage('Remove spack.yaml') {
+          steps {
+              sh 'rm /home/scitasbuildpr/syrah-lite/spack.v1/var/spack/environments/ph02_avx/spack.yaml'
+              sh 'rm /home/scitasbuildpr/syrah-lite/spack.v1/var/spack/environments/ph02_avx2/spack.yaml'
+          }
+     }
 
 //     stage('Clear spack-config modules.yaml file') {
 //          steps {
