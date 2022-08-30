@@ -7,4 +7,4 @@ environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
 . $JENKINS/activate_spack.sh
 
 echo "Concretizing environment ${environment}"
-spack -d --env ${environment} concretize
+spack --env ${environment} concretize
