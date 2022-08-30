@@ -92,6 +92,12 @@ pipeline {
             }
         }
 
+        stage('Clear home environment') {
+            steps {
+                sh 'rm /home/scitasbuildpr/.spack/linux/*.yaml'
+            }
+        }
+
         stage('Clone Spack') {  
             steps {
                 sh '${JENKINS}/install_spack.sh'
