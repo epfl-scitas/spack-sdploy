@@ -28,3 +28,7 @@ spack --env ${environment} write-mirrors-yaml -s ${STACK_RELEASE} -p ${environme
 
 echo "Installing config.yaml configuration: ${environment}"
 spack --env ${environment} write-config-yaml -s ${STACK_RELEASE} -p ${environment} -d
+
+echo "Reporting spack.yaml:"
+cat $(spack location -e $environment)/spack.yaml
+
