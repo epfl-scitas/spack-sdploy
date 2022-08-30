@@ -91,7 +91,6 @@ class ConfigYaml(StackFile):
               commons.data['work_directory'] + os.path.sep
             + commons.data['stack_release'] + os.path.sep
             + commons.data['spack_sdploy'])
-        self.conf['extensions'].append('cartlos')
 
     def _add_module_roots(self):
         """Add modules installation paths"""
