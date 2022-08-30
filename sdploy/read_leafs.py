@@ -67,15 +67,28 @@ class ReadLeaf(StackFile):
         for leaf in self.leafs:
             print(f'- {leaf}')
 
-    def write_to_file(self, filename):
+    def write_inline(self, filename):
         """Report leafs in a row to filename (to feed spack install)"""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         filename = filename + '.' + self.platform
-        tty.info(f'Leafs written to {filename}')
+        tty.info(f'Compilers written to {filename}')
         with open(filename, 'w') as f:
             f.write(' '.join(self.leafs))
+            f.write('\n')
+
+    def write_perline(self, filename):
+        """Report leafs in a row to filename (to feed spack install)"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        filename = filename + '.' + self.platform
+        tty.info(f'Compilers written to {filename}')
+        with open(filename, 'w') as f:
+            for leaf in self.leafs:
+                f.write(leaf)
+                f.write('\n')
 
     def _leafs_from_dict(self, dic, key):
         """Returns list of values whose key is a string named key"""

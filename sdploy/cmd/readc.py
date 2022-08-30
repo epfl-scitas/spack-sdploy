@@ -28,5 +28,10 @@ def readc(parser, args):
     # Display results
     compilers.report_leafs()
 
-    # Write compiler to file
-    compilers.write_to_file('compilers')
+    # Write compiler to file (all specs single line)
+    # The filename will be concatenated with the platform name.
+    compilers.write_inline('compilers-inline')
+
+    # Write compiler to file (all specs single line)
+    # The filename will be concatenated with the platform name.
+    compilers.write_perline('compilers-perline')
