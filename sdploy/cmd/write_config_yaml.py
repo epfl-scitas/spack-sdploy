@@ -41,6 +41,5 @@ def write_config_yaml(parser, args):
     # Instantiate ConfigYaml class
     conf = ConfigYaml(config)
 
-    st()
     # Write config yaml file
     conf.write_yaml(data = conf.conf)
