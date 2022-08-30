@@ -19,4 +19,4 @@ echo 'Source Spack and show version'
 
 spack --version
 
-spack compiler find
+spack compiler find --scope system
