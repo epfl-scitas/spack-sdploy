@@ -14,6 +14,9 @@ echo "ENVIRONMENT: $environment"
 cp ${SPACK_SYSTEM_CONFIG_PATH}/* $(spack location -e $environment)
 SPACK_SYSTEM_CONFIG_PATH=$(spack location -e $environment)
 
+echo "Reporting BEFORE spack.yaml:"
+cat $(spack location -e $environment)/spack.yaml
+
 echo "Installing stack configuration: ${environment}"
 spack --env ${environment} write-spack-yaml -s ${STACK_RELEASE} -p ${environment}
 
@@ -29,6 +32,6 @@ spack --env ${environment} write-mirrors-yaml -s ${STACK_RELEASE} -p ${environme
 echo "Installing config.yaml configuration: ${environment}"
 spack --env ${environment} write-config-yaml -s ${STACK_RELEASE} -p ${environment} -d
 
-echo "Reporting spack.yaml:"
+echo "Reporting AFTER spack.yaml:"
 cat $(spack location -e $environment)/spack.yaml
 
