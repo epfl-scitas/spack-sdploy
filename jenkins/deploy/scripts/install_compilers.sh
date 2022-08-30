@@ -23,11 +23,11 @@ fi
 spack readc -s ${STACK_RELEASE} -p ${environment}
 
 echo "Contents of compilers.${environment}:"
-cat compilers.${environment}
+cat compilers-inline.${environment}
 
 echo ""
 echo "Contents of compilers variable:"
-compilers=$(cat compilers.${environment})
+compilers=$(cat compilers-inline.${environment})
 echo $compilers
 
 echo "Installing compilers"
@@ -36,9 +36,15 @@ spack -v --env ${environment} install ${compilers}
 echo "Add seen in spack-packagelist"
 spack -v --env ${environment} module lmod refresh -y ${compilers}
 
-#echo "Adding stack compilers"
-#spack --env ${environment} add-compilers find -s ${STACK_RELEASE} --scope system
-#
+echo "Adding stack compilers"
+while read -r line
+do
+    spec_path=$(spack location -i ${line})
+    echo ${spec_path}
+    spack --env ${environment} compiler find ${spec_path}
+done <<< $(cat compilers-perline.${environment})
+
+#spack --env ${environment} compiler find ${compilers}
 #echo "Adding system compiler"
 #spack --env ${environment} compiler find --scope system
 #
