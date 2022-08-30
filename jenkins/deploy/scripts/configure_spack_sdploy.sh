@@ -4,6 +4,8 @@ set -euo pipefail
 echo 'Activating Python virtual environment'
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate
 
+echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
+
 if [ -e ${SPACK_SYSTEM_CONFIG_PATH} ]; then
     echo 'Previous configuration directory detected, removing...'
     rm -rf ${SPACK_SYSTEM_CONFIG_PATH}
@@ -15,3 +17,6 @@ config:
   extensions:
   - ${SPACK_SDPLOY_INSTALL_PATH}
 EOF
+
+echo "Spack config blame config"
+spack config blame config
