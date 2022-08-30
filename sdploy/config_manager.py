@@ -194,6 +194,13 @@ class Config(object):
             else:
                 self.mirrors_yaml_template = mirrors_yaml_template
 
+        # FILENAME: template for config.yaml, for example, 'config.yaml.j2'
+        if 'config_yaml_template' in config.data['config']:
+            if config.data['config']['config_yaml_template'] is not None:
+                self.config_yaml_template = config.data['config']['config_yaml_template']
+            else:
+                self.config_yaml_template = config_yaml_template
+
         # From now on, the following variables deal with output.
 
         # <!> SPECIAL CASE <!>
@@ -289,6 +296,20 @@ class Config(object):
             else:
                 self.mirrors_yaml_path = mirrors_yaml_path
 
+        # FILENAME: config.yaml, for example, 'config.yaml'
+        if 'config_yaml' in config.data['config']:
+            if config.data['config']['config_yaml'] is not None:
+                self.config_yaml = config.data['config']['config_yaml']
+            else:
+                self.config_yaml = config_yaml
+
+        # PATH: path to mirrors.yaml, for example, '/path/to/config'
+        #       -> does not include the file name
+        if 'config_yaml_path' in config.data['config']:
+            if config.data['config']['config_yaml_path'] is not None:
+                self.config_yaml_path = config.data['config']['config_yaml_path']
+            else:
+                self.config_yaml_path = config_yaml_path
 
     def info_to_file(self, file=None):
         """Print debug information to file"""

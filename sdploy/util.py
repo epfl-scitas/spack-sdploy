@@ -80,6 +80,7 @@ packages_yaml_template = 'packages.yaml.j2'
 modules_yaml_template = 'modules.yaml.j2'
 repos_yaml_template = 'repos.yaml.j2'
 mirrors_yaml_template = 'mirrors.yaml.j2'
+config_yaml_template = 'config.yaml.j2'
 # Where to write files to
 spack_install_path = ''
 spack_config_path = get_prefix()
@@ -93,4 +94,5 @@ repos_yaml = 'repos.yaml'
 repos_yaml_path = os.path.join(get_prefix(), 'output')
 mirrors_yaml = 'mirrors.yaml'
 mirrors_yaml_path = os.path.join(get_prefix(), 'output')
-
+config_yaml = 'mirrors.yaml'
+config_yaml_path = os.path.join(get_prefix(), 'output')
