@@ -30,6 +30,9 @@ echo "Contents of compilers variable:"
 compilers=$(cat compilers-inline.${environment})
 echo $compilers
 
+echo "Reporting BEFORE installing compilers:"
+cat $(spack location -e $environment)/spack.yaml
+
 echo "Installing compilers"
 spack -v --env ${environment} install ${compilers}
 
@@ -53,10 +56,19 @@ sed -i 's/intel@19.1.3.304/intel@20.0.4/' ${SPACK_SYSTEM_CONFIG_PATH}/compilers.
 echo "spack  blame compilers after sed:"
 spack config blame compilers
 
+echo "Reporting BEFORE system compiler I:"
+cat $(spack location -e $environment)/spack.yaml
+
 echo "Adding system compiler I"
 spack compiler find --scope system
 cat $(spack location -e ${environment})/spack.yaml
 
+echo "Reporting BEFORE system compiler II:"
+cat $(spack location -e $environment)/spack.yaml
+
 echo "Adding system compiler II"
 spack compiler find --env
 cat $(spack location -e ${environment})/spack.yaml
+
+echo "Reporting AT THE END:"
+cat $(spack location -e $environment)/spack.yaml
