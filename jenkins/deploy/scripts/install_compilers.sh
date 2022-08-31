@@ -36,6 +36,9 @@ cat $(spack location -e $environment)/spack.yaml
 echo "Installing compilers"
 spack -v --env ${environment} install ${compilers}
 
+echo "Reporting BEFORE modules generation:"
+cat $(spack location -e $environment)/spack.yaml
+
 echo "Add seen in spack-packagelist"
 spack -v --env ${environment} module lmod refresh -y ${compilers}
 
