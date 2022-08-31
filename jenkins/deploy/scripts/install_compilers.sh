@@ -39,6 +39,9 @@ spack -v --env ${environment} install ${compilers}
 echo "Add seen in spack-packagelist"
 spack -v --env ${environment} module lmod refresh -y ${compilers}
 
+echo "Reporting BEFORE while loop:"
+cat $(spack location -e $environment)/spack.yaml
+
 echo "Adding stack compilers"
 while read -r line
 do
@@ -46,7 +49,8 @@ do
     spack compiler find --scope system ${spec_path}
 done <<< $(cat compilers-perline.${environment})
 
-cat $(spack location -e ${environment})/spack.yaml
+echo "Reporting AFTER while loop:"
+cat $(spack location -e $environment)/spack.yaml
 
 echo "spack  blame compilers before sed:"
 spack config blame compilers
@@ -57,6 +61,7 @@ echo "spack  blame compilers after sed:"
 spack config blame compilers
 
 echo "Reporting BEFORE system compiler I:"
+# already has the extra compiler lines in spack.yaml
 cat $(spack location -e $environment)/spack.yaml
 
 echo "Adding system compiler I"
@@ -66,9 +71,9 @@ cat $(spack location -e ${environment})/spack.yaml
 echo "Reporting BEFORE system compiler II:"
 cat $(spack location -e $environment)/spack.yaml
 
-echo "Adding system compiler II"
-spack compiler find --env
-cat $(spack location -e ${environment})/spack.yaml
+#echo "Adding system compiler II"
+#spack compiler find --env
+#cat $(spack location -e ${environment})/spack.yaml
 
 echo "Reporting AT THE END:"
 cat $(spack location -e $environment)/spack.yaml
