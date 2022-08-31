@@ -15,18 +15,18 @@ core:
     section: core
   compiler: <core_compiler>
 
-#intel:
-#  metadata:
-#    section: pe
-#  stable:
-#    compiler: intel@20.0.4 target=<target>
-#    mpi: intel-mpi@2019.10.317 +external-libfabric
-#    blas: intel-mkl@2020.4.304
-#    blas_parallel: intel-mkl@2020.4.304
-#    python3: python@<python3> +tkinter +optimizations ~debug
-#    gpu:
-#      nvidia: cuda@11.7.0
-#      none: ""
+intel:
+  metadata:
+    section: pe
+  stable:
+    compiler: intel@20.0.4 target=<target>
+    mpi: intel-mpi@2019.10.317 +external-libfabric
+    blas: intel-mkl@2020.4.304
+    blas_parallel: intel-mkl@2020.4.304
+    python3: python@<python3> +tkinter +optimizations ~debug
+    gpu:
+      nvidia: cuda@11.7.0
+      none: ""
 
 gcc:
   metadata:
@@ -76,7 +76,7 @@ serial_packages:
     section: packages
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   packages:
     - fftw +openmp ~mpi
     - gsl
@@ -103,7 +103,7 @@ serial_packages_gpu:
     section: packages
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   dependencies:
     - gpu
   packages:
@@ -145,7 +145,7 @@ serial_packages_blas:
     section: packages
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   dependencies:
     - blas
   packages:
@@ -182,7 +182,7 @@ serial_packages_python_activated:
     activated: True
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   dependencies:
     - python3
   packages:
@@ -204,7 +204,7 @@ serial_packages_python_blas_activated:
     activated: True
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   dependencies:
     - python3
     - blas_parallel
@@ -219,7 +219,7 @@ serial_packages_python:
     section: packages
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   dependencies:
     - python3
   packages:
@@ -235,7 +235,7 @@ serial_packages_python_blas:
     section: packages
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   dependencies:
     - blas_parallel
     - python3
@@ -266,7 +266,7 @@ mpi_packages:
     section: packages
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   dependencies:
     - mpi
   packages:
@@ -288,7 +288,7 @@ mpi_lapack_packages:
     section: packages
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   dependencies:
     - mpi
     - blas
@@ -303,7 +303,7 @@ mpi_lapack_gpu_packages:
     section: packages
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   dependencies:
     - gpu
     - mpi
@@ -321,7 +321,7 @@ mpi_python_packages:
     section: packages
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   dependencies:
     - mpi
     - python3
@@ -349,7 +349,7 @@ mpi_blas_packages_intel_stable:
   metadata:
     section: packages
   pe:
-#    - intel_stable
+    - intel_stable
   dependencies:
     - mpi
     - blas
@@ -361,7 +361,7 @@ mpi_lapack_python_packages:
     section: packages
   pe:
     - gcc_stable
-#    - intel_stable
+    - intel_stable
   dependencies:
     - mpi
     - blas
