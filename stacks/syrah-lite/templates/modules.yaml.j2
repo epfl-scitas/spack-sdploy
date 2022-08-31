@@ -14,6 +14,9 @@ modules:
       - mpi
       blacklist_implicits: true
       all:
+        environment:
+          set:
+            ${PACKAGE}_ROOT: ${PREFIX}
         suffixes:
 {% for variant, suffix in data['suffixes'].items() %}
           {{ variant }}: {{ suffix }}
