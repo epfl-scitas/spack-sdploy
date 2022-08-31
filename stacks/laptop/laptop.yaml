@@ -15,11 +15,24 @@ core:
     section: core
   compiler: <core_compiler>
 
+#intel:
+#  metadata:
+#    section: pe
+#  stable:
+#    compiler: intel@20.0.4 target=<target>
+#    mpi: intel-mpi@2019.10.317 +external-libfabric
+#    blas: intel-mkl@2020.4.304
+#    blas_parallel: intel-mkl@2020.4.304
+#    python3: python@<python3> +tkinter +optimizations ~debug
+#    gpu:
+#      nvidia: cuda@11.7.0
+#      none: ""
+
 gcc:
   metadata:
     section: pe
   stable:
-    compiler: gcc@12.1.0 arch=<target>
+    compiler: gcc@12.1.0 target=<target>
     mpi:
       infiniband: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
       ethernet: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
@@ -30,34 +43,6 @@ gcc:
     gpu:
       nvidia: cuda@11.7.0
       none: ""
-  future:
-    compiler: gcc@9.3.0 arch=<target>
-    mpi:
-      infiniband: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
-      ethernet: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
-    blas: openblas@0.3.20 threads=none +locking
-    blas_parallel: openblas@0.3.20 threads=openmp +locking
-    python3: python@<python3> +tkinter +optimizations ~debug
-    python2: python@2.7.18 +tkinter ~debug
-    gpu:
-      nvidia: cuda@11.7.0
-      none: ""
-intel:
-  metadata:
-    section: pe
-  stable:
-    compiler: intel@20.0.4 arch=<target>
-    mpi:
-      infiniband: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
-      ethernet: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
-    blas: openblas@0.3.20 threads=none +locking
-    blas_parallel: openblas@0.3.20 threads=openmp +locking
-    python3: python@<python3> +tkinter +optimizations ~debug
-    python2: python@2.7.18 +tkinter ~debug
-    gpu:
-      nvidia: cuda@11.7.0
-      none: ""
-
 
 # ------------------------------------------------------------------------------
 # PACKAGES SECTION
@@ -91,7 +76,7 @@ serial_packages:
     section: packages
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   packages:
     - fftw +openmp ~mpi
     - gsl
@@ -107,6 +92,9 @@ serial_packages:
         default:
           version: 1.1.1k
           buildable: False
+        externals:
+          - spec: openssl@1.1.1k
+            prefix: /usr
     - scotch ~mpi:
         default: { variants: +esmumps ~metis }
 
@@ -115,7 +103,7 @@ serial_packages_gpu:
     section: packages
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - gpu
   packages:
@@ -157,7 +145,7 @@ serial_packages_blas:
     section: packages
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - blas
   packages:
@@ -194,7 +182,7 @@ serial_packages_python_activated:
     activated: True
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - python3
   packages:
@@ -216,7 +204,7 @@ serial_packages_python_blas_activated:
     activated: True
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - python3
     - blas_parallel
@@ -231,7 +219,7 @@ serial_packages_python:
     section: packages
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - python3
   packages:
@@ -247,7 +235,7 @@ serial_packages_python_blas:
     section: packages
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - blas_parallel
     - python3
@@ -259,26 +247,26 @@ serial_packages_python_blas:
     - py-scikit-learn
     - py-statsmodels
 
-external_packages:
-  metadata:
-    section: packages
-    cloud: False
-  pe:
-    - core
-  packages:
-    - openjdk:
-        default:
-          buildable: False
-        externals:
-          - spec: openjdk@1.8.0.342.b07-2
-            prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-2.el8_6.x86_64/jre
+#external_packages:
+#  metadata:
+#    section: packages
+#    cloud: False
+#  pe:
+#    - core
+#  packages:
+#    - openjdk:
+#        default:
+#          buildable: False
+#        externals:
+#          - spec: openjdk@1.8.0.342.b07-2
+#            prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-2.el8_6.x86_64/jre
 
 mpi_packages:
   metadata:
     section: packages
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - mpi
   packages:
@@ -300,7 +288,7 @@ mpi_lapack_packages:
     section: packages
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - mpi
     - blas
@@ -315,7 +303,7 @@ mpi_lapack_gpu_packages:
     section: packages
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - gpu
     - mpi
@@ -333,7 +321,7 @@ mpi_python_packages:
     section: packages
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - mpi
     - python3
@@ -357,23 +345,23 @@ mpi_blas_packages_gcc_stable:
           - netlib-scalapack
     - netlib-scalapack
 
-mpi_blas_packages_intel_stable:
-  metadata:
-    section: packages
-  pe:
-    - intel_stable
-  dependencies:
-    - mpi
-    - blas
-  packages:
-    - mumps+mpi+parmetis+metis+scotch+ptscotch
+#mpi_blas_packages_intel_stable:
+#  metadata:
+#    section: packages
+#  pe:
+#    - intel_stable
+#  dependencies:
+#    - mpi
+#    - blas
+#  packages:
+#    - mumps+mpi+parmetis+metis+scotch+ptscotch
 
 mpi_lapack_python_packages:
   metadata:
     section: packages
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - mpi
     - blas
@@ -406,14 +394,14 @@ mpi_blas_python_packages_gcc_stable:
     - blas
     - python3
   packages:
-    - lammps@20220107:
-        variants:
-          common: build_type=Release +asphere +atc +body +class2 +colloid +compress +coreshell +dipole +diffraction +extra-dump +granular +h5md +kspace +latboltz +latte +lib +manybody +mc +misc +molecule +mpi +mpiio +netcdf +peri ~poems +python +qeq  +replica +rigid +shock +ml-snap +srd +voronoi +plumed
-          gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch>
-            none: ~cuda
-        dependencies:
-          - netcdf-c+mpi
+    #    - lammps@20220107:
+    #        variants:
+    #          common: build_type=Release +asphere +atc +body +class2 +colloid +compress +coreshell +dipole +diffraction +extra-dump +granular +h5md +kspace +latboltz +latte +lib +manybody +mc +misc +molecule +mpi +mpiio +netcdf +peri ~poems +python +qeq  +replica +rigid +shock +ml-snap +srd +voronoi +plumed
+    #          gpu:
+    #            nvidia: +cuda cuda_arch=<cuda_arch>
+    #            none: ~cuda
+    #        dependencies:
+    #          - netcdf-c+mpi
     - opencv +vtk +python3:
         variants:
           gpu:
