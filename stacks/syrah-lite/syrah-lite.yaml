@@ -159,7 +159,7 @@ serial_packages_blas_gpu:
     section: packages
   pe:
     - gcc_stable
-    - intel_stable
+#    - intel_stable
   dependencies:
     - blas
     - gpu
