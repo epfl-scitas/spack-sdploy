@@ -92,6 +92,7 @@ pipeline {
                 echo "STACK_RELEASE: $STACK_RELEASE"
                 echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUALENV_PATH}"
                 echo "JENKINS: ${JENKINS}"
+                echo "STACK: ${STACK}"
                 echo "SPACK_RELEASE: ${SPACK_RELEASE}"
                 echo "STACK_PREFIX: $STACK_PREFIX"
                 echo "STACK_INSTALL_PATH: ${STACK_INSTALL_PATH}"
