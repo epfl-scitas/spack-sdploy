@@ -1,5 +1,5 @@
 #!/bin/bash -l
-# set -euo pipefail
+set -euo pipefail
 
 environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
 echo "NODE_LABEL: $NODE_LABELS"
@@ -13,10 +13,10 @@ spack location -r
 
 echo "Processing environment: ${environment}"
 if [[ -z $(spack env list | grep $environment) && $? -eq 1 ]] ; then
-    echo "$environment: creating environment"
+    echo "$environment: creating..."
     spack env create ${environment}
 else
-    echo "$environment: found environment"
+    echo "$environment: found"
 fi
 
 echo "List spack environments:"
