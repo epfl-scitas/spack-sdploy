@@ -1,8 +1,8 @@
 #!/bin/bash -l
 set -euo pipefail
 
-echo 'Activating Python virtual environment'
-. ${PYTHON_VIRTUALENV_PATH}/bin/activate
+echo 'Activating Spack'
+. $JENKINS/activate_spack.sh
 
 echo "Checking for previous spack-sdploy installation:"
 if [ -e ${SPACK_SDPLOY_INSTALL_PATH} ]; then
