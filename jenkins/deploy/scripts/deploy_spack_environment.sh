@@ -8,30 +8,27 @@ echo "ENVIRONMENT: $environment"
 # Activating Spack
 . $JENKINS/activate_spack.sh
 
-# When doing this, all the files writen to the previous
-# location do not take effect anymore. To use the extension
-# we must copy the files over ot the new directory.
-cp ${SPACK_SYSTEM_CONFIG_PATH}/* $(spack location -e $environment)
-SPACK_SYSTEM_CONFIG_PATH=$(spack location -e $environment)
+export SPACK_SYSTEM_CONFIG_PATH=${SYSTEM_CONFIG_PREFIX}/${environment}
 
-echo "Reporting BEFORE spack.yaml:"
-cat $(spack location -e $environment)/spack.yaml
+echo "Creating spack environemnt: ${environment}"
+spack env create env ${environment}
 
-echo "Installing stack configuration: ${environment}"
+echo "Deploying manifest"
 spack --env ${environment} write-spack-yaml -s ${STACK_RELEASE} -p ${environment}
 
-echo "Installing packages configuration: ${environment}"
+echo "Installing packages configuration"
 spack --env ${environment} write-packages-yaml -s ${STACK_RELEASE} -p ${environment} -d
+spack --env ${environment} config blame packages
 
-echo "Installing modules configuration: ${environment}"
+echo "Installing modules configuration"
 spack --env ${environment} write-modules-yaml -s ${STACK_RELEASE} -p ${environment} -d
-
-echo "Installing mirrors configuration: ${environment}"
-spack --env ${environment} write-mirrors-yaml -s ${STACK_RELEASE} -p ${environment} -d
+spack --env ${environment} config blame modules
 
 echo "Installing config.yaml configuration: ${environment}"
 spack --env ${environment} write-config-yaml -s ${STACK_RELEASE} -p ${environment} -d
+spack --env ${environment} config blame config
 
-echo "Reporting AFTER spack.yaml:"
-cat $(spack location -e $environment)/spack.yaml
+#echo "Installing mirrors configuration: ${environment}"
+#spack --env ${environment} write-mirrors-yaml -s ${STACK_RELEASE} -p ${environment} -d
+
 

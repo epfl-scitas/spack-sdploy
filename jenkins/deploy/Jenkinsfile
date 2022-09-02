@@ -15,6 +15,8 @@ pipeline {
     environment {
 
         // <!> can't figure out where the ${STACK} variable comes from <!>
+        // The following statement does nothing
+        // It seems that 
         STACK = "syrah-lite-l1"
 
         // Variables read from commons.yaml using cat, grep and cut.
@@ -46,6 +48,7 @@ pipeline {
         SPACK_SYSTEM_CONFIG_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_EXTENSION}"
         SPACK_SDPLOY_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_SDPLOY}"
         SPACK_DEFAULT_CONFIG_PATH = "${SPACK_INSTALL_PATH}/etc/spack"
+        SYSTEM_CONFIG_PREFIX      = "${WORK_DIR}/${STACK_RELEASE}/${STACK_RELEASE_VER}/config"
     }
 
     // A variable defined in a stage is bound to that stage.
@@ -127,17 +130,27 @@ pipeline {
             }
         }
 
+        stage('Deploy spack environment') {
+            steps {
+                script {
+                    parallel(do_deploy_spack_environment())
+                }
+            }
+        }
+
+//        stage('Deploy common ressources') {
+//            steps {
+//                sh '${JENKINS}/common_resources.sh'
+//            }
+//        }
+
+
 //        stage('Install external repositories') {
 //            steps {
 //                sh '${JENKINS}/clone_external_repos.sh'
 //            }
 //        }
 
-//        stage('Create Spack environments') {
-//            steps {
-//                sh '${JENKINS}/create_spack_environments.sh'
-//            }
-//        }
 //
 //        stage('Parallel stage') {
 //            steps {
@@ -148,13 +161,6 @@ pipeline {
 //        }
 //
 //        
-//        stage('Deploy spack manifest') {
-//            steps {
-//                script {
-//                    parallel(do_deploy_spack_configuration())
-//                }
-//            }
-//        }
 //
 //        stage('Install compilers') {
 //            steps {
@@ -277,17 +283,18 @@ def _define_stages(prefix, script, message, do_junit = true) {
     return jobs
 }
 
+def do_deploy_spack_environment() {
+    return _define_stages("Deploy spack Configuration",
+                          "${env.JENKINS}/deploy_spack_environment.sh",
+                          "Run a stage in parallel")
+}
+
 def do_install_compilers() {
     return _define_stages("Install compilers",
                           "${env.JENKINS}/install_compilers.sh",
                           "Run a stage in parallel")
 }
 
-def do_deploy_spack_configuration() {
-    return _define_stages("Deploy spack Configuration",
-                          "${env.JENKINS}/deploy_spack_environment.sh",
-                          "Run a stage in parallel")
-}
 
 def do_concretize() {
     return _define_stages("Concretize",
