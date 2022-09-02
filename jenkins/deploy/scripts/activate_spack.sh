@@ -7,5 +7,5 @@ echo 'Activating Python virtual environment'
 echo 'Source Spack'
 . $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 
+echo "Active spack:"
 spack --version
-
