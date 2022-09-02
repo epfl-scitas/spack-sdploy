@@ -130,20 +130,6 @@ pipeline {
             }
         }
 
-        stage('Deploy spack environment') {
-            steps {
-                script {
-                    parallel(do_deploy_spack_environment())
-                }
-            }
-        }
-
-        stage('Deploy common ressources') {
-            steps {
-                sh '${JENKINS}/deploy_common_resources.sh'
-            }
-        }
-
         stage('Install compilers') {
             steps {
                 script {
@@ -151,6 +137,21 @@ pipeline {
                 }
             }
         }
+
+//        stage('Deploy spack environment') {
+//            steps {
+//                script {
+//                    parallel(do_deploy_spack_environment())
+//                }
+//            }
+//        }
+//
+//        stage('Deploy common ressources') {
+//            steps {
+//                sh '${JENKINS}/deploy_common_resources.sh'
+//            }
+//        }
+
 
 //
 //        stage('Parallel stage') {
