@@ -1,0 +1,53 @@
+packages:
+{#                                                          #}
+{#                                                          #}
+{#                                         DEFAULT PACKAGES #}
+{#                                                          #}
+{#                                                          #}
+{% for pkg, definition in data['defaults'].items() %}
+{% if pkg not in data['externals'] %}
+  {{ pkg }}:
+{% for key, value in definition.items() %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{#                                                          #}
+{#                                                          #}
+{#                                        EXTERNAL PACKAGES #}
+{#                                                          #}
+{#                                                          #}
+{% for pkg, definition in data['externals'].items() %}
+  {{ pkg }}:
+{% if pkg in data['defaults'] %}
+{% for key, value in data['defaults'][pkg].items() %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+    externals:
+{% for spec in definition %}
+    - {{ spec }}
+{% endfor %}
+{% endfor %}
+{#  all:                                                    #}
+{#                                                          #}
+{#                                                          #}
+{#                                          ALL PREFERENCES #}
+{#                                                          #}
+{#                                                          #}
+{# {% for pref, value in data['preferences'].items() %}     #}
+{#     {{ pref }}: {{value}}                                #}
+{# {% endfor %}                                             #}
+{#     providers:                                           #}
+{#       blas: [openblas, intel-mkl]                        #}
+{#       fftw-api: [fftw]                                   #}
+{#       uuid: [util-linux-uuid]                            #}
+{#       glu: [mesa-glu]                                    #}
+{#                                                          #}
+{#                                                          #}
+{#                                                PROVIDERS #}
+{#                                                          #}
+{#                                                          #}
+{# {% for lib, provider in data['providers'].items() %}     #}
+{#       {{ lib }}: {{ provider }}                          #} 
+{# {% endfor %}                                             #} 

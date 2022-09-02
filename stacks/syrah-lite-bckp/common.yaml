@@ -2,7 +2,7 @@ spack_release: v0.18.1
 stack_release: syrah-lite
 
 # Path definitions
-work_directory: /home/scitasbuildpr/l1
+work_directory: /home/scitasbuildpr
 python_venv: py3-venv
 spack_external: external
 jenkins: jenkins/deploy/scripts
@@ -14,8 +14,8 @@ lmod_roots: share/spack/lmod
 tcl_roots: share/spack/modules
 
 environments: # platforms
-  - ph02_avx
   - ph02_avx2
+  - ph02_avx
 
 # The mirrors paths are common to all stacks.
 # They are created under `work_directory`.
