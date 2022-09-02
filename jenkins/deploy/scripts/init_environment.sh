@@ -14,7 +14,7 @@ spack location -r
 echo "Processing environment: ${environment}"
 if [[ -z $(spack env list | grep $environment) && $? -eq 1 ]] ; then
     echo "$environment: creating environment"
-    # spack env create ${environment}
+    spack env create ${environment}
 else
     echo "$environment: found environment"
 fi
