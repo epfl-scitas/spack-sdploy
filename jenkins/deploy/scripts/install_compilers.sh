@@ -30,10 +30,6 @@ echo "Contents of compilers variable:"
 compilers=$(cat compilers-inline.${environment})
 echo $compilers
 
-echo "Create environments"
-spack env create ph02_avx
-spack env create ph02_avx2
-
 echo "Installing compilers"
 spack install ${compilers}
 
