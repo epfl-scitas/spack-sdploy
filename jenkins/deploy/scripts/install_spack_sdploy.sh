@@ -21,6 +21,7 @@ cat > ${SPACK_INSTALL_PATH}/etc/spack/config.yaml << EOF
 config:
   extensions:
   - ${SPACK_SDPLOY_INSTALL_PATH}
+  db_lock_timeout: 10
 EOF
 
 echo "spack config blame config"
