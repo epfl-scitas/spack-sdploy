@@ -167,6 +167,12 @@ pipeline {
            }
        }
 
+       stage('Populate mirror') {
+           steps {
+               sh 'jenkins/deploy/scripts/add_mirror.sh'
+           }
+       }
+
 //
 //        stage('Parallel stage') {
 //            steps {
@@ -180,11 +186,6 @@ pipeline {
 //
 //
 //
-//       stage('Populate mirror') {
-//           steps {
-//               sh 'jenkins/deploy/scripts/add_mirror.sh'
-//           }
-//       }
 //
 //       stage('Deploy software') { 
 //           steps {
