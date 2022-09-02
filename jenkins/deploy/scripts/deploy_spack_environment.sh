@@ -9,7 +9,8 @@ echo "ENVIRONMENT: $environment"
 . $JENKINS/activate_spack.sh
 
 SPACK_SYSTEM_CONFIG_PATH=${SYSTEM_CONFIG_PREFIX}/${environment}
-mkdir ${SPACK_SYSTEM_CONFIG_PATH}
+echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
+mkdir -p ${SPACK_SYSTEM_CONFIG_PATH}
 echo "Created SPACK_SYSTEM_CONFIG_PATH in ${SPACK_SYSTEM_CONFIG_PATH}"
 
 echo "Creating spack environemnt: ${environment}"
