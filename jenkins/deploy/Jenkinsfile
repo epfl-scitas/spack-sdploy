@@ -138,11 +138,11 @@ pipeline {
             }
         }
 
-//        stage('Deploy common ressources') {
-//            steps {
-//                sh '${JENKINS}/common_resources.sh'
-//            }
-//        }
+        stage('Deploy common ressources') {
+            steps {
+                sh '${JENKINS}/deploy_common_resources.sh'
+            }
+        }
 
 
 //        stage('Install external repositories') {
