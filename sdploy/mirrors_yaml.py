@@ -50,7 +50,17 @@ class MirrorsYaml(StackFile):
         self.yaml_file = self.config.mirrors_yaml
 
         self.mirrors = {}
+        self._overload()
         self._create_dictionary()
+
+    def _overload(self):
+        """Sets path to etc/spack if running outside environment"""
+
+        self.yaml_path = os.path.join(
+            self.commons['work_directory'],
+            self.commons['stack_release'],
+            self.commons['spack'] + '.' + self.commons['stack_version'],
+            'etc/spack')
 
     def _create_dictionary(self):
         """Populates dictionary with the values it will
