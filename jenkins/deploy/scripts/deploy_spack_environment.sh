@@ -8,6 +8,7 @@ echo "ENVIRONMENT: $environment"
 # Activating Spack
 . $JENKINS/activate_spack.sh
 
+# <!> DIRECTORY OVERWRITTEN <!>
 SPACK_SYSTEM_CONFIG_PATH=${SYSTEM_CONFIG_PREFIX}/${environment}
 echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
 mkdir -p ${SPACK_SYSTEM_CONFIG_PATH}
@@ -17,7 +18,7 @@ echo "Created SPACK_SYSTEM_CONFIG_PATH in ${SPACK_SYSTEM_CONFIG_PATH}"
 # We test if the environment directory already exists ans create it otherwise
 # env_dir=$(spack location -e ${environment})
 
-if ! [ -e $(spack location -e ${environment}) ]; then
+if ! [ -d $(spack location -e ${environment}) ]; then
     echo "Environment ${environment} already exists"
 else
     echo "Creating environment ${environment}"
@@ -38,5 +39,3 @@ spack --env ${environment} config blame modules
 echo "Installing config.yaml configuration: ${environment}"
 spack --env ${environment} write-config-yaml -s ${STACK_RELEASE} -p ${environment} -d
 spack --env ${environment} config blame config
-
-
