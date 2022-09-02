@@ -16,12 +16,12 @@ echo "ENVIRONMENT: $environment"
 # mkdir -p ${SPACK_SYSTEM_CONFIG_PATH}
 # echo "Created SPACK_SYSTEM_CONFIG_PATH in ${SPACK_SYSTEM_CONFIG_PATH}"
 
-if [ -d $(spack location -e ${environment}) ]; then
-    echo "Environment ${environment} already exists"
-else
-    echo "Creating environment ${environment}"
-    spack env create ${environment}
-fi
+# if [ -d $(spack location -e ${environment}) ]; then
+#     echo "Environment ${environment} already exists"
+# else
+#     echo "Creating environment ${environment}"
+#     spack env create ${environment}
+# fi
 
 echo "Deploying manifest"
 spack --env ${environment} write-spack-yaml -s ${STACK_RELEASE} -p ${environment}

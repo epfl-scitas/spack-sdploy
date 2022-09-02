@@ -16,8 +16,7 @@ pipeline {
 
         // <!> can't figure out where the ${STACK} variable comes from <!>
         // The following statement does nothing
-        // It seems that 
-        STACK = "syrah-lite-l1"
+        STACK = "syrah-lite-l2"
 
         // Variables read from commons.yaml using cat, grep and cut.
         WORK_DIR=sh(returnStdout:true,
