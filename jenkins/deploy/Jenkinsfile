@@ -159,6 +159,14 @@ pipeline {
             }
         }
 
+       stage('Concretize') {
+           steps {
+               script {
+                   parallel(do_concretize())
+               }
+           }
+       }
+
 //
 //        stage('Parallel stage') {
 //            steps {
@@ -171,13 +179,6 @@ pipeline {
 //        
 //
 //
-//       stage('Concretize') {
-//           steps {
-//               script {
-//                   parallel(do_concretize())
-//               }
-//           }
-//       }
 //
 //       stage('Populate mirror') {
 //           steps {
