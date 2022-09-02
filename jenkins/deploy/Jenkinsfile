@@ -144,12 +144,13 @@ pipeline {
             }
         }
 
-
-//        stage('Install external repositories') {
-//            steps {
-//                sh '${JENKINS}/clone_external_repos.sh'
-//            }
-//        }
+        stage('Install compilers') {
+            steps {
+                script {
+                    parallel(do_install_compilers())
+                }
+            }
+        }
 
 //
 //        stage('Parallel stage') {
@@ -162,13 +163,6 @@ pipeline {
 //
 //        
 //
-//        stage('Install compilers') {
-//            steps {
-//                script {
-//                    parallel(do_install_compilers())
-//                }
-//            }
-//        }
 //
 //       stage('Concretize') {
 //           steps {
