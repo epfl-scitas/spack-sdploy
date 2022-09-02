@@ -8,4 +8,9 @@ echo 'Activating Spack'
 . $JENKINS/activate_spack.sh
 
 echo "Initialize environment: ${environment}"
-spack env create ${environment}
+if [[ -z $(spack env list | grep $environment) ]] && $?; then
+   echo "Found environment $environment"
+else
+   echo "Creating environment $environment"
+   spack env create ${environment}
+fi
