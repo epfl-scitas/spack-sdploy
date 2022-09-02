@@ -7,7 +7,7 @@ echo "ENVIRONMENT ${environment}"
 # Activate spack
 . $JENKINS/activate_spack.sh
 
-echo 'Installing License'
+echo 'Installing Intel license'
 # If directory already exists, remove it
 SOURCE_PATH=${SPACK_SDPLOY_INSTALL_PATH}/external/licenses/intel
 LICENSE_PATH=${SPACK_INSTALL_PATH}/etc/spack/licenses/intel
@@ -30,42 +30,16 @@ echo "Contents of compilers variable:"
 compilers=$(cat compilers-inline.${environment})
 echo $compilers
 
-# echo "Reporting BEFORE installing compilers:"
-# cat $(spack location -e $environment)/spack.yaml
+echo "Create environments"
+spack env create ph02_avx
+spack env create ph02_avx2
 
 echo "Installing compilers"
-spack -v --env ${environment} install ${compilers}
-
-# echo "Reporting BEFORE modules generation:"
-# cat $(spack location -e $environment)/spack.yaml
-
-# echo "Add seen in spack-packagelist"
-# spack -v --env ${environment} module lmod refresh -y ${compilers}
-
-# echo "Reporting BEFORE while loop:"
-# cat $(spack location -e $environment)/spack.yaml
+spack install ${compilers}
 
 echo "Adding stack compilers"
-
 while read -r line
 do
     spec_path=$(spack location -i ${line})
     spack compiler find --scope system ${spec_path}
 done <<< $(cat compilers-perline.${environment})
-
-
-# echo "Reporting AFTER while loop:"
-# cat $(spack location -e $environment)/spack.yaml
-#
-# echo "spack  blame compilers before sed:"
-# spack config blame compilers
-#
-# sed -i 's/intel@19.1.3.304/intel@20.0.4/' ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
-#
-# echo "spack  blame compilers after sed:"
-# spack config blame compilers
-#
-# echo "Reporting BEFORE system compiler I:"
-# # already has the extra compiler lines in spack.yaml
-# cat $(spack location -e $environment)/spack.yaml
-#
