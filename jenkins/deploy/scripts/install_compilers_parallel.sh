@@ -20,7 +20,7 @@ echo $compilers
 # We can remove --debug from the spack install
 # command if the compilers are already installed.
 echo "Installing compilers"
-spack install ${compilers}
+spack --debug install ${compilers}
 
 echo "Adding stack compilers"
 while read -r line
