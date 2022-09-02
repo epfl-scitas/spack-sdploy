@@ -133,7 +133,7 @@ pipeline {
         stage('Initialize Spack environments') {
             steps {
                 script {
-                    parallel(do_init_enviroments())
+                    parallel(do_init_environments())
                 }
             }
         }
