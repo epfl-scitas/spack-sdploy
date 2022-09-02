@@ -61,9 +61,9 @@ class MirrorsYaml(StackFile):
         commons.read(self.config.commons_yaml)
 
         self.yaml_path = os.path.join(
-            commons['work_directory'],
-            commons['stack_release'],
-            commons['spack'] + '.' + self.commons['stack_version'],
+            commons.data['work_directory'],
+            commons.data['stack_release'],
+            commons.data['spack'] + '.' + commons.data['stack_version'],
             'etc/spack')
 
     def _create_dictionary(self):
