@@ -9,16 +9,12 @@ echo "ENVIRONMENT: $environment"
 . $JENKINS/activate_spack.sh
 
 # <!> DIRECTORY OVERWRITTEN <!>
-export SPACK_SYSTEM_CONFIG_PATH=${SYSTEM_CONFIG_PREFIX}/${environment}
-echo "Grep SPACK_SYSTEM_CONFIG_PATH from shell environment"
-env|grep SPACK_SYSTEM_CONFIG_PATH
-echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
-mkdir -p ${SPACK_SYSTEM_CONFIG_PATH}
-echo "Created SPACK_SYSTEM_CONFIG_PATH in ${SPACK_SYSTEM_CONFIG_PATH}"
-
-#echo "Creating spack environemnt: ${environment}"
-# We test if the environment directory already exists ans create it otherwise
-# env_dir=$(spack location -e ${environment})
+# export SPACK_SYSTEM_CONFIG_PATH=${SYSTEM_CONFIG_PREFIX}/${environment}
+# echo "Grep SPACK_SYSTEM_CONFIG_PATH from shell environment"
+# env|grep SPACK_SYSTEM_CONFIG_PATH
+# echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
+# mkdir -p ${SPACK_SYSTEM_CONFIG_PATH}
+# echo "Created SPACK_SYSTEM_CONFIG_PATH in ${SPACK_SYSTEM_CONFIG_PATH}"
 
 if [ -d $(spack location -e ${environment}) ]; then
     echo "Environment ${environment} already exists"
@@ -41,3 +37,9 @@ spack --env ${environment} config blame modules
 echo "Installing config.yaml configuration: ${environment}"
 spack --env ${environment} write-config-yaml -s ${STACK_RELEASE} -p ${environment} -d
 spack --env ${environment} config blame config
+
+echo "Copying core compilerdo enviroment path"
+cp ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yam $(spack location -e ${environment})
+
+echo "List environment directory contents"
+ls -l $(spack location -e ${environment})
