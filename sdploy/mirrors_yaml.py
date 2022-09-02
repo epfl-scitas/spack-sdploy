@@ -56,6 +56,10 @@ class MirrorsYaml(StackFile):
     def _overload(self):
         """Sets path to etc/spack if running outside environment"""
 
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+        commons = ReadYaml()
+        commons.read(self.config.commons_yaml)
+
         self.yaml_path = os.path.join(
             self.commons['work_directory'],
             self.commons['stack_release'],
