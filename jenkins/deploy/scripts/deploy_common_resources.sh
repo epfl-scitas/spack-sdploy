@@ -15,3 +15,5 @@ spack config blame repos
 echo "Installing mirrors configuration"
 spack write-mirrors-yaml -s ${STACK_RELEASE} -p ph02_avx
 spack config blame mirrors
+
+cp ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml ${SPACK_INSTALL_PATH}/etc/spack
