@@ -39,7 +39,7 @@ spack --env ${environment} write-config-yaml -s ${STACK_RELEASE} -p ${environmen
 spack --env ${environment} config blame config
 
 echo "Copying core compilerdo enviroment path"
-cp ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yam $(spack location -e ${environment})
+cp ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml $(spack location -e ${environment})
 
 echo "List environment directory contents"
 ls -l $(spack location -e ${environment})
