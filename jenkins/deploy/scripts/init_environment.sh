@@ -19,7 +19,7 @@ else
 fi
 
 echo "List spack environments:"
-spack env list |head
+spack env list
 
 
 # spack_env_path=$(spack location -e ${environment})
