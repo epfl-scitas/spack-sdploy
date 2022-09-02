@@ -17,7 +17,7 @@ echo "Created SPACK_SYSTEM_CONFIG_PATH in ${SPACK_SYSTEM_CONFIG_PATH}"
 # We test if the environment directory already exists ans create it otherwise
 # env_dir=$(spack location -e ${environment})
 
-if ! [ -e $(spack location -e ${environment} ]; then
+if ! [ -e $(spack location -e ${environment}) ]; then
     echo "Environment ${environment} already exists"
 else
     echo "Creating environment ${environment}"
