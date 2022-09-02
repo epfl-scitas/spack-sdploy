@@ -4,13 +4,16 @@ set -euo pipefail
 environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
 echo "ENVIRONMENT ${environment}"
 
-echo 'Activating Spack'
+# Activating Spack
 . $JENKINS/activate_spack.sh
 
 echo "Who is Spack:"
 spack location -r
 
-if [ -d $(spack location -e ${environment}) ]; then
+spack_env_path=$(spack location -e ${environment})
+echo "spack_env_path: ${spack_env_path}"
+
+if [ -d $(spack_env_path) ]; then
     echo "Environment ${environment} already exists"
 else
     echo "Creating environment ${environment}"
