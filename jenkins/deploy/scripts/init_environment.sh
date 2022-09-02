@@ -9,8 +9,8 @@ echo 'Activating Spack'
 
 echo "Initialize environment: ${environment}"
 if [[ -z $(spack env list | grep $environment) ]] && $?; then
-   echo "Found environment $environment"
+    echo "Creating environment $environment"
+    spack env create ${environment}
 else
-   echo "Creating environment $environment"
-   spack env create ${environment}
+    echo "Found environment $environment"
 fi
