@@ -14,7 +14,7 @@ spack config blame repos
 
 echo "Installing mirrors configuration"
 spack write-mirrors-yaml -s ${STACK_RELEASE} -p ph02_avx
-spack config blame repos
+spack config blame mirrors
 
 echo "Move files to etc/spack"
 cp ${SPACK_SYSTEM_CONFIG_PATH}/*.yaml ${SPACK_INSTALL_PATH}/etc/spack

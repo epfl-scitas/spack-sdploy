@@ -55,6 +55,16 @@ class ReposYaml(StackFile):
 
         self.repos = {}
         self._load_data()
+        self._overload()
+
+    def _overload(self):
+        """Sets path to etc/spack if running outside environment"""
+
+        self.yaml_path = os.path.join(
+            self.commons['work_directory'],
+            self.commons['stack_release'],
+            self.commons['spack'] + '.' + self.commons['stack_version'],
+            'etc/spack')
 
     def _load_data(self):
         """Read configuration"""
