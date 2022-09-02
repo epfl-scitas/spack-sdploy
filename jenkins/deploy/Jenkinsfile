@@ -50,12 +50,12 @@ pipeline {
     // A variable defined in a stage is bound to that stage.
     stages {
 
-        stage('Do a fresh restart') {
-            steps {
-                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
-                sh 'rm -rf ${STACK_PREFIX}'
-            }
-         }
+//        stage('Do a fresh restart') {
+//            steps {
+//                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
+//                sh 'rm -rf ${STACK_PREFIX}'
+//            }
+//         }
 
 //     stage('Temporary clear file') {
 //         steps {
@@ -76,6 +76,13 @@ pipeline {
 //              sh 'rm -rf /home/scitasbuildpr/syrah-lite/spack-config/modules.yaml'
 //          }
 //     }
+
+
+        stage('Clear home directory') {
+             steps {
+                 sh 'rm -rf /home/scitasbuildpr/.spack'
+             }
+        }
 
         stage('Print variables') {
             steps {
@@ -106,82 +113,76 @@ pipeline {
 //            }
 //        }
 
-        stage('Clone Spack') {  
+        stage('Install Spack') {  
             steps {
                 sh '${JENKINS}/install_spack.sh'
             }
         }
 
-        stage('Clone spack-sdploy') {
+        stage('Install Spack extensions') {
             steps {
                 sh '${JENKINS}/install_spack_sdploy.sh'
             }
         }
 
-        stage('Configure spack-sdploy') {
-            steps {
-                sh '${JENKINS}/configure_spack_sdploy.sh'
-            }
-        }
+//        stage('Install external repositories') {
+//            steps {
+//                sh '${JENKINS}/clone_external_repos.sh'
+//            }
+//        }
 
-        stage('Install external repositories') {
-            steps {
-                sh '${JENKINS}/clone_external_repos.sh'
-            }
-        }
-
-        stage('Create Spack environments') {
-            steps {
-                sh '${JENKINS}/create_spack_environments.sh'
-            }
-        }
-
-        stage('Parallel stage') {
-            steps {
-                script {
-                    parallel(do_parallel_stage())
-                }
-            }
-        }
-
-        
-        stage('Deploy spack manifest') {
-            steps {
-                script {
-                    parallel(do_deploy_spack_configuration())
-                }
-            }
-        }
-
-        stage('Install compilers') {
-            steps {
-                script {
-                    parallel(do_install_compilers())
-                }
-            }
-        }
-
-       stage('Concretize') {
-           steps {
-               script {
-                   parallel(do_concretize())
-               }
-           }
-       }
-
-       stage('Populate mirror') {
-           steps {
-               sh 'jenkins/deploy/scripts/add_mirror.sh'
-           }
-       }
-
-       stage('Deploy software') { 
-           steps {
-               script {
-                  parallel(do_deploy())
-               }
-           }
-       }
+//        stage('Create Spack environments') {
+//            steps {
+//                sh '${JENKINS}/create_spack_environments.sh'
+//            }
+//        }
+//
+//        stage('Parallel stage') {
+//            steps {
+//                script {
+//                    parallel(do_parallel_stage())
+//                }
+//            }
+//        }
+//
+//        
+//        stage('Deploy spack manifest') {
+//            steps {
+//                script {
+//                    parallel(do_deploy_spack_configuration())
+//                }
+//            }
+//        }
+//
+//        stage('Install compilers') {
+//            steps {
+//                script {
+//                    parallel(do_install_compilers())
+//                }
+//            }
+//        }
+//
+//       stage('Concretize') {
+//           steps {
+//               script {
+//                   parallel(do_concretize())
+//               }
+//           }
+//       }
+//
+//       stage('Populate mirror') {
+//           steps {
+//               sh 'jenkins/deploy/scripts/add_mirror.sh'
+//           }
+//       }
+//
+//       stage('Deploy software') { 
+//           steps {
+//               script {
+//                  parallel(do_deploy())
+//               }
+//           }
+//       }
 
     }
 }
