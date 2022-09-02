@@ -18,7 +18,7 @@ compilers=$(cat compilers-inline.${environment})
 echo $compilers
 
 echo "Installing compilers"
-spack install ${compilers}
+spack --debug install ${compilers}
 
 echo "Adding stack compilers"
 while read -r line
