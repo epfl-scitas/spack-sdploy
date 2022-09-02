@@ -15,6 +15,7 @@ pipeline {
     environment {
 
         // <!> can't figure out where the ${STACK} variable comes from <!>
+        STACK = "syrah-lite-l1"
 
         // Variables read from commons.yaml using cat, grep and cut.
         WORK_DIR=sh(returnStdout:true,
