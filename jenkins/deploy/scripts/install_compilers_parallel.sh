@@ -17,8 +17,10 @@ echo "Contents of compilers variable:"
 compilers=$(cat compilers-inline.${environment})
 echo $compilers
 
+# We can remove --debug from the spack install
+# command if the compilers are already installed.
 echo "Installing compilers"
-spack --debug install ${compilers}
+spack install ${compilers}
 
 echo "Adding stack compilers"
 while read -r line
