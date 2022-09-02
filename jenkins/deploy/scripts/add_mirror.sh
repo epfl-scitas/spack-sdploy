@@ -14,4 +14,3 @@ for environment in $(yareed -file stacks/common.yaml -key environments); do
     spack --env ${environment} mirror create -D -d ${SPACK_MIRROR} -a
 done
 
-True
