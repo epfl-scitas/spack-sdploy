@@ -1,0 +1,34 @@
+spack_release: v0.18.1
+stack_release: syrah-lite-l1
+
+# Path definitions
+work_directory: /home/scitasbuildpr/l1
+python_venv: py3-venv
+spack_external: external
+jenkins: jenkins/deploy/scripts
+extensions: spack-config
+spack: spack
+spack_sdploy: spack-sdploy
+stack_version: v1
+lmod_roots: share/spack/lmod
+tcl_roots: share/spack/modules
+
+environments: # platforms
+  - ph02_avx
+  - ph02_avx2
+
+# The mirrors paths are common to all stacks.
+# They are created under `work_directory`.
+mirrors:
+  local: spack-mirror
+  restricted: spack-mirror-restricted
+
+extra_repos:
+  scitas-external:
+    repo: http://github.com/epfl-scitas/spack-repo-externals.git
+    path: scitas-repos-externals/
+    tag: releases/arvine
+  scitas-spack-packages:
+    repo: http://github.com/epfl-scitas/scitas-spack-packages.git
+    path: scitas-spack-packages/
+    tag: releases/syrah
