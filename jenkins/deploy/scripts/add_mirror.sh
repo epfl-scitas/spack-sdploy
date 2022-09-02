@@ -4,7 +4,7 @@ set -euo pipefail
 # Activating Spack
 . $JENKINS/activate_spack.sh
 
-SPACK_MIRROR=$(yareed -file stacks/common.yaml -keys mirrors local
+SPACK_MIRROR=$(yareed -file stacks/common.yaml -keys mirrors local)
 SPACK_MIRROR=${WORK_DIR}/${SPACK_MIRROR}
 echo "SPACK_MIRROR: ${SPACK_MIRROR}"
 
