@@ -173,6 +173,14 @@ pipeline {
            }
        }
 
+       stage('Deploy software') {
+           steps {
+               script {
+                  parallel(do_deploy())
+               }
+           }
+       }
+
 //
 //        stage('Parallel stage') {
 //            steps {
@@ -187,13 +195,6 @@ pipeline {
 //
 //
 //
-//       stage('Deploy software') { 
-//           steps {
-//               script {
-//                  parallel(do_deploy())
-//               }
-//           }
-//       }
 
     }
 }
