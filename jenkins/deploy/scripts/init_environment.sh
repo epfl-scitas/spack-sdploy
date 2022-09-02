@@ -2,6 +2,7 @@
 # set -euo pipefail
 
 environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
+echo "NODE_LABEL: $NODE_LABELS"
 echo "ENVIRONMENT ${environment}"
 
 # Activating Spack
@@ -20,27 +21,3 @@ fi
 
 echo "List spack environments:"
 spack env list
-
-
-# spack_env_path=$(spack location -e ${environment})
-# echo "spack_env_path: ${spack_env_path}"
-
- # if [ -d $(spack_env_path) ]; then
- #     echo "Environment ${environment} already exists"
- # else
- #     echo "Creating environment ${environment}"
- #     spack env create ${environment}
- # fi
-
-
-#echo "Initialize environment: ${environment}"
-#if [[ -z $(spack env list | grep $environment) && $? -eq 1 ]] ; then
-#    echo "Creating environment $environment"
-#    # spack env create ${environment}
-#else
-#    echo "Found environment $environment"
-#fi
-#
-#echo "List spack environments"
-#spack env list
-#

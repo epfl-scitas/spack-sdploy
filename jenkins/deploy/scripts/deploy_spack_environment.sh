@@ -8,6 +8,12 @@ echo "ENVIRONMENT: $environment"
 # Activating Spack
 . $JENKINS/activate_spack.sh
 
+echo "Who is Spack:"
+spack location -r
+
+echo "List spack environments:"
+spack env list
+
 # <!> DIRECTORY OVERWRITTEN <!>
 # export SPACK_SYSTEM_CONFIG_PATH=${SYSTEM_CONFIG_PREFIX}/${environment}
 # echo "Grep SPACK_SYSTEM_CONFIG_PATH from shell environment"
