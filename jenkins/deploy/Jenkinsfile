@@ -81,11 +81,11 @@ pipeline {
 //     }
 
 
-        stage('Clear home directory') {
-             steps {
-                 sh 'rm -rf /home/scitasbuildpr/.spack'
-             }
-        }
+//        stage('Clear home directory') {
+//             steps {
+//                 sh 'rm -rf /home/scitasbuildpr/.spack'
+//             }
+//        }
 
         stage('Print variables') {
             steps {
@@ -181,6 +181,13 @@ pipeline {
            }
        }
 
+//      stage('Activate packages') {
+//           steps {
+//              script {
+//                  parallel(activate_packages())
+//              }
+//          }
+//      }
 //
 //        stage('Parallel stage') {
 //            steps {
@@ -323,4 +330,11 @@ def do_parallel_stage() {
     return _define_stages('Deploy',
                           'jenkins/deploy/scripts/parallel_stage1.sh',
                           'Deployement of production stack')
+}
+
+def do_activate_packages() {
+    return _define_stages('activate',
+                          'jenkins/deploy/scripts/activate_packages.sh',
+                          'Activation of packages',
+                          false)
 }
