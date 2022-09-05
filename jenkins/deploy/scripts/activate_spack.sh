@@ -12,4 +12,8 @@ spack --version
 environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
 echo "ENVIRONMENT ${environment}"
 
-SPACK_SYSTEM_CONFIG_PATH=$(spack location --env ${environment})
+_env_path=$(spack location --env ${environment} || true)
+
+if [ ! -z ${_env_path} ]; then
+    export SPACK_SYSTEM_CONFIG_PATH=${_env_path}
+fi
