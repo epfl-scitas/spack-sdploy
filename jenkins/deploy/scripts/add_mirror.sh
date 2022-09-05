@@ -4,7 +4,7 @@ set -euo pipefail
 # Activating Spack
 . $JENKINS/activate_spack.sh
 
-spack list-mirrors -s ${SPACK_RELEASE} | grep local | tee mirrors.list
+spack list-mirrors -s ${STACK_RELEASE} | grep local | tee mirrors.list
 SPACK_MIRROR=$(cat mirrors.list | cut -d ' ' -f 2)
 
 echo "Looping through all environments:"
