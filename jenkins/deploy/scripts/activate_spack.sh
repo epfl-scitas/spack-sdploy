@@ -8,3 +8,8 @@ echo 'Active Spack'
 . $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 
 spack --version
+
+environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
+echo "ENVIRONMENT ${environment}"
+
+SPACK_SYSTEM_CONFIG_PATH=$(spack install -e ${environment})

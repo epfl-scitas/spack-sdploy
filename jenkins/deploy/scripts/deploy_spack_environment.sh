@@ -1,9 +1,5 @@
 #!/bin/bash -l
-# set -euo pipefail
-
-environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
-echo "NODE_LABEL: $NODE_LABELS"
-echo "ENVIRONMENT: $environment"
+set -euo pipefail
 
 # Activating Spack
 . $JENKINS/activate_spack.sh
@@ -33,16 +29,25 @@ echo "Deploying manifest"
 spack --env ${environment} write-spack-yaml -s ${STACK_RELEASE} -p ${environment}
 
 echo "Installing packages configuration"
-spack --env ${environment} write-packages-yaml -s ${STACK_RELEASE} -p ${environment} -d
+spack --env ${environment} write-packages-yaml -s ${STACK_RELEASE} -p ${environment}
 spack --env ${environment} config blame packages
 
 echo "Installing modules configuration"
-spack --env ${environment} write-modules-yaml -s ${STACK_RELEASE} -p ${environment} -d
+spack --env ${environment} write-modules-yaml -s ${STACK_RELEASE} -p ${environment}
 spack --env ${environment} config blame modules
 
 echo "Installing config.yaml configuration: ${environment}"
-spack --env ${environment} write-config-yaml -s ${STACK_RELEASE} -p ${environment} -d
+spack --env ${environment} write-config-yaml -s ${STACK_RELEASE} -p ${environment}
 spack --env ${environment} config blame config
 
+echo "Installing external repos for:"
+spack --env ${environment} write-repos-yaml -s ${STACK_RELEASE} -p ${environment}
+spack --env ${environment} config blame repos
+
+echo "Installing mirrors configuration"
+spack --env ${environment} write-mirrors-yaml -s ${STACK_RELEASE} -p ${environment}
+spack --env ${environment} config blame mirrors
+
 echo "List environment directory contents"
-ls -l $(spack location -e ${environment})
+ls -l ${SPACK_SYSTEM_CONFIG_PATH}
+

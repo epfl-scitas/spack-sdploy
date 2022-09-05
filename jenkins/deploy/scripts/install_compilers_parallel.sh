@@ -1,9 +1,6 @@
 #!/bin/bash -l
 set -euo pipefail
 
-environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
-echo "ENVIRONMENT ${environment}"
-
 # Activate spack
 . $JENKINS/activate_spack.sh
 
@@ -13,12 +10,9 @@ echo "ENVIRONMENT ${environment}"
 # the compiler specs in a single row (compilers-inline).
 spack readc -s ${STACK_RELEASE} -p ${environment}
 
-echo "Contents of compilers.${environment}:"
-cat compilers-inline.${environment}
-
 echo ""
 echo "Contents of compilers variable:"
-compilers=$(cat compilers-inline.${environment})
+compilers=$(cat compilers-perline.${environment})
 echo $compilers
 
 # We can remove --debug from the spack install
@@ -27,10 +21,16 @@ echo "Installing compilers"
 spack --debug install ${compilers}
 
 echo "Adding stack compilers to ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml"
-while read -r line
+while read -r spec
 do
-    spec_path=$(spack location -i ${line})
+    spec_path=$(spack location -i ${spec})
     spack compiler find --scope system ${spec_path}
+
+    if [[ "$spec" =~ "intel" ]]; then
+	version=$(${spec_path}/bin/icc --verion | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
+	spec_version=$(echp $spec | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
+	sed -i ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml 's/intel@${version}/intel@${spec_version}/'
+    fi
 done <<< $(cat compilers-perline.${environment})
 
 echo "============= COMPILERS DEBUG INFO ============="

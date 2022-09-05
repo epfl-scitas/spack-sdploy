@@ -40,14 +40,11 @@ pipeline {
         JENKINS = "jenkins/deploy/scripts"
 
         // Composed variables (from above values).
-        PYTHON_VIRTUALENV_PATH = "${WORK_DIR}/${STACK_RELEASE}/${PYTHON_VENV}"
         STACK_PREFIX           = "${WORK_DIR}/${STACK_RELEASE}"
-        STACK_INSTALL_PATH     = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_PATH}.${STACK_RELEASE_VER}"
-        SPACK_INSTALL_PATH     = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_PATH}.${STACK_RELEASE_VER}"
-        SPACK_SYSTEM_CONFIG_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_EXTENSION}"
-        SPACK_SDPLOY_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_SDPLOY}"
-        SPACK_DEFAULT_CONFIG_PATH = "${SPACK_INSTALL_PATH}/etc/spack"
-        SYSTEM_CONFIG_PREFIX      = "${WORK_DIR}/${STACK_RELEASE}/${STACK_RELEASE_VER}/config"
+        PYTHON_VIRTUALENV_PATH = "${STACK_PREFIX}/${PYTHON_VENV}"
+        STACK_INSTALL_PATH     = "${STACK_PREFIX}/${SPACK_PATH}.${STACK_RELEASE_VER}"
+        SPACK_SDPLOY_INSTALL_PATH = "${STACK_PREFIX}/${SPACK_SDPLOY}"
+	SYSTEM_CONFIG_PREFIX      = "${STACK_PREFIX}/${STACK_RELEASE_VER}/config"
     }
 
     // A variable defined in a stage is bound to that stage.
@@ -97,10 +94,8 @@ pipeline {
                 echo "STACK: ${STACK}"
                 echo "SPACK_RELEASE: ${SPACK_RELEASE}"
                 echo "STACK_PREFIX: $STACK_PREFIX"
-                echo "STACK_INSTALL_PATH: ${STACK_INSTALL_PATH}"
                 echo "SPACK_INSTALL_PATH: ${SPACK_INSTALL_PATH}"
                 echo "SPACK_RELEASE: ${SPACK_RELEASE}"
-                echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
                 echo "SPACK_SDPLOY_INSTALL_PATH: ${SPACK_SDPLOY_INSTALL_PATH}"
             }   
         }
@@ -110,12 +105,6 @@ pipeline {
                 sh '${JENKINS}/update_production_configuration.sh'
             }
         }
-
-//        stage('Clear home environment') {
-//            steps {
-//                sh 'rm /home/scitasbuildpr/.spack/linux/*.yaml'
-//            }
-//        }
 
         stage('Install Spack') {  
             steps {
@@ -169,11 +158,11 @@ pipeline {
 
        stage('Populate mirror') {
            steps {
-               sh 'jenkins/deploy/scripts/add_mirror.sh'
+               sh '${JENKINS}/add_mirror.sh'
            }
        }
 
-       stage('Deploy software') {
+       stage('Deploy software') { 
            steps {
                script {
                   parallel(do_deploy())
@@ -197,12 +186,6 @@ pipeline {
 //            }
 //        }
 //
-//        
-//
-//
-//
-//
-
     }
 }
 
