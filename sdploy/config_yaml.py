@@ -57,6 +57,9 @@ class ConfigYaml(StackFile):
 
         # Call method that will populate dict
         self._create_dictionary()
+        self.commons = ReadYaml()
+        self.commons.read(os.path.join(self.config.commons_yaml))
+
 
     def _create_dictionary(self):
         """Populates dictionary with the values it will
@@ -68,9 +71,9 @@ class ConfigYaml(StackFile):
         self._add_extensions()
 
     def _add_license_dir(self):
-        self.conf['license_dir'] = os.path.join(commons.data['work_directory'],
-                                                commons.data['stack_release'],
-                                                commons.data['spack_sdploy'],
+        self.conf['license_dir'] = os.path.join(self.commons.data['work_directory'],
+                                                self.commons.data['stack_release'],
+                                                self.commons.data['spack_sdploy'],
                                                 'external', 'license')       
 
     def _add_build_stage(self):
@@ -90,12 +93,10 @@ class ConfigYaml(StackFile):
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
-        commons = ReadYaml()
-        commons.read(os.path.join(self.config.commons_yaml))
         self.conf['extensions'] = [
-            os.path.join(commons.data['work_directory'],
-                         commons.data['stack_release'],
-                         commons.data['spack_sdploy'])
+            os.path.join(self.commons.data['work_directory'],
+                         self.commons.data['stack_release'],
+                         self.commons.data['spack_sdploy'])
         ]
 
     def _add_module_roots(self):
@@ -103,17 +104,15 @@ class ConfigYaml(StackFile):
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
-        commons = ReadYaml()
-        commons.read(self.config.commons_yaml)
         self.conf['module_roots'] = {}
         self.conf['module_roots']['lmod'] = os.path.join(
-            commons.data['work_directory'], 
-            commons.data['stack_release'],
-            commons.data['stack_version'],
-            commons.data['lmod_roots'])
+            self.commons.data['work_directory'], 
+            self.commons.data['stack_release'],
+            self.commons.data['stack_version'],
+            self.commons.data['lmod_roots'])
         self.conf['module_roots']['tcl'] = os.path.join(
-            commons.data['work_directory'],
-            commons.data['stack_release'],
-            commons.data['stack_version'],
-            commons.data['tcl_roots'])
+            self.commons.data['work_directory'],
+            self.commons.data['stack_release'],
+            self.commons.data['stack_version'],
+            self.commons.data['tcl_roots'])
 
