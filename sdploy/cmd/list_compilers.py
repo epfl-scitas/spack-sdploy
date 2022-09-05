@@ -21,6 +21,6 @@ def list_compilers(parser, args):
     config = Config(args)
 
     # Instantiate class
-    compilers = ReadCompilers(config)
+    compilers = Compilers(config)
 
     print('\n'.join(compilers.list_compilers()))
