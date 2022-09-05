@@ -24,14 +24,3 @@ config:
   - {{ build_stage }}
 {% endfor %}
 {% endif %}
-#                                                          #
-#                                                          #
-#                                             MODULE ROOTS #
-#                                                          #
-#                                                          #
-{% if 'module_roots' in data.keys() %}
-  module_roots:
-{% for pkg, path in data['module_roots'].items() %}
-    {{ pkg }}: {{ path }}
-{% endfor %}
-{% endif %}
