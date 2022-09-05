@@ -49,10 +49,6 @@ class SpackYaml(StackFile):
         self.pkgs_specs = {}
         self.definitions_list = []
 
-#        self.template = config.spack_yaml_template
-#        self.yaml_file = config.spack_yaml
-#        self.schema = spack.schema.env.schema
-
     def create_pe_libraries_specs_dict(self):
         pass
 

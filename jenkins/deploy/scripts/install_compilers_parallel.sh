@@ -8,12 +8,10 @@ set -euo pipefail
 # and writes two files, one with each compiler spec in
 # its own line (compilers-perline) and a second with all
 # the compiler specs in a single row (compilers-inline).
-spack readc -s ${STACK_RELEASE} -p ${environment}
+spack -e ${environment} read_compilers -s ${STACK_RELEASE} | tee compilers.list
 
-echo ""
-echo "Contents of compilers variable:"
-compilers=$(cat compilers-perline.${environment})
-echo $compilers
+
+compilers=${cat compilers.list}
 
 # We can remove --debug from the spack install
 # command if the compilers are already installed.
@@ -31,7 +29,7 @@ do
 	spec_version=$(echo $spec | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
 	sed -i ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml 's/intel@${version}/intel@${spec_version}/'
     fi
-done <<< $(cat compilers-perline.${environment})
+done <<< $(cat compilers.list)
 
 echo "============= COMPILERS DEBUG INFO ============="
 
