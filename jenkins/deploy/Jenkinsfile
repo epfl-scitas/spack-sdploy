@@ -1,4 +1,3 @@
-
 pipeline {
     agent {
         label 'ph02-syrah-rhel8'
@@ -49,40 +48,12 @@ pipeline {
 
     // A variable defined in a stage is bound to that stage.
     stages {
-
 //        stage('Do a fresh restart') {
 //            steps {
 //                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
 //                sh 'rm -rf ${STACK_PREFIX}'
 //            }
 //         }
-
-//     stage('Temporary clear file') {
-//         steps {
-//             sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx2.xml'
-//             sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx.xml'
-//         }
-//     }
-
-//     stage('Remove spack.yaml') {
-//          steps {
-//              sh 'rm /home/scitasbuildpr/syrah-lite/spack.v1/var/spack/environments/ph02_avx/spack.yaml'
-//              sh 'rm /home/scitasbuildpr/syrah-lite/spack.v1/var/spack/environments/ph02_avx2/spack.yaml'
-//          }
-//     }
-
-//     stage('Clear spack-config modules.yaml file') {
-//          steps {
-//              sh 'rm -rf /home/scitasbuildpr/syrah-lite/spack-config/modules.yaml'
-//          }
-//     }
-
-
-//        stage('Clear home directory') {
-//             steps {
-//                 sh 'rm -rf /home/scitasbuildpr/.spack'
-//             }
-//        }
 
         stage('Print variables') {
             steps {
@@ -131,14 +102,6 @@ pipeline {
                 }
             }
         }
-
-//        stage('Deploy spack environment') {
-//            steps {
-//                script {
-//                    parallel(do_deploy_spack_environment())
-//                }
-//            }
-//        }
 
         stage('Install compilers') {
             steps {
