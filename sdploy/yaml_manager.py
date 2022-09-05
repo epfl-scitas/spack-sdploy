@@ -13,7 +13,7 @@
 #                                                                       #
 #                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
+import os
 import spack
 import spack.util
 import spack.util.spack_yaml as spyaml
@@ -147,8 +147,12 @@ class ReadYaml(object):
 
         if not platform_file:
             platform_file = self.platform_file
-        common = ReadYaml()
-        common.read(platform_file)
+
+        if not os.path.exists(platform_file):
+            common.data['platform']['filters'] = {}
+        else:
+            common = ReadYaml()
+            common.read(platform_file)
         return(common.data['platform']['filters'])
 
     def group_sections(self, dic, section):
@@ -245,8 +249,12 @@ class ReadYaml(object):
             {key1: option1, key2, option2, ...}
         """
 
-        common = ReadYaml()
-        common.read(platform_file)
+        if not os.path.exists(platform_file):
+            common.data['platform']['variables'] = {}
+        else:
+            common = ReadYaml()
+            common.read(platform_file)
+
         return(common.data['common']['variables'])
 
     def do_replace(self, d, pat, rep):
