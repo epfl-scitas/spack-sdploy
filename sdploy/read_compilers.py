@@ -18,7 +18,7 @@ import llnl.util.tty as tty
 from .stack_file import StackFile
 
 
-class ReadCompilers(StackFile):
+class Compilers(StackFile):
     """Manage the packages section in stack.yaml"""
 
     def __init__(self, config):

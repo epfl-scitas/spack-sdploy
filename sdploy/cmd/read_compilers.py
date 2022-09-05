@@ -9,7 +9,7 @@ description = "read_compilers"
 section = "Sdploy"
 level = "short"
 
-from ..read_compilers import ReadCompilers
+from ..read_compilers import Compilers
 from ..config_manager import Config
 from ..common_parser import setup_parser
 
