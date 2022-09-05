@@ -35,7 +35,7 @@ from ..config import *
 from ..config_manager import Config
 from ..common_parser import setup_parser
 
-def write_repos_yaml(parser, args):
+def clone_external_repos(parser, args):
 
     # spack-sdploy setup
     config = Config(args)
