@@ -100,10 +100,10 @@ class ReadYaml(object):
             platform_file = self.platform_file
 
         if not os.path.exists(platform_file):
-            common.data['platform']['tokens'] = {}
-        else:
-            common = ReadYaml()
-            common.read(platform_file)
+            return {}
+
+        common = ReadYaml()
+        common.read(platform_file)
             
         return(common.data['platform']['tokens'])
 
@@ -149,11 +149,12 @@ class ReadYaml(object):
             platform_file = self.platform_file
 
         if not os.path.exists(platform_file):
-            common.data['platform']['filters'] = {}
-        else:
-            common = ReadYaml()
-            common.read(platform_file)
-        return(common.data['platform']['filters'])
+            return {}
+
+        common = ReadYaml()
+        common.read(platform_file)
+
+        return common.data['platform']['filters']
 
     def group_sections(self, dic, section):
         """Returns dictionary composed of common sections
@@ -229,6 +230,9 @@ class ReadYaml(object):
             {key1: option1, key2, option2, ...}
         """
 
+        if not os.path.exists(platform_file):
+            return {}
+
         common = ReadYaml()
         common.read(platform_file)
         return(common.data['common']['filters'])
@@ -250,10 +254,10 @@ class ReadYaml(object):
         """
 
         if not os.path.exists(platform_file):
-            common.data['platform']['variables'] = {}
-        else:
-            common = ReadYaml()
-            common.read(platform_file)
+            return {}
+
+        common = ReadYaml()
+        common.read(platform_file)
 
         return(common.data['common']['variables'])
 
