@@ -88,7 +88,7 @@ class ReposYaml(StackFile):
         
     def clone(self):
         """Read repositories declared in commons.yaml to be cloned and call clone method"""
-        for repo, info in repo.items(): 
+        for repo, info in self.repos.items(): 
             self._clone(repo, **info)
 
     def _clone(self, repo, url=None, repo_path=None, tag=None):
