@@ -5,40 +5,19 @@ set -x
 # Activating Spack
 . $JENKINS/activate_spack.sh
 
-echo "Who is Spack:"
-spack location -r
-
-echo "List spack environments:"
-spack env list
-
-# <!> DIRECTORY OVERWRITTEN <!>
-# export SPACK_SYSTEM_CONFIG_PATH=${SYSTEM_CONFIG_PREFIX}/${environment}
-# echo "Grep SPACK_SYSTEM_CONFIG_PATH from shell environment"
-# env|grep SPACK_SYSTEM_CONFIG_PATH
-# echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
-# mkdir -p ${SPACK_SYSTEM_CONFIG_PATH}
-# echo "Created SPACK_SYSTEM_CONFIG_PATH in ${SPACK_SYSTEM_CONFIG_PATH}"
-
-# if [ -d $(spack location -e ${environment}) ]; then
-#     echo "Environment ${environment} already exists"
-# else
-#     echo "Creating environment ${environment}"
-#     spack env create ${environment}
-# fi
-
 echo "Deploying manifest"
-spack --env ${environment} write-spack-yaml -s ${STACK_RELEASE} -p ${environment}
+spack --env ${environment} -d write-spack-yaml -s ${STACK_RELEASE} -p ${environment}
 
 echo "Installing packages configuration"
-spack --env ${environment} write-packages-yaml -s ${STACK_RELEASE} -p ${environment}
+spack --env ${environment} -d write-packages-yaml -s ${STACK_RELEASE} -p ${environment}
 spack --env ${environment} config blame packages
 
 echo "Installing modules configuration"
-spack --env ${environment} write-modules-yaml -s ${STACK_RELEASE} -p ${environment}
+spack --env ${environment} -d write-modules-yaml -s ${STACK_RELEASE} -p ${environment}
 spack --env ${environment} config blame modules
 
 echo "Installing config.yaml configuration: ${environment}"
-spack --env ${environment} write-config-yaml -s ${STACK_RELEASE} -p ${environment}
+spack --env ${environment} -d write-config-yaml -s ${STACK_RELEASE} -p ${environment}
 spack --env ${environment} config blame config
 
 echo "Installing external repos for:"
