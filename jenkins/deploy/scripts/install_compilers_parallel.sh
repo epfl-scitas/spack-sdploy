@@ -27,7 +27,7 @@ do
     spack compiler find --scope system ${spec_path}
 
     if [[ "$spec" =~ "intel" ]]; then
-	version=$(${spec_path}/bin/icc --verion | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
+	version=$(${spec_path}/bin/icc --version | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
 	spec_version=$(echp $spec | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
 	sed -i ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml 's/intel@${version}/intel@${spec_version}/'
     fi
