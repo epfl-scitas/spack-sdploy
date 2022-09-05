@@ -189,25 +189,14 @@ def get_agent_name(platform) {
     return agent_name
 }
 
-def _define_stages(prefix, script, message, do_junit = true) {
-
+def _define_stages(prefix, script, message, do_junit = false) {
     def platforms = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/syrah-lite/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
 
     def jobs = [:]
     for (def platform in platforms) {
-
-        // THIS FUNCTIONS RETURNS THE CORRECT AGENT NAMES
-        // - ONE AGENT NAME PER PLATFORM
         def agent_name = get_agent_name(platform)
 
-        // Reporting
-        // println('Agent Name: ' + agent_name)
-        // println('Platform: ' + platform)
-        // println('Agent Name: ' + agent_name)
-        // println('Platform: ' + platform)
-
         jobs["${prefix}-${agent_name}"] = {
-
             stage("${prefix}-${agent_name}") {
                 node(agent_name) {
                     env.environment = platform
@@ -256,7 +245,8 @@ def do_init_environments() {
 def do_install_compilers() {
     return _define_stages("Install compilers",
                           "${env.JENKINS}/install_compilers_parallel.sh",
-                          "Run a stage in parallel")
+                          "Run a stage in parallel",
+			  true)
 }
 
 
@@ -269,18 +259,12 @@ def do_concretize() {
 def do_deploy() {
     return _define_stages("Deploy",
                           "${env.JENKINS}/install_stack.sh",
-                          "Deployement of production stack")
-}
-
-def do_parallel_stage() {
-    return _define_stages('Deploy',
-                          'jenkins/deploy/scripts/parallel_stage1.sh',
-                          'Deployement of production stack')
+                          "Deployement of production stack",
+			  true)
 }
 
 def do_activate_packages() {
     return _define_stages('activate',
                           'jenkins/deploy/scripts/activate_packages.sh',
-                          'Activation of packages',
-                          false)
+                          'Activation of packages')
 }
