@@ -15,8 +15,11 @@ else
     echo "$environment: found"
 fi
 
-echo "List spack environments:"
-spack env list
+_env_path=$(spack location --env ${environment} || true)
+
+if [ ! -z ${_env_path} ]; then
+    export SPACK_SYSTEM_CONFIG_PATH=${_env_path}
+fi
 
 echo "Deploying manifest"
 spack --env ${environment} -d write-spack-yaml -s ${STACK_RELEASE}
@@ -44,12 +47,3 @@ spack --env ${environment} config blame mirrors
 echo "List environment directory contents"
 ls -l ${SPACK_SYSTEM_CONFIG_PATH}
 
-
-
-# echo "Processing environment: ${environment}"
-# if [[ -z $(spack env list | grep $environment) && $? -eq 1 ]] ; then
-#     echo "$environment: creating..."
-#     spack env create ${environment}
-# else
-#     echo "$environment: found"
-# fi
