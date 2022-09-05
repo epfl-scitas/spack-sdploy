@@ -22,7 +22,8 @@ echo "Adding stack compilers to ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml"
 while read -r spec
 do
     spec_path=$(spack location -i ${spec})
-    spack compiler find --scope system ${spec_path}
+    echo "spack compiler find --scope system ${spec_path} || true"
+    spack compiler find --scope system ${spec_path} || true
 
     if [[ "$spec" =~ "intel" ]]; then
 	version=$(${spec_path}/bin/icc --version | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
