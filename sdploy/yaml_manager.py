@@ -45,7 +45,6 @@ class ReadYaml(object):
         self.data = None
         self.config = None
         self.platform = None
-        self.tokens = None
 
     def read(self, filename, **kwargs):
         """Read yaml file into data object"""
@@ -75,7 +74,6 @@ class ReadYaml(object):
         """Reads tokens from platform file and executes replacement.
         `data` is a dictionary where the replacements will happen.
         Replacements are done in place."""
-
         self.tokens = self._read_tokens(self.platform_file)
         for key, value in self.tokens.items():
             self._do_replace_tokens(data, '<' + str(key) + '>', str(value))

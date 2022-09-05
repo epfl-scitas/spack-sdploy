@@ -29,15 +29,18 @@ packages:
     - {{ spec }}
 {% endfor %}
 {% endfor %}
-   all: {}
+   all:
+{% if 'target' in tokens %}
+     target: [{{tokens['target']}}]
+{% endif %}
 #                                                          #
 #                                                          #
 #                                          ALL PREFERENCES #
 #                                                          #
 #                                                          #
- {% for pref, value in data['preferences'].items() %}     
-     {{ pref }}: {{value}}                                
- {% endfor %}                                             
+{% for pref, value in data['preferences'].items() %}     
+    {{ pref }}: {{value}}                                
+{% endfor %}                                             
 #     providers:                                           #
 #       blas: [openblas, intel-mkl]                        #
 #       fftw-api: [fftw]                                   #

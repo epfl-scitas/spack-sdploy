@@ -98,7 +98,7 @@ class StackFile(ReadYaml):
 
         # Render and write self.yaml_file
         jinja_template = jinja_env.get_template(self.template_file)
-        output = jinja_template.render(data = kwargs['data'])
+        output = jinja_template.render(data=kwargs['data'], tokens=self.tokens)
 
         tty.msg(self.yaml_file)
         print(output)
