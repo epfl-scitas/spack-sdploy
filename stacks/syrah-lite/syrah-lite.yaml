@@ -51,4 +51,6 @@ serial_packages_intel_stable:
   metadata: { section: packages }
   pe: [intel_stable]
   packages:
-    - perl@5.32.1
+    - perl:
+        default:
+          version: 5.32.1
