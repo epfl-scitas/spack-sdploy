@@ -91,18 +91,18 @@ class ReposYaml(StackFile):
         for repo, info in self.repos.items(): 
             self._clone(repo, **info)
 
-    def _clone(self, repo, url=None, repo_path=None, tag=None):
+    def _clone(self, repo, url=None, path=None, tag=None):
         """Clone repository"""
 
         git = which('git', required=True)
-        if os.path.exists(repo_path):
-            tty.debug("Update repository {} in {}".format(repo, repo_path))
-            with working_dir(repo_path):
+        if os.path.exists(path):
+            tty.debug("Update repository {} in {}".format(repo, path))
+            with working_dir(path):
                 git('fetch', 'origin')
                 git('checkout', tag)
         else:
-            tty.debug("Clonining {}[{}] repository in {}".format(repo, url, repo_path))
-            git('clone', '-b', tag, url, repo_path)
+            tty.debug("Clonining {}[{}] repository in {}".format(repo, url, path))
+            git('clone', '-b', tag, url, path)
 
 
 
