@@ -118,6 +118,12 @@ pipeline {
             }
         }
 
+        stage('Install External Repos') {
+            steps {
+                sh '${JENKINS}/install_spack_external.sh'
+            }
+        }
+
         stage('Initialize Spack environments') {
             steps {
                 script {
@@ -126,13 +132,13 @@ pipeline {
             }
         }
 
-        stage('Deploy spack environment') {
-            steps {
-                script {
-                    parallel(do_deploy_spack_environment())
-                }
-            }
-        }
+//        stage('Deploy spack environment') {
+//            steps {
+//                script {
+//                    parallel(do_deploy_spack_environment())
+//                }
+//            }
+//        }
 
         stage('Install compilers') {
             steps {

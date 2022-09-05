@@ -44,7 +44,7 @@ def write_repos_yaml(parser, args):
     repos = ReposYaml(config)
 
     # Clone the repositories
-    repos.clone()
+    # repos.clone()
 
     # Write mirrors file.
     # Each commend must pass the dictionary in the contents variable.

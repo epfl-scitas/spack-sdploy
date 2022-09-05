@@ -85,37 +85,22 @@ class ReposYaml(StackFile):
 
             # self.repos will be needed later for creating repos.yaml
             self.repos[repo_path] = os.path.join(prefix,repo_path)
-            self._clone(repo_url, repo_path, repo_tag, os.path.join(prefix,repo_path))
+            self._clone(repo_url, repo_path, repo_tag, os.path.join(prefix, repo_path))
 
-    def _clone(self, url, path, tag, prefix):
+    def _clone(self, url, path, tag, repo_path):
         """Clone repository"""
 
-        origin_url = url
-        branch = tag
+        git = which('git', required=True)
+        if os.path.exists(repo_path):
+            tty.debug("Update repository in %s" % repo_path)
+            with working_dir(repo_path):
+                git('fetch', 'origin')
+                git('checkout', tag)
+        else:
+            tty.debug("Clonining {} repository in {}".format(url, repo_path))
+            git('clone', '-b', tag, url, repo_path)
 
-        if os.path.isfile(prefix):
-            tty.die("There is already a file at %s" % prefix)
 
-        if os.path.exists(os.path.join(prefix)):
-            tty.warn("There already seems to be repository in %s" % prefix)
-            tty.warn("Deleting the repository in %s" % prefix)
-            try:
-                shutil.rmtree(prefix)
-            except:
-                pass
-
-        mkdirp(prefix)
-
-        with working_dir(prefix):
-            git = which('git', required=True)
-            git('init', '--shared', '-q')
-            git('remote', 'add', 'origin', origin_url)
-            git('fetch', 'origin', '%s:refs/remotes/origin/%s' % (branch, branch),
-                '-n', '-q')
-            git('reset', '--hard', 'origin/%s' % branch, '-q')
-            git('checkout', '-B', branch, 'origin/%s' % branch, '-q')
-
-            tty.msg("Successfully created a new repository in %s" % prefix)
 
 
 
