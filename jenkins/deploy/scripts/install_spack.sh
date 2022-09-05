@@ -29,5 +29,15 @@ echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
 echo "Add system compiler:"
 spack compiler find --scope system
 
-echo "Dsiplay known compilers:"
+echo "============= COMPILERS DEBUG INFO ============="
+
+echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
+
+echo "spack config blame compilers"
 spack config blame compilers
+
+echo "spack compilers"
+spack compilers
+
+echo "cat ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml:"
+cat ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
