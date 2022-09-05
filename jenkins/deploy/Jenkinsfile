@@ -42,7 +42,7 @@ pipeline {
         // Composed variables (from above values).
         STACK_PREFIX           = "${WORK_DIR}/${STACK_RELEASE}"
         PYTHON_VIRTUALENV_PATH = "${STACK_PREFIX}/${PYTHON_VENV}"
-        STACK_INSTALL_PATH     = "${STACK_PREFIX}/${SPACK_PATH}.${STACK_RELEASE_VER}"
+        SPACK_INSTALL_PATH     = "${STACK_PREFIX}/${SPACK_PATH}.${STACK_RELEASE_VER}"
         SPACK_SDPLOY_INSTALL_PATH = "${STACK_PREFIX}/${SPACK_SDPLOY}"
 	SYSTEM_CONFIG_PREFIX      = "${STACK_PREFIX}/${STACK_RELEASE_VER}/config"
     }
@@ -93,7 +93,7 @@ pipeline {
                 echo "JENKINS: ${JENKINS}"
                 echo "STACK: ${STACK}"
                 echo "SPACK_RELEASE: ${SPACK_RELEASE}"
-                echo "STACK_PREFIX: $STACK_PREFIX"
+                echo "STACK_PREFIX: ${STACK_PREFIX}"
                 echo "SPACK_INSTALL_PATH: ${SPACK_INSTALL_PATH}"
                 echo "SPACK_RELEASE: ${SPACK_RELEASE}"
                 echo "SPACK_SDPLOY_INSTALL_PATH: ${SPACK_SDPLOY_INSTALL_PATH}"
@@ -126,14 +126,6 @@ pipeline {
             }
         }
 
-        stage('Install compilers') {
-            steps {
-                script {
-                    parallel(do_install_compilers())
-                }
-            }
-        }
-
         stage('Deploy spack environment') {
             steps {
                 script {
@@ -142,9 +134,11 @@ pipeline {
             }
         }
 
-        stage('Deploy common ressources') {
+        stage('Install compilers') {
             steps {
-                sh '${JENKINS}/deploy_common_resources.sh'
+                script {
+                    parallel(do_install_compilers())
+                }
             }
         }
 
