@@ -32,5 +32,4 @@ spack config blame compilers
 echo "spack compilers"
 spack compilers
 
-echo "cat ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml:"
-cat ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+
