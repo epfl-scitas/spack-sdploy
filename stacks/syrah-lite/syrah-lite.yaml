@@ -49,6 +49,6 @@ gcc:
 # ------------------------------------------------------------------------------
 serial_packages_intel_stable:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [intel_stable]
   packages:
     - perl@5.32.1
