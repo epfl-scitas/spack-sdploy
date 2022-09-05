@@ -1,6 +1,5 @@
 #!/bin/bash -l
 set -euo pipefail
-set -x
 
 echo 'Activating Python virtual environment'
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate

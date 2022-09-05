@@ -140,39 +140,9 @@ pipeline {
 //              }
 //          }
 //      }
-//
-//        stage('Parallel stage') {
-//            steps {
-//                script {
-//                    parallel(do_parallel_stage())
-//                }
-//            }
-//        }
-//
     }
 }
 
-
-def groovy_script(my_param) {
-
-    param1 = "eduardo"
-    def param2 = "eduardo2"
-
-    println("print a simple string")
-    println("1: " + param1)
-    println("2: " + param2)
-    println("3: ${param1}")
-    println("4: ${param2}")
-    println("5: " + my_param)
-    println("6: ${my_param}")
-
-    def environments = "${sh (script: 'jenkins/deploy/scripts/run.sh yareed -file stacks/common.yaml -keys environments',  returnStdout: true).trim()}".split('\n')
-
-    for (def environment in environments) {
-        print environment
-    }
-
-}
 
 def get_prefix(branch_name, stack_name) {
     def pattern = ~"origin/(packages|bugfix|features)/$stack_name/"

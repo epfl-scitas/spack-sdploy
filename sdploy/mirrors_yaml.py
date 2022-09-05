@@ -49,22 +49,11 @@ class MirrorsYaml(StackFile):
         self.yaml_path = self.config.spack_config_path
         self.yaml_file = self.config.mirrors_yaml
 
+        self.common = ReadYaml()
+        self.common.read(self.config.commons_yaml)
+
         self.mirrors = {}
-        self._overload()
         self._create_dictionary()
-
-    def _overload(self):
-        """Sets path to etc/spack if running outside environment"""
-
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-        commons = ReadYaml()
-        commons.read(self.config.commons_yaml)
-
-        self.yaml_path = os.path.join(
-            commons.data['work_directory'],
-            commons.data['stack_release'],
-            commons.data['spack'] + '.' + commons.data['stack_version'],
-            'etc/spack')
 
     def _create_dictionary(self):
         """Populates dictionary with the values it will
@@ -78,10 +67,8 @@ class MirrorsYaml(StackFile):
         are read from commons.yaml and not from sdploy.yaml."""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-        commons = ReadYaml()
-        commons.read(self.config.commons_yaml)
-
         self.mirrors['paths'] = {}
-        for k,v in commons.data['mirrors'].items():
-            self.mirrors['paths'][k] = (commons.data['work_directory'] +
-                                        os.path.sep + v)
+        for mirror, path in self.common.data['mirrors'].items():
+            self.mirrors['paths'][mirror] = os.path.join(
+                self.common.data['work_directory'],
+                path)
