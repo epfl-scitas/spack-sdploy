@@ -41,14 +41,11 @@ pipeline {
         JENKINS = "jenkins/deploy/scripts"
 
         // Composed variables (from above values).
-        PYTHON_VIRTUALENV_PATH = "${WORK_DIR}/${STACK_RELEASE}/${PYTHON_VENV}"
         STACK_PREFIX           = "${WORK_DIR}/${STACK_RELEASE}"
-        STACK_INSTALL_PATH     = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_PATH}.${STACK_RELEASE_VER}"
-        SPACK_INSTALL_PATH     = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_PATH}.${STACK_RELEASE_VER}"
-        SPACK_SYSTEM_CONFIG_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_EXTENSION}"
-        SPACK_SDPLOY_INSTALL_PATH = "${WORK_DIR}/${STACK_RELEASE}/${SPACK_SDPLOY}"
-        SPACK_DEFAULT_CONFIG_PATH = "${SPACK_INSTALL_PATH}/etc/spack"
-        SYSTEM_CONFIG_PREFIX      = "${WORK_DIR}/${STACK_RELEASE}/${STACK_RELEASE_VER}/config"
+        PYTHON_VIRTUALENV_PATH = "${STACK_PREFIX}/${PYTHON_VENV}"
+        STACK_INSTALL_PATH     = "${STACK_PREFIX}/${SPACK_PATH}.${STACK_RELEASE_VER}"
+        SPACK_SDPLOY_INSTALL_PATH = "${STACK_PREFIX}/${SPACK_SDPLOY}"
+	SYSTEM_CONFIG_PREFIX      = "${STACK_PREFIX}/${STACK_RELEASE_VER}/config"
     }
 
     // A variable defined in a stage is bound to that stage.
@@ -60,27 +57,6 @@ pipeline {
 //                sh 'rm -rf ${STACK_PREFIX}'
 //            }
 //         }
-
-//     stage('Temporary clear file') {
-//         steps {
-//             sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx2.xml'
-//             sh 'rm -rf /home/scitasbuildpr/jenkins/workspace/spack.syrah.test.deploy@4/compilers.ph02-avx.xml'
-//         }
-//     }
-
-//     stage('Remove spack.yaml') {
-//          steps {
-//              sh 'rm /home/scitasbuildpr/syrah-lite/spack.v1/var/spack/environments/ph02_avx/spack.yaml'
-//              sh 'rm /home/scitasbuildpr/syrah-lite/spack.v1/var/spack/environments/ph02_avx2/spack.yaml'
-//          }
-//     }
-
-//     stage('Clear spack-config modules.yaml file') {
-//          steps {
-//              sh 'rm -rf /home/scitasbuildpr/syrah-lite/spack-config/modules.yaml'
-//          }
-//     }
-
 
         stage('Clear home directory') {
              steps {
@@ -98,10 +74,8 @@ pipeline {
                 echo "STACK: ${STACK}"
                 echo "SPACK_RELEASE: ${SPACK_RELEASE}"
                 echo "STACK_PREFIX: $STACK_PREFIX"
-                echo "STACK_INSTALL_PATH: ${STACK_INSTALL_PATH}"
                 echo "SPACK_INSTALL_PATH: ${SPACK_INSTALL_PATH}"
                 echo "SPACK_RELEASE: ${SPACK_RELEASE}"
-                echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
                 echo "SPACK_SDPLOY_INSTALL_PATH: ${SPACK_SDPLOY_INSTALL_PATH}"
             }   
         }
@@ -111,12 +85,6 @@ pipeline {
                 sh '${JENKINS}/update_production_configuration.sh'
             }
         }
-
-//        stage('Clear home environment') {
-//            steps {
-//                sh 'rm /home/scitasbuildpr/.spack/linux/*.yaml'
-//            }
-//        }
 
         stage('Install Spack') {  
             steps {
@@ -138,12 +106,6 @@ pipeline {
             }
         }
 
-        stage('Deploy common ressources') {
-            steps {
-                sh '${JENKINS}/deploy_common_resources.sh'
-            }
-        }
-
         stage('Install compilers') {
             steps {
                 script {
@@ -152,40 +114,27 @@ pipeline {
             }
         }
 
-//
-//        stage('Parallel stage') {
-//            steps {
-//                script {
-//                    parallel(do_parallel_stage())
-//                }
-//            }
-//        }
-//
-//        
-//
-//
-//       stage('Concretize') {
-//           steps {
-//               script {
-//                   parallel(do_concretize())
-//               }
-//           }
-//       }
-//
-//       stage('Populate mirror') {
-//           steps {
-//               sh 'jenkins/deploy/scripts/add_mirror.sh'
-//           }
-//       }
-//
-//       stage('Deploy software') { 
-//           steps {
-//               script {
-//                  parallel(do_deploy())
-//               }
-//           }
-//       }
+       stage('Concretize') {
+           steps {
+               script {
+                   parallel(do_concretize())
+               }
+           }
+       }
 
+       stage('Populate mirror') {
+           steps {
+               sh '${JENKINS}/add_mirror.sh'
+           }
+       }
+
+       stage('Deploy software') { 
+           steps {
+               script {
+                  parallel(do_deploy())
+               }
+           }
+       }
     }
 }
 

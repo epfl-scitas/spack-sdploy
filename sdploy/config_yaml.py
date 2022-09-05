@@ -62,22 +62,28 @@ class ConfigYaml(StackFile):
         """Populates dictionary with the values it will
         need to write the modules.yaml file"""
 
+        self._add_license_dir()
         self._add_build_stage()
         self._add_module_roots()
         self._add_extensions()
+
+    def _add_license_dir(self):
+        self.conf['license_dir'] = os.join.path(commons.data['work_directory'],
+                                                commons.data['stack_release'],
+                                                commons.data['spack_sdploy'],
+                                                'external', 'license')       
 
     def _add_build_stage(self):
         """Add build stages section to the dictionary"""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
-        self.conf['build_stage'] = []
-        self.conf['build_stage'].append(
-            os.path.join('$tempdir', self.config.stack + '.' + self.config.stack_ver, 'tmp'))
-        self.conf['build_stage'].append(
-            os.path.join('$tempdir', '$user', 'spack-stage'))
-        self.conf['build_stage'].append(
-            os.path.join('~', '.spack', 'stage'))
+        self.conf['build_stage'] = [
+            os.path.join('$tempdir', '$user',
+                         self.config.stack + '.' + self.config.stack_ver, 'tmp'),
+            os.path.join('$tempdir', '$user', 'spack-stage'),
+            os.path.join('~', '.spack', 'stage')
+        ]
 
     def _add_extensions(self):
         """Add extensions to the dictionary"""
@@ -86,11 +92,11 @@ class ConfigYaml(StackFile):
 
         commons = ReadYaml()
         commons.read(os.path.join(self.config.commons_yaml))
-        self.conf['extensions'] = []
-        self.conf['extensions'].append(
-              commons.data['work_directory'] + os.path.sep
-            + commons.data['stack_release'] + os.path.sep
-            + commons.data['spack_sdploy'])
+        self.conf['extensions'] = [
+            os.join.path(commons.data['work_directory'],
+                         commons.data['stack_release'],
+                         commons.data['spack_sdploy'])
+        ]
 
     def _add_module_roots(self):
         """Add modules installation paths"""
@@ -98,16 +104,16 @@ class ConfigYaml(StackFile):
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         commons = ReadYaml()
-        commons.read(os.path.join(self.config.commons_yaml))
+        commons.read(self.config.commons_yaml)
         self.conf['module_roots'] = {}
-        self.conf['module_roots']['lmod'] = (
-                                        commons.data['work_directory'] + os.path.sep
-                                      + commons.data['stack_release'] + os.path.sep
-                                      + commons.data['stack_version'] + os.path.sep
-                                      + commons.data['lmod_roots'])
-        self.conf['module_roots']['tcl'] = (
-                                        commons.data['work_directory'] + os.path.sep
-                                      + commons.data['stack_release'] + os.path.sep
-                                      + commons.data['stack_version'] + os.path.sep
-                                      + commons.data['tcl_roots'])
+        self.conf['module_roots']['lmod'] = os.path.join(
+            commons.data['work_directory'], 
+            commons.data['stack_release'],
+            commons.data['stack_version'],
+            commons.data['lmod_roots'])
+        self.conf['module_roots']['tcl'] = os.path.join(
+            commons.data['work_directory'],
+            commons.data['stack_release'],
+            commons.data['stack_version'],
+            commons.data['tcl_roots'])
 

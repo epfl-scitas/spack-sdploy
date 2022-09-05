@@ -16,18 +16,11 @@ fi
 
 echo 'Source Spack and show version'
 . $SPACK_INSTALL_PATH/share/spack/setup-env.sh
+
 spack --version
 
-echo "Check if there is a previous SPACK_SYSTEM_CONFIG_PATH directory and remove it:"
-if [ -e ${SPACK_SYSTEM_CONFIG_PATH} ]; then
-    echo 'Previous system config directory found, removing it...'
-    rm -r ${SPACK_SYSTEM_CONFIG_PATH}
-fi
-
-echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
-
 echo "Add system compiler:"
-spack compiler find --scope system
+spack compiler find --scope site /usr
 
 echo "Dsiplay known compilers:"
 spack config blame compilers
