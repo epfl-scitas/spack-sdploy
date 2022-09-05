@@ -52,13 +52,14 @@ class ConfigYaml(StackFile):
         self.yaml_path = self.config.spack_config_path
         self.yaml_file = self.config.config_yaml
 
+        self.commons = ReadYaml()
+        self.commons.read(os.path.join(self.config.commons_yaml))
+
         # Configuration files
         self.conf = {}
 
         # Call method that will populate dict
         self._create_dictionary()
-        self.commons = ReadYaml()
-        self.commons.read(os.path.join(self.config.commons_yaml))
 
 
     def _create_dictionary(self):
