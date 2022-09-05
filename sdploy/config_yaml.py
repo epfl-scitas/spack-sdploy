@@ -75,7 +75,7 @@ class ConfigYaml(StackFile):
         self.conf['license_dir'] = os.path.join(self.commons.data['work_directory'],
                                                 self.commons.data['stack_release'],
                                                 self.commons.data['spack_sdploy'],
-                                                'external', 'license')       
+                                                'external', 'licenses')       
 
     def _add_build_stage(self):
         """Add build stages section to the dictionary"""
