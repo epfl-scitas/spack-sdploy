@@ -23,9 +23,6 @@ echo "Add system compiler:"
 spack compiler find --scope site /usr
 
 echo "============= COMPILERS DEBUG INFO ============="
-
-echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
-
 echo "spack config blame compilers"
 spack config blame compilers
 
