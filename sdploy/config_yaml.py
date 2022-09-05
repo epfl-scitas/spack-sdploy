@@ -68,7 +68,7 @@ class ConfigYaml(StackFile):
         self._add_extensions()
 
     def _add_license_dir(self):
-        self.conf['license_dir'] = os.join.path(commons.data['work_directory'],
+        self.conf['license_dir'] = os.path.join(commons.data['work_directory'],
                                                 commons.data['stack_release'],
                                                 commons.data['spack_sdploy'],
                                                 'external', 'license')       
@@ -93,7 +93,7 @@ class ConfigYaml(StackFile):
         commons = ReadYaml()
         commons.read(os.path.join(self.config.commons_yaml))
         self.conf['extensions'] = [
-            os.join.path(commons.data['work_directory'],
+            os.path.join(commons.data['work_directory'],
                          commons.data['stack_release'],
                          commons.data['spack_sdploy'])
         ]
