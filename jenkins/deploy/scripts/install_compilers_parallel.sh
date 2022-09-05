@@ -11,7 +11,7 @@ set -euo pipefail
 spack -e ${environment} list-compilers -s ${STACK_RELEASE} | tee compilers.list
 
 
-compilers=${cat compilers.list}
+compilers=$(cat compilers.list)
 
 # We can remove --debug from the spack install
 # command if the compilers are already installed.
