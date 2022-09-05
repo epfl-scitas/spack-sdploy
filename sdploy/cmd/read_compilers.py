@@ -5,7 +5,7 @@
 
 import llnl.util.tty as tty
 
-description = "install compilers"
+description = "read_compilers"
 section = "Sdploy"
 level = "short"
 
