@@ -23,12 +23,17 @@ while read -r spec
 do
     spec_path=$(spack location -i ${spec})
     echo "spack compiler find --scope system ${spec_path} || true"
-    spack compiler find --scope system ${spec_path} || true
 
     if [[ "$spec" =~ "intel" ]]; then
+	grep -q ${spec_path} ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+	if [ $? -eq 1 ]; then
+	    spack compiler find --scope system ${spec_path} || true
+	fi
 	version=$(${spec_path}/bin/icc --version | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
 	spec_version=$(echo $spec |  sed 's/intel@\([0-9.]*\).*/\1/')
 	sed -i -e "s/intel@${version}/intel@${spec_version}/" ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+    else
+	spack compiler find --scope system ${spec_path} || true
     fi
 done <<< $(cat compilers.list)
 
