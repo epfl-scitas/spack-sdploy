@@ -55,7 +55,7 @@ class ReposYaml(StackFile):
 
         self.repos = {}
         self._load_data()
-        self._overload()
+        #self._overload()
 
     def _overload(self):
         """Sets path to etc/spack if running outside environment"""
@@ -72,9 +72,6 @@ class ReposYaml(StackFile):
         self.stack = self.get_data(self.config.stack_yaml)
         self.commons = self.get_data(self.config.commons_yaml)
 
-    def clone(self):
-        """Read repositories declared in commons.yaml to be cloned and call clone method"""
-
         for repo in self.commons['extra_repos'].keys():
             repo_url = self.commons['extra_repos'][repo]['repo']
             repo_path = self.commons['extra_repos'][repo]['path']
@@ -83,21 +80,28 @@ class ReposYaml(StackFile):
                                   self.commons['stack_release'],
                                   self.commons['spack_external'])
 
-            # self.repos will be needed later for creating repos.yaml
-            self.repos[repo_path] = os.path.join(prefix,repo_path)
-            self._clone(repo_url, repo_path, repo_tag, os.path.join(prefix, repo_path))
+            self.repos[repo] = {
+                'path': os.path.join(prefix, repo_path),
+                'url': repo_url,
+                'tag': repo_tag
+            }
+        
+    def clone(self):
+        """Read repositories declared in commons.yaml to be cloned and call clone method"""
+        for repo, info in repo.items(): 
+            self._clone(repo, **info)
 
-    def _clone(self, url, path, tag, repo_path):
+    def _clone(self, repo, url=None, repo_path=None, tag=None):
         """Clone repository"""
 
         git = which('git', required=True)
         if os.path.exists(repo_path):
-            tty.debug("Update repository in %s" % repo_path)
+            tty.debug("Update repository {} in {}".format(repo, repo_path))
             with working_dir(repo_path):
                 git('fetch', 'origin')
                 git('checkout', tag)
         else:
-            tty.debug("Clonining {} repository in {}".format(url, repo_path))
+            tty.debug("Clonining {}[{}] repository in {}".format(repo, url, repo_path))
             git('clone', '-b', tag, url, repo_path)
 
 
