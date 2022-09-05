@@ -31,6 +31,7 @@ class StackFile(ReadYaml):
 
         # Configuration files
         self.platform_file = config.platform_yaml
+            
         self.stack_file = config.stack_yaml
 
         # Original data

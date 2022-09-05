@@ -42,6 +42,8 @@ class PackagesYaml(StackFile):
         self.yaml_path = self.config.spack_config_path
         self.yaml_file = self.config.packages_yaml
 
+        tty.debug("Using template {}".format(self.templates_path))
+        tty.debug("Writing file {}".format(self.yaml_file))
         # Used to create packages.yaml:
         self.defaults = {}
         self.externals = {}

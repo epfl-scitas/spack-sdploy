@@ -15,6 +15,9 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import os
+import spack.environment as ev
+import llnl.util.tty as tty
+
 from .yaml_manager import ReadYaml
 from .util import *
 from .config import *
@@ -127,7 +130,11 @@ class Config(object):
 
         # platform:
         # - name of the platform (environment)
-        if not args.platform:
+        env = ev.active_environment()
+        if env:
+            tty.debug("Using env instead of platform")
+            self.platform = env.name
+        elif not args.platform:
             if 'platform' in config.data['config']:
                 if config.data['config']['platform'] is None:
                     self.platform = platform
