@@ -5,7 +5,7 @@
 
 import llnl.util.tty as tty
 
-description = "list_compilers"
+description = "list-compilers"
 section = "Sdploy"
 level = "short"
 

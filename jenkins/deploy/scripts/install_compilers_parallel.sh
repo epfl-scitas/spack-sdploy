@@ -8,7 +8,7 @@ set -euo pipefail
 # and writes two files, one with each compiler spec in
 # its own line (compilers-perline) and a second with all
 # the compiler specs in a single row (compilers-inline).
-spack -e ${environment} read_compilers -s ${STACK_RELEASE} | tee compilers.list
+spack -e ${environment} list-compilers -s ${STACK_RELEASE} | tee compilers.list
 
 
 compilers=${cat compilers.list}
