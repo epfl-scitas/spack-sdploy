@@ -120,7 +120,7 @@ pipeline {
 
         stage('Install External Repos') {
             steps {
-                sh '${JENKINS}/install_spack_external.sh'
+                sh '${JENKINS}/clone_external_repos.sh'
             }
         }
 
