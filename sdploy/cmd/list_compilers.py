@@ -5,7 +5,7 @@
 
 import llnl.util.tty as tty
 
-description = "read_compilers"
+description = "list_compilers"
 section = "Sdploy"
 level = "short"
 
@@ -15,7 +15,7 @@ from ..common_parser import setup_parser
 
 from pdb import set_trace as st
 
-def read_compilers(parser, args):
+def list_compilers(parser, args):
     """Returns list of comilers defined in stack"""
 
     config = Config(args)
