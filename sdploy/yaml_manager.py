@@ -98,8 +98,13 @@ class ReadYaml(object):
 
         if not platform_file:
             platform_file = self.platform_file
-        common = ReadYaml()
-        common.read(platform_file)
+
+        if not os.path.exists(platform_file):
+            common.data['platform']['tokens'] = {}
+        else:
+            common = ReadYaml()
+            common.read(platform_file)
+            
         return(common.data['platform']['tokens'])
 
     def _do_replace_tokens(self, d, pat, rep):
