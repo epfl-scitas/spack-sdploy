@@ -47,10 +47,10 @@ gcc:
 # ------------------------------------------------------------------------------
 # PACKAGES SECTION
 # ------------------------------------------------------------------------------
-serial_packages_intel_stable:
-  metadata: { section: packages }
-  pe: [intel_stable]
-  packages:
-    - perl:
-        default:
-          version: 5.32.0
+#serial_packages_intel_stable:
+#  metadata: { section: packages }
+#  pe: [intel_stable]
+#  packages:
+#    - perl:
+#        default:
+#          version: 5.32.0
