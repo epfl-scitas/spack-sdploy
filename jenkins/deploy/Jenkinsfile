@@ -47,13 +47,13 @@ pipeline {
     }
 
     // A variable defined in a stage is bound to that stage.
-    stages {
-        stage('Do a fresh restart') {
-            steps {
-                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
-                sh 'rm -rf ${STACK_PREFIX}'
-            }
-         }
+//    stages {
+//        stage('Do a fresh restart') {
+//            steps {
+//                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
+//                sh 'rm -rf ${STACK_PREFIX}'
+//            }
+//         }
 
         stage('Print variables') {
             steps {
