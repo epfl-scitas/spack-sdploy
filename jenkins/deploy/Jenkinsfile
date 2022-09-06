@@ -47,7 +47,8 @@ pipeline {
     }
 
     // A variable defined in a stage is bound to that stage.
-//    stages {
+    stages {
+
 //        stage('Do a fresh restart') {
 //            steps {
 //                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
