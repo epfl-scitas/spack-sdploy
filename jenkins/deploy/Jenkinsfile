@@ -43,17 +43,17 @@ pipeline {
         PYTHON_VIRTUALENV_PATH = "${STACK_PREFIX}/${PYTHON_VENV}"
         SPACK_INSTALL_PATH     = "${STACK_PREFIX}/${SPACK_PATH}.${STACK_RELEASE_VER}"
         SPACK_SDPLOY_INSTALL_PATH = "${STACK_PREFIX}/${SPACK_SDPLOY}"
-	SYSTEM_CONFIG_PREFIX      = "${STACK_PREFIX}/${STACK_RELEASE_VER}/config"
+        SYSTEM_CONFIG_PREFIX      = "${STACK_PREFIX}/${STACK_RELEASE_VER}/config"
     }
 
     // A variable defined in a stage is bound to that stage.
     stages {
-//        stage('Do a fresh restart') {
-//            steps {
-//                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
-//                sh 'rm -rf ${STACK_PREFIX}'
-//            }
-//         }
+        stage('Do a fresh restart') {
+            steps {
+                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
+                sh 'rm -rf ${STACK_PREFIX}'
+            }
+         }
 
         stage('Print variables') {
             steps {
