@@ -95,5 +95,6 @@ class ModulesYaml(StackFile):
         """Add modules suffixes from stack.yaml"""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-        self.modules['suffixes'] = {'+mpi': 'mpi', '+openmp': 'openmp'}
-
+        self.modules['suffixes'] = {'+mpi': 'mpi',
+                                    '+openmp': 'openmp',
+                                    'threads=openmp': 'openmp'}
