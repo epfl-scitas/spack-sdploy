@@ -20,8 +20,8 @@ intel:
     section: pe
   stable:
     compiler: intel@20.0.4
-    mpi: intel-mpi@2019.10.317 +external-libfabric
     blas: intel-mkl@2020.4.304
+#    mpi: intel-mpi@2019.10.317 +external-libfabric
 #    blas_parallel: intel-mkl@2020.4.304
 #    python3: python@<python3> +tkinter +optimizations ~debug ^perl@5.32.0
 #    gpu:
