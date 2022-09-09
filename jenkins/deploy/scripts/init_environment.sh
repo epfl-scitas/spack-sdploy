@@ -21,29 +21,32 @@ if [ ! -z ${_env_path} ]; then
     export SPACK_SYSTEM_CONFIG_PATH=${_env_path}
 fi
 
-echo "Deploying manifest"
+echo "Deploying manifest for ${environment}"
 spack --env ${environment} -d write-spack-yaml -s ${STACK_RELEASE}
 
-echo "Installing packages configuration"
+echo "Installing packages configuration for ${environment}"
 spack --env ${environment} -d write-packages-yaml -s ${STACK_RELEASE}
 spack --env ${environment} config blame packages
 
-echo "Installing modules configuration"
+echo "Installing modules configuration for ${environment}"
 spack --env ${environment} -d write-modules-yaml -s ${STACK_RELEASE}
 spack --env ${environment} config blame modules
 
-echo "Installing config.yaml configuration: ${environment}"
+echo "Installing config.yaml for ${environment}"
 spack --env ${environment} -d write-config-yaml -s ${STACK_RELEASE}
 spack --env ${environment} config blame config
 
-echo "Installing external repos for:"
+echo "Installing external repos for ${environment}"
 spack --env ${environment} write-repos-yaml -s ${STACK_RELEASE}
 spack --env ${environment} config blame repos
 
-echo "Installing mirrors configuration"
+echo "Installing mirrors configuration for ${environment}"
 spack --env ${environment} write-mirrors-yaml -s ${STACK_RELEASE}
 spack --env ${environment} config blame mirrors
 
+echo "Installing concretizer configuration for ${environment}"
+spack --env ${environment} write-concretizer-yaml -s ${STACK_RELEASE}
+spack --env ${environment} config blame concretizer
+
 echo "List environment directory contents"
 ls -l ${SPACK_SYSTEM_CONFIG_PATH}
-
