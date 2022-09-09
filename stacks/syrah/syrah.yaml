@@ -496,9 +496,14 @@ mpi_lapack_gpu_packages:
               none: ~cuda
 
 mpi_python_packages:
-  metadata: { section: packages }
-  pe: [gcc_stable, intel_stable]
-  dependencies: [mpi, python3]
+  metadata:
+    section: packages
+  pe:
+    - gcc_stable
+    - intel_stable
+  dependencies:
+    - mpi
+    - python3
   packages:
     - py-h5py ^hdf5 +mpi
     - py-mpi4py
