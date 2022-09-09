@@ -208,6 +208,13 @@ class Config(object):
             else:
                 self.config_yaml_template = config_yaml_template
 
+        # FILENAME: template for concretizer.yaml, for example, 'concretizer.yaml.j2'
+        if 'concretizer_yaml_template' in config.data['config']:
+            if config.data['config']['concretizer_yaml_template'] is not None:
+                self.concretizer_yaml_template = config.data['config']['concretizer_yaml_template']
+            else:
+                self.concretizer_yaml_template = concretizer_yaml_template
+
         # From now on, the following variables deal with output.
 
         # <!> SPECIAL CASE <!>
@@ -310,13 +317,28 @@ class Config(object):
             else:
                 self.config_yaml = config_yaml
 
-        # PATH: path to mirrors.yaml, for example, '/path/to/config'
+        # PATH: path to config.yaml, for example, '/path/to/config'
         #       -> does not include the file name
         if 'config_yaml_path' in config.data['config']:
             if config.data['config']['config_yaml_path'] is not None:
                 self.config_yaml_path = config.data['config']['config_yaml_path']
             else:
                 self.config_yaml_path = config_yaml_path
+
+        # FILENAME: concretizer.yaml, for example, 'concretizer.yaml'
+        if 'concretizer_yaml' in config.data['config']:
+            if config.data['config']['concretizer_yaml'] is not None:
+                self.concretizer_yaml = config.data['config']['concretizer_yaml']
+            else:
+                self.concretizer_yaml = concretizer_yaml
+
+        # PATH: path to concretizer.yaml, for example, '/path/to/config'
+        #       -> does not include the file name
+        if 'concretizer_yaml_path' in config.data['config']:
+            if config.data['config']['concretizer_yaml_path'] is not None:
+                self.concretizer_yaml_path = config.data['config']['concretizer_yaml_path']
+            else:
+                self.concretizer_yaml_path = concretizer_yaml_path
 
     def info_to_file(self, file=None):
         """Print debug information to file"""
@@ -349,6 +371,7 @@ class Config(object):
         print(f'modules_yaml_template: {self.modules_yaml_template}')
         print(f'repos_yaml_template: {self.repos_yaml_template}')
         print(f'mirrors_yaml_template: {self.mirrors_yaml_template}')
+        print(f'concretizer_yaml_template: {self.concretizer_yaml_template}')
         print(f'spack_config_path: {self.spack_config_path}')
         print(f'spack_yaml: {self.spack_yaml}')
         print(f'spack_yaml_path: {self.spack_yaml_path}')
@@ -360,3 +383,5 @@ class Config(object):
         print(f'repos_yaml_path: {self.repos_yaml_path}')
         print(f'mirrors_yaml: {self.mirrors_yaml}')
         print(f'mirrors_yaml_path: {self.mirrors_yaml_path}')
+        print(f'concretizer_yaml: {self.concretizer_yaml}')
+        print(f'concretizer_yaml_path: {self.concretizer_yaml_path}')

@@ -54,11 +54,6 @@ if len(sys.argv) <= 2:
 else:
     stack_dir = 'stacks'
 
-
-#print("UTIL.PY")
-#st()
-
-
 # We don't give a default for the stack name. Whether the user passes the name
 # of the stack as an argument or we use the samples directory, in which case
 # the name of the stack is known (stack).
@@ -81,6 +76,7 @@ modules_yaml_template = 'modules.yaml.j2'
 repos_yaml_template = 'repos.yaml.j2'
 mirrors_yaml_template = 'mirrors.yaml.j2'
 config_yaml_template = 'config.yaml.j2'
+concretizer_yaml_template = 'concretizer.yaml.j2'
 # Where to write files to
 spack_install_path = ''
 spack_config_path = get_prefix()
@@ -96,3 +92,5 @@ mirrors_yaml = 'mirrors.yaml'
 mirrors_yaml_path = os.path.join(get_prefix(), 'output')
 config_yaml = 'mirrors.yaml'
 config_yaml_path = os.path.join(get_prefix(), 'output')
+concretizer_yaml = 'concretizer.yaml'
+concretizer_yaml_path = os.path.join(get_prefix(), 'output')
