@@ -27,7 +27,7 @@ class FilterException(Exception):
         self.filter = filter
         self.filter_value = filter_value
 
-class ReadCompilers(StackFile):
+class ReadLeaf(StackFile):
     """Manage the packages section in stack.yaml"""
 
     def __init__(self, config):
@@ -39,21 +39,65 @@ class ReadCompilers(StackFile):
         self.stack_file = config.stack_yaml
         self.leafs = []
 
-    def list_compilers(self, key):
+    def read_key(self, key):
         """Regroup compilers for parsing in specs"""
 
-        core_compiler_data = self.group_sections(deepcopy(self.data), 'core')
-        compilers_data = self.group_sections(deepcopy(self.data), 'pe')
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
-        core_compiler = core_compiler_data['compiler']
-        
-        self.replace_tokens(core_compiler_data)
-        self.replace_tokens(compilers_data)
+        # Read stack file
+        compilers = ReadYaml()
+        tty.info(f'Reading stack from file {self.stack_file}')
+        compilers.read(os.path.join(self.stack_file))
 
-        compilers = []
-        for pe, stack in compilers_data.items():
-            for stack_name, stack in stack.items():
-                if 'compiler' in stack:
-                    compilers.append('{} %{}', compiler, core_compiler_data)
+        # Get only PE section
+        data = self.group_sections(compilers.data, 'pe')
 
-        return
+        # Replace tokens found in platform file
+        self.replace_tokens(data)
+
+        # Gather compilers in leafs
+        self._leafs_from_dict(data, key)
+
+    def report_leafs(self):
+        """Report one item per line with dash"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        tty.info(f'The following items were found in {self.stack_file}')
+        for leaf in self.leafs:
+            print(f'- {leaf}')
+
+    def write_inline(self, filename):
+        """Report leafs in a row to filename (to feed spack install)"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        filename = filename + '.' + self.platform
+        tty.info(f'Compilers written to {filename}')
+        with open(filename, 'w') as f:
+            f.write(' '.join(self.leafs))
+            f.write('\n')
+
+    def write_perline(self, filename):
+        """Report leafs in a row to filename (to feed spack install)"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        filename = filename + '.' + self.platform
+        tty.info(f'Compilers written to {filename}')
+        with open(filename, 'w') as f:
+            for leaf in self.leafs:
+                f.write(leaf)
+                f.write('\n')
+
+    def _leafs_from_dict(self, dic, key):
+        """Returns list of values whose key is a string named key"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        for k,v in dic.items():
+            if isinstance(v, dict):
+                self._leafs_from_dict(v, key)
+            if isinstance(v, str):
+                if k == key:
+                    self.leafs.append(v)

@@ -24,7 +24,7 @@ class Compilers(StackFile):
     def __init__(self, config):
         """Declare class structs"""
         super().__init__(config)
-        
+
     def list_compilers(self):
         """Regroup compilers for parsing in specs"""
 
