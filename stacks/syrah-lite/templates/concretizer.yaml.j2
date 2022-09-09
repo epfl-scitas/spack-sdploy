@@ -1,0 +1,16 @@
+concretizer:
+{% if 'reuse' in  data %}
+  reuse: {{ data['reuse'] }}
+{% endif %}
+{% if 'targets' in  data %}
+  targets:
+{% if 'granularity' in  data['targets'] %}
+    granularity: {{ data['targets']['granularity'] }}
+{% endif %}
+{% if 'host_compatible' in  data['targets'] %}
+    host_compatible: {{ data['targets']['host_compatible'] }}
+{% endif %}
+{% endif %}
+{% if 'unify' in  data %}
+  unify: {{ data['unify'] }}
+{% endif %}
