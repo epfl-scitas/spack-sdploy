@@ -1,0 +1,26 @@
+config:
+{% if 'license_dir' in data.keys() %}
+  license_dir: {{data['license_dir']}}
+{% endif %}
+#                                                          #
+#                                                          #
+#                                               EXTENSIONS #
+#                                                          #
+#                                                          #
+{% if 'extensions' in data.keys() %}
+  extensions:
+{% for extension in data['extensions'] %}
+  - {{ extension }}
+{% endfor %}
+{% endif %}
+#                                                          #
+#                                                          #
+#                                             BUILD STAGES #
+#                                                          #
+#                                                          #
+{% if 'build_stage' in data.keys() %}
+  build_stage:
+{% for build_stage in data['build_stage'] %}
+  - {{ build_stage }}
+{% endfor %}
+{% endif %}

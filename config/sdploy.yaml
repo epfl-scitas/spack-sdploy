@@ -1,54 +1,135 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                                                                       #
-# SCITAS STACK DEPLOYMENT 2022, EPFL                                    #
-#                                                                       #
-# This file contains configuration names which are                      #
-# used internally, but can hereby be modified by means                  #
-# of this file, in respect to code and data separation.                 #
-#                                                                       #
-# Example:                                                              #
-#                                                                       #
-#         stack_yaml: stack.yaml                                        #
-#                                                                       #
-#         Internally this program will use the word `stack_yaml`        #
-#         when referring to the file `stack.yaml`. If the user          #
-#         wants later to change the name of the file where the          #
-#         stack is specified, it will be sufficient to replace          #
-#         `stack.yaml` with the new name.                               #
-#                                                                       #
-# If a key is left empty in this file, spack will use the default       #
-# value defined in the config.py module or it will use the values       #
-# given by the user at the command line. The values given at the        #
-# command line will have higher priority.                               #
-#                                                                       #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                                             #
+# SCITAS STACK DEPLOYMENT 2022, EPFL                                          #
+#                                                                             #
+# This file contains configuration names which are                            #
+# used internally, but can hereby be modified by means                        #
+# of this file, in respect to code and data separation.                       #
+#                                                                             #
+# Example:                                                                    #
+#                                                                             #
+#         stack_yaml: stack.yaml                                              #
+#                                                                             #
+#         Internally this program will use the word `stack_yaml`              #
+#         when referring to the file `stack.yaml`. If the user                #
+#         wants later to change the name of the file where the                #
+#         stack is specified, it will be sufficient to replace                #
+#         `stack.yaml` with the new name.                                     #
+#                                                                             #
+# If a key is left empty in this file, spack will use the default             #
+# value defined in the config.py module or it will use the values             #
+# given by the user at the command line. The values given at the              #
+# command line will have higher priority.                                     #
+#                                                                             #
+# Some conventions                                                            #
+# ----------------                                                            #
+#                                                                             #
+# A variable which ends in:                                                   #
+# - dir:   is the name of a subdirectory                                      #
+# - path:  is the fully qualified path to a file or directory                 #
+# - yaml:  is the name of an yaml file                                        #
+#                                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 config:
+  # Version of the stack. This value is used across the entire directories
+  # structure.
+  stack_ver: v1
+  # Path to the directory where the stacks are stored. The contents of
+  # this directory must follow a precise structure. An exaple fo This
+  # directory is located at the root of spack-sdploy extension.
+  #
+  # /path/to/prefix:
+  #               stack_1/
+  #                   common.yaml
+  #                   stack_1.yaml
+  #                   platforms/
+  #                   templates/
+  #               stack_2/
+  #                   common.yaml
+  #                   stack.yaml
+  #                   platforms/
+  #                   templates/
+  #
+  # Where spack-sdploy will find the directory contaning all stacks.
+  # In the above example, the prefix variable would contain the value
+  # '/path/to/prefix'. If this value is empty, it will default to the
+  # spack-sdploy installation path, ie, '/path/to/spack-sdploy/stacks'.
+  prefix:
+  # The name of the stack to process is given at the command line. This
+  # value is here for completeness only. And because this file also plays
+  # the role of documenting all the parameters and how they work. I mean,
+  # of course you can use this parameter, but...
+  stack:
+  # This is the default name for the stacks subdirectory located under prefix.
+  stack_dir: stacks
   # Full name of the stack file (including path). This is usually a 
   # string like /path/to/stack.yaml, but it can be convenient to be 
   # able to change it in case you are running several stacks, for 
   # which you would have different names for each stack file.
+  # The stack_yaml file should be named after the stack name.
   stack_yaml:
+  # Name of the platform. This parameter shoud be passed at command line
+  # or it sould be read in a loop from the commons.yaml file.
+  platforms_dir: platforms
+  # Name of the platform. This name will most of the time be read from
+  # the commons.yaml file or given as an argument in the command line.
+  # It doesn't make much sens have it here, but we still do it for sake
+  # of completeness.
+  platform:
   # Full name of the platform file (including path). This is the name
   # of the file where you will fill in the details about your hardware
-  # capabilities and other information like external repositories and
-  # paths.
+  # capabilities (does it have acceleration ou fast communications) as
+  # well as other details like which is the compiler provided by the
+  # system or what python should be used.
+  # The platform_yaml file sould be named after the platform name.
   platform_yaml:
+  # Information that is common to all platforms. This is usually the case
+  # of external repositories git urls, installations paths, environment
+  # names, spack version to be used, etc.
+  # The common_yaml file can be named simply common.yaml, since there
+  # should be one of this per stack.
+  commons_yaml: common.yaml
+  commons_dir:
+  commons_path:
+  # Name of the templates subdirectory under the stack directory.
+  templates_dir: templates
   # This is where spack-sdploy can find the jinja templates. Each
   # configuration file produced by spack-sdploy will have its own
   # template, but they are gathered here under the same directory.
+  # This is the full qualified path.
   templates_path:
+  # Names of the template files (to be found under the templates path).
   spack_yaml_template: spack.yaml.j2
+  # spack_compilers_yaml_template: spack-compilers.yaml.j2
   packages_yaml_template: packages.yaml.j2
   modules_yaml_template: modules.yaml.j2
+  repos_yaml_template: repos.yaml.j2
+  mirrors_yaml_template: mirrors.yaml.j2
+  config_yaml_template: config.yaml.j2
   # There is no reason why the spack configuration files would have
   # different names than those defined in spack itself, but because
   # we don't like things hardcoded, we set here variables for these
   # names. Remember that contrary to the paths defined above, these
   # are paths where spack-sdploy will write to, where paths defined
-  # above are paths where spack-sdploy will look for files.
+  # above are paths where spack-sdploy will be reading from.
+  #
+  # The spack config path is read from the environment. This is where
+  # all the other files will be written to. In config_manager, this
+  # variable will be given the value of the environment variable
+  # SPACK_SYSTEM_CONFIG_PATH.
+  spack_config_path:
+  spack_system_config_path:
+  spack_install_path:
+  # All other files
   spack_yaml: spack.yaml
   spack_yaml_path:
   packages_yaml: packages.yaml
   packages_yaml_path:
   modules_yaml: modules.yaml
   modules_yaml_path:
+  repos_yaml: repos.yaml
+  repos_yaml_path:
+  mirrors_yaml: mirrors.yaml
+  mirrors_yaml_path:
+  config_yaml: config.yaml
+  config_yaml_path:

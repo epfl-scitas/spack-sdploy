@@ -1,0 +1,8 @@
+{#                                                          #}
+{#                                                          #}
+{#                              COMMON.YAML (string values) #}
+{#                                                          #}
+{#                                                          #}
+{% for key, value in common['str'].items() %}
+export {{ key }}={{ value }}
+{% endfor %}

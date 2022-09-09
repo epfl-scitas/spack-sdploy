@@ -1,0 +1,5 @@
+mirrors:
+  spack-public: https://spack-llnl-mirror.s3-us-west-2.amazonaws.com/
+{% for mirror, path in data['paths'].items() %}
+  {{ mirror }}: {{ path }}
+{% endfor %}

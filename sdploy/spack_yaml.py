@@ -13,27 +13,33 @@
 #                                                                       #
 #                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-import llnl.util.tty as tty
-
 from collections.abc import MutableMapping
 from copy import deepcopy
 import inspect
 
-from .yaml_manager import ReadYaml
+import llnl.util.tty as tty
+import spack.schema
 
-class FilterException(Exception):
-    """Exception raised when filter evaluation fails"""
-    def __init__(self, filter, filter_value):
-        self.filter = filter
-        self.filter_value = filter_value
+from .stack_file import StackFile, FilterException
+from .util import *
 
-
-class SpackYaml(ReadYaml):
+class SpackYaml(StackFile):
     """Manage the packages section in stack.yaml"""
 
-    def __init__(self, platform_file, stack_file, debug):
+    def __init__(self, config):
         """Declare class structs"""
+
+        super().__init__(config)
+
+        # These variables will be used in StackFile class.
+        # Each command that write an Yaml file must define these 4 variables.
+        # This technique allows for individual command customization of each
+        # one of these parameters and at the same time the reuse of the functions
+        # all gathered in a single module.
+        self.templates_path = self.config.templates_path
+        self.template_file = self.config.spack_yaml_template
+        self.yaml_path = self.config.spack_config_path
+        self.yaml_file = self.config.spack_yaml
 
         # The 4 dictionaries to give to jinja. The whole
         # purpose of this class is to construct these dicts.
@@ -41,26 +47,7 @@ class SpackYaml(ReadYaml):
         self.pkgs_defs = {}
         self.pe_specs = {}
         self.pkgs_specs = {}
-
-        # Configuration
-        self.platform_file = platform_file
-        self.stack_file = stack_file
-        self.debug = debug
-
-        # Original data
-        self.data = {}
-
-        # Filters
-        self.filters = {}
-
-        # Read stack.yaml into self.data attribute
-        self.read(self.stack_file)
-
-        # Replace tokens
-        self.replace_tokens(self.data)
-
-        # Read filters from platform file
-        self.filters = self.read_filters(self.platform_file)
+        self.definitions_list = []
 
     def create_pe_libraries_specs_dict(self):
         pass
@@ -68,8 +55,7 @@ class SpackYaml(ReadYaml):
     def create_pe_compiler_specs_dict(self):
         """Regroup compilers for parsing in specs"""
 
-        if self.debug:
-            print(f'Entering function: {inspect.stack()[0][3]}')
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         data = self.group_sections(deepcopy(self.data), 'pe')
 
@@ -79,7 +65,7 @@ class SpackYaml(ReadYaml):
                 # compiler is defined by default
                 self.pe_specs[pe + '_' + stack_name].pop(0)
 
-    def create_pe_definitions_dict(self, filter = 1):
+    def create_pe_definitions_dict(self, filter = 1, core = True):
         """Regroup PE definitions in a single dictionary"""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
@@ -87,9 +73,10 @@ class SpackYaml(ReadYaml):
         self.pe_stack = self.group_sections(deepcopy(self.data), 'pe')
 
         # Hack for adding core_compiler definition
-        core_compiler = self.group_sections(deepcopy(self.data), 'core')
-        for k,v in core_compiler.items():
-            self.pe_stack[k] = v
+        if core:
+            core_compiler = self.group_sections(deepcopy(self.data), 'core')
+            for k,v in core_compiler.items():
+                self.pe_stack[k] = v
 
         # Check for filters presence and applies filters
         for pe, stack in self.pe_stack.items():
@@ -104,6 +91,37 @@ class SpackYaml(ReadYaml):
 
         self.pe_defs = self._flatten_dict(self.pe_stack)
 
+    def _handle_package_dictionary(self, pkg_list):
+        """missing docstring"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        if len(pkg_list.keys()) > 1:
+            raise KeyError()
+
+        pkg_name = list(pkg_list.keys())[0]
+        pkg_attributes = pkg_list[pkg_name]
+
+        try:
+            package = [pkg_name]
+            tty.debug(f'Reading package: {package}')
+
+            # Do not force user to use `variants` if he only wants a filter
+            for filter in self._filters_in_package(pkg_attributes):
+                package.append(pkg_attributes[filter][self.filters[filter]])
+
+            for attr in ['version', 'variants', 'dependencies']:
+                if attr in pkg_attributes:
+                    _spack_yaml_pkg = getattr(SpackYaml, '_spack_yaml_pkg_' + attr)
+
+                    #calling self._spack_yaml_pkg_<attr>
+                    package.append(_spack_yaml_pkg(self, pkg_attributes[attr]))
+            return package
+        except FilterException as fe:
+            tty.debug(f'Ignoring package {pkg_name} in `spack.yaml` due to'
+                      f'missing value for {fe.filter_value} in filter {fe.filter}')
+            return None
+
     def create_pkgs_definitions_dict(self):
         """Regroup package lists with their specs"""
 
@@ -114,35 +132,21 @@ class SpackYaml(ReadYaml):
 
             tty.debug(f'Entering package list: {pkg_list_name}')
 
+            self.definitions_list.append(pkg_list_name)
+
             self.pkgs_defs[pkg_list_name] = []
             for pkg_list in pkg_list_cfg.get('packages'):
-
+                package = None
                 # This is the case where the package has no structure
                 if isinstance(pkg_list, str):
                     package = [pkg_list]
                     tty.debug(f'Reading package: {package}')
 
-                try:
-                    if isinstance(pkg_list, dict):
-                        for pkg_name, pkg_attributes in pkg_list.items():
-                            package = [pkg_name]
-                            tty.debug(f'Reading package: {package}')
+                if isinstance(pkg_list, dict):
+                    package = self._handle_package_dictionary(pkg_list)
 
-                            # Do not force user to use `variants` if he only wants a filter
-                            for filter in self._filters_in_package(pkg_attributes):
-                                package.append(pkg_attributes[filter].get(self.filters.get(filter)))
-
-                            for attr in ['version', 'variants', 'dependencies']:
-                                if attr in pkg_attributes:
-                                    _spack_yaml_pkg = getattr(SpackYaml, '_spack_yaml_pkg_' + attr)
-
-                                    #calling self._spack_yaml_pkg_<attr>
-                                    package.append(_spack_yaml_pkg(self, pkg_name, pkg_attributes[attr]))
-                except FilterException as fe:
-                    tty.debug(f'Ignoring package {pkg_name} due to missing value for {fe.filter_value} in filter {fe.filter}')
-                    continue
-
-                self.pkgs_defs[pkg_list_name].append(((' '.join(package)).strip()))
+                if package:
+                    self.pkgs_defs[pkg_list_name].append(((' '.join(package)).strip()))
 
     def create_pkgs_specs_dict(self):
         """Regroup package lists with PE components to write the matrix specs"""
@@ -159,60 +163,45 @@ class SpackYaml(ReadYaml):
     def _filters_in_package(self, dic):
         """Return list of filters found in dictionary"""
 
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         result = []
         for filter in self.filters.keys():
             if filter in dic:
                 result.append(filter)
         return(result)
 
-    def __handle_filter(self, attributes):
-        result = []
-        if isinstance(attributes, dict):
-            # Check for filters presence
-            for filter in self.filters.keys():
-                if filter in attributes:
-                    if self.filters[filter] in attributes[filter]:
-                        values = attributes[filter][self.filters[filter]]
-                        if isinstance(values, list):
-                            result.extend(values)
-                        else:
-                            result.append(values)
-                    else:
-                        raise FilterException(filter, self.filters[filter])
-        else: # We are just checking that attributes is not a structure (dict, list, etc)
-            # We need to cast version to str because of ' '.join in next step
-            result.append(str(attributes))
-        return result
-
-    def _spack_yaml_pkg_version(self, pkg_name, version_attributes):
+    def _spack_yaml_pkg_version(self, version_attributes):
         """Returns package version"""
 
-        version = self.__handle_filter(version_attributes)
-        return(' '.join(version))
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+        version = self._handle_filter(version_attributes)
+        return(self._remove_newline(' '.join(version)))
 
 
-    def _spack_yaml_pkg_variants(self, pkg_name, variants_attributes):
+    def _spack_yaml_pkg_variants(self, variants_attributes):
         """Returns package variants"""
 
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         variants = []
         if 'common' in variants_attributes:
             variants.append(variants_attributes.get('common'))
 
-        variants.extend(self.__handle_filter(variants_attributes))
+        variants.extend(self._handle_filter(variants_attributes))
 
-        return(' '.join(variants))
+        return(self._remove_newline(' '.join(variants)))
 
-    def _spack_yaml_pkg_dependencies(self, pkg_name, dependencies_attributes):
+    def _spack_yaml_pkg_dependencies(self, dependencies_attributes):
         """Returns package dependencies"""
 
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         dependencies = []
         # We are just checking that version_attributes is not a structure (dict, list, etc)
         if isinstance(dependencies_attributes, list):
             dependencies = dependencies_attributes
         else:
-            dependencies = self.__handle_filter(dependencies_attributes)
+            dependencies = self._handle_filter(dependencies_attributes)
 
-        return(' ^' + ' ^'.join(dependencies))
+        return(self._remove_newline(' ^' + ' ^'.join(dependencies)))
 
     def _flatten_dict(self, d: MutableMapping, parent_key: str = '', sep: str = '_'):
         """Returns a flat dict
@@ -233,13 +222,13 @@ class SpackYaml(ReadYaml):
             else:
                 yield new_key, v
 
-    # METHOD IS NOT CURRENTLY USED
-    def _get_pe_list(self):
-        """Return list with PE names"""
-
-        stack = self.group_sections(deepcopy(self.data), 'pe')
-        pe_list = list(stack.keys())
-        if 'metadata' in pe_list:
-            pe_list.pop('metadata')
-
-        return(pe_list)
+#    # METHOD IS NOT CURRENTLY USED
+#    def _get_pe_list(self):
+#        """Return list with PE names"""
+#
+#        stack = self.group_sections(deepcopy(self.data), 'pe')
+#        pe_list = list(stack.keys())
+#        if 'metadata' in pe_list:
+#            pe_list.pop('metadata')
+#
+#        return(pe_list)

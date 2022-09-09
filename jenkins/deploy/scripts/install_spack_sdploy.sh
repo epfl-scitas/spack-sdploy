@@ -1,15 +1,20 @@
 #!/bin/bash -l
 set -euo pipefail
 
-echo 'Activating Python virtual environment'
-. ${PYTHON_VIRTUALENV_PATH}/bin/activate
+echo 'Activating Spack'
+. $JENKINS/activate_spack.sh
 
-echo 'Load variables'
-. $JENKINS_SCRIPTS_PATH/config.sh
+rsync -auv $PWD/ ${SPACK_SDPLOY_INSTALL_PATH}/
 
-if [ -e ${SPACK_SDPLOY_INSTALL_PATH} ]; then
-    echo 'Previous installation of spack-sdploy detected, removing...'
-    rm -rf ${SPACK_SDPLOY_INSTALL_PATH}
-fi
+echo "Adding extension key to config.yaml"
+# mkdir ${SPACK_SYSTEM_CONFIG_PATH}
+cat > ${SPACK_INSTALL_PATH}/etc/spack/config.yaml << EOF
+config:
+  extensions:
+  - ${SPACK_SDPLOY_INSTALL_PATH}
+  db_lock_timeout: 10
+EOF
 
-git clone https://github.com/epfl-scitas/spack-sdploy ${SPACK_SDPLOY_INSTALL_PATH}
+echo "spack config blame config"
+spack config blame config
+

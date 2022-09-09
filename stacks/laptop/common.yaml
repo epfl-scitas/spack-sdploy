@@ -1,0 +1,49 @@
+spack_release: v0.18.1
+stack_release: laptop
+
+# Path definitions
+# These PATHS are ALL related to destination.
+# - work_directory: everything will be installed here.
+# - python_venv: name of directory inside `work_directory`. used to install the
+#                python virtual environment.
+# - spack_external: name of directory inside `work_directory`. used to install
+#                   external repositories.
+# - extensions: name of directory inside `work_directory`. used to deploy the
+#               spack configuration files (modules.yaml, compilers.yaml, etc).
+#               The name is not the best we could find.
+# - spack:  name of directory inside `work_directory`. used to install spack
+#           itself.
+# - spack_sdploy: name of directory inside `work_directory`. used to name
+#                 where spack_sdploy will be installed. it will rename the
+#                 repository.
+# - stack_version: used in composition with other directories to have multiple
+#                  versions of the same stack.
+# - lmod_roots: where to install the Lmod modules (under spack)
+# - tcl_roots: where to install the TCL modules (under spack)
+work_directory: /work/stack
+python_venv: py3-venv
+spack_external: external
+extensions: spack-config
+spack: spack
+spack_sdploy: spack-sdploy
+stack_version: v1
+lmod_roots: share/spack/lmod
+tcl_roots: share/spack/modules
+
+environments: # platforms
+  - lab1
+  - lab2
+
+mirrors:
+  local: spack-mirror
+  restricted: spack-mirror-restricted
+
+extra_repos:
+  scitas-external:
+    repo: http://github.com/epfl-scitas/spack-repo-externals.git
+    path: scitas-repos-externals/
+    tag: releases/arvine
+  scitas-spack-packages:
+    repo: http://github.com/epfl-scitas/scitas-spack-packages.git
+    path: scitas-spack-packages/
+    tag: releases/syrah

@@ -1,0 +1,70 @@
+spack:
+{#                                                          #}
+{#                                                          #}
+{#                                              DEFINITIONS #}
+{#                                                          #}
+{#                                                          #}
+  definitions:
+{#                                                          #}
+{#                                                          #}
+{#                                  PROGRAMMING ENVIRONMENT #}
+{#                                                          #}
+{#                                                          #}
+{% for definition, spec  in stack['pe_defs'].items() %}
+  - {{ definition }}: [ {{ spec }} ]
+{% endfor %}
+{#                                                          #}
+{#                                                          #}
+{#                                                 PACKAGES #}
+{#                                                          #}
+{#                                                          #}
+{% if 'pkgs_defs' in stack.keys() %}
+{% for list_name, pkg_list in stack['pkgs_defs'].items() %}
+  - {{ list_name }}:
+{% for pkg in pkg_list %}
+    - {{ pkg }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{#                                                          #}
+{#                                                          #}
+{#                                                    SPECS #}
+{#                                                          #}
+{#                                                          #}
+  specs:
+{#                                                          #}
+{#                                                          #}
+{#                                  PROGRAMMING ENVIRONMENT #}
+{#                                                          #}
+{#                                                          #}
+{% for pe, stack in stack['pe_specs'].items() %}
+  - matrix:
+    - [ ${{ pe }}_compiler]
+    - [ $%core_compiler ]
+{% for library in stack %}
+  - matrix:
+    - [ ${{ pe }}_{{ library }} ]
+    - [ $%{{ pe }}_compiler ]
+{% endfor %}
+{% endfor %}
+{#                                                          #}
+{#                                                          #}
+{#                                                 PACKAGES #}
+{#                                                          #}
+{#                                                          #}
+{% if 'pkgs_specs' in stack.keys() %}
+{% for list_name, pe in stack['pkgs_specs'].items() %}
+{% for compiler in pe['compilers'] %}
+  - matrix:
+    - [ ${{ list_name }} ]
+{% if 'dependencies' in pe %}
+{% for dependency in pe['dependencies'] %}
+    - [ $^{{ compiler }}_{{ dependency }} ]
+{% endfor %}
+{% endif %}
+    - [ $%{{ compiler }}_compiler ]
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+  view: False

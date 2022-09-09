@@ -4,17 +4,22 @@ set -euo pipefail
 echo 'Activating Python virtual environment'
 . ${PYTHON_VIRTUALENV_PATH}/bin/activate
 
-echo 'Load variables'
-. $JENKINS_SCRIPTS_PATH/config.sh
+echo 'Source Spack'
+. $SPACK_INSTALL_PATH/share/spack/setup-env.sh
 
-if [ -e ${SPACK_USER_CONFIG_PATH} ]; then
+echo "SPACK_SYSTEM_CONFIG_PATH: ${SPACK_SYSTEM_CONFIG_PATH}"
+
+if [ -e ${SPACK_SYSTEM_CONFIG_PATH} ]; then
     echo 'Previous configuration directory detected, removing...'
-    rm -rf ${SPACK_USER_CONFIG_PATH}
+    rm -rf ${SPACK_SYSTEM_CONFIG_PATH}
 fi
 
-mkdir ${SPACK_USER_CONFIG_PATH}
-cat > ${SPACK_USER_CONFIG_PATH}/config.yaml << EOF
+mkdir ${SPACK_SYSTEM_CONFIG_PATH}
+cat > ${SPACK_SYSTEM_CONFIG_PATH}/config.yaml << EOF
 config:
   extensions:
   - ${SPACK_SDPLOY_INSTALL_PATH}
 EOF
+
+echo "spack config blame config"
+spack config blame config

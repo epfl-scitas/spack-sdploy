@@ -1,0 +1,37 @@
+spack:
+{#                                                          #}
+{#                                                          #}
+{#                                              DEFINITIONS #}
+{#                                                          #}
+{#                                                          #}
+  definitions:
+{#                                                          #}
+{#                                                          #}
+{#                                  PROGRAMMING ENVIRONMENT #}
+{#                                                          #}
+{#                                                          #}
+{% for definition, spec  in stack['pe_defs'].items() %}
+  - {{ definition }}: [ {{ spec }} ]
+{% endfor %}
+{#                                                          #}
+{#                                                          #}
+{#                                                    SPECS #}
+{#                                                          #}
+{#                                                          #}
+  specs:
+{#                                                          #}
+{#                                                          #}
+{#                                  PROGRAMMING ENVIRONMENT #}
+{#                                                          #}
+{#                                                          #}
+{% for pe, stack in stack['pe_specs'].items() %}
+  - matrix:
+    - [ ${{ pe }}_compiler]
+    - [ $%core_compiler ]
+{% for library in stack %}
+  - matrix:
+    - [ ${{ pe }}_{{ library }} ]
+    - [ $%{{ pe }}_compiler ]
+{% endfor %}
+{% endfor %}
+  view: False

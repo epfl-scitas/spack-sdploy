@@ -1,0 +1,7 @@
+platform:
+  filters:
+    gpu: none
+    mpi: infiniband
+  tokens:
+    core_compiler: gcc@9.4.0 arch=linux-ubuntu20.04-icelake
+    python3: 3.10.4

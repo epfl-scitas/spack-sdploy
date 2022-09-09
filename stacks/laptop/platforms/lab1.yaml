@@ -1,0 +1,12 @@
+platform:
+  filters:
+    gpu: none
+    mpi: infiniband
+  tokens:
+    core_compiler: gcc@9.4.0
+    python3: 3.10.4
+    target: x86_64_v3
+  preferences:
+    target: [x86_64_v3]
+  providers:
+    gl: [mesa]

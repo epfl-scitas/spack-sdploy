@@ -13,8 +13,10 @@
 #                                                                       #
 #                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-
-from ruamel import yaml
+import os
+import spack
+import spack.util
+import spack.util.spack_yaml as spyaml
 import collections.abc
 from pdb import set_trace as st
 
@@ -43,18 +45,24 @@ class ReadYaml(object):
         self.data = None
         self.config = None
         self.platform = None
-        self.tokens = None
 
-    def read(self, filename):
+    def read(self, filename, **kwargs):
         """Read yaml file into data object"""
 
-        self.data = yaml.load(open(filename))
+        with open(filename) as f:
+            self.data = spyaml.load_config(f, **kwargs)
         return self.data
+
+    def get_data(self, filename):
+        """Returns the data read"""
+
+        with open(filename) as f:
+            return(spyaml.load_config(f))
 
     def list(self):
         """Display configuration"""
 
-        print(yaml.round_trip_dump(self.data))
+        print(spyaml.round_trip_dump(self.data))
 
     #
     #
@@ -66,7 +74,6 @@ class ReadYaml(object):
         """Reads tokens from platform file and executes replacement.
         `data` is a dictionary where the replacements will happen.
         Replacements are done in place."""
-
         self.tokens = self._read_tokens(self.platform_file)
         for key, value in self.tokens.items():
             self._do_replace_tokens(data, '<' + str(key) + '>', str(value))
@@ -89,8 +96,13 @@ class ReadYaml(object):
 
         if not platform_file:
             platform_file = self.platform_file
+
+        if not os.path.exists(platform_file):
+            return {}
+
         common = ReadYaml()
         common.read(platform_file)
+            
         return(common.data['platform']['tokens'])
 
     def _do_replace_tokens(self, d, pat, rep):
@@ -133,9 +145,14 @@ class ReadYaml(object):
 
         if not platform_file:
             platform_file = self.platform_file
+
+        if not os.path.exists(platform_file):
+            return {}
+
         common = ReadYaml()
         common.read(platform_file)
-        return(common.data['platform']['filters'])
+
+        return common.data['platform']['filters']
 
     def group_sections(self, dic, section):
         """Returns dictionary composed of common sections
@@ -211,6 +228,9 @@ class ReadYaml(object):
             {key1: option1, key2, option2, ...}
         """
 
+        if not os.path.exists(platform_file):
+            return {}
+
         common = ReadYaml()
         common.read(platform_file)
         return(common.data['common']['filters'])
@@ -231,8 +251,12 @@ class ReadYaml(object):
             {key1: option1, key2, option2, ...}
         """
 
+        if not os.path.exists(platform_file):
+            return {}
+
         common = ReadYaml()
         common.read(platform_file)
+
         return(common.data['common']['variables'])
 
     def do_replace(self, d, pat, rep):
