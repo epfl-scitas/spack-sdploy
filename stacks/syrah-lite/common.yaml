@@ -14,8 +14,8 @@ lmod_roots: share/spack/lmod
 tcl_roots: share/spack/modules
 
 environments: # platforms
-  - ivybridge
-  - sandybridge
+  - ph02_avx
+  - ph02_avx2
 
 # The mirrors paths are common to all stacks.
 # They are created under `work_directory`.
