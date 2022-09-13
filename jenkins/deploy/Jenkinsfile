@@ -52,6 +52,8 @@ pipeline {
         stage('Do a fresh restart') {
             steps {
                 sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
+                sh 'rm -rf /home/scitasbuildpr/.spack'
+                sh 'rm -rf /home/scitasbuildpr/master'
             }
          }
 
