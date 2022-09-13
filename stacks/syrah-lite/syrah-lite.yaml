@@ -45,12 +45,12 @@ gcc:
       none: ""
 
 # ------------------------------------------------------------------------------
-# PACKAGES SECTION
+# PACKAGE PREFERENCES
 # ------------------------------------------------------------------------------
-#serial_packages_intel_stable:
-#  metadata: { section: packages }
-#  pe: [intel_stable]
-#  packages:
-#    - perl:
-#        default:
-#          version: 5.32.0
+preferences:
+  metadata: { section: packages }
+  pe: [gcc_stable, intel_stable]
+  packages:
+    - perl:
+        default:
+          version: 5.32.0
