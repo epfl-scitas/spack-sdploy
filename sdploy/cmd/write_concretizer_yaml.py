@@ -48,5 +48,4 @@ def write_concretizer_yaml(parser, args):
     # Each commend must pass the dictionary in the contents variable.
 
     data = concretizer.concretizer
-    st()
     concretizer.write_yaml(data = concretizer.concretizer)
