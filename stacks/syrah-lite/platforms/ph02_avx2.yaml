@@ -5,4 +5,4 @@ platform:
   tokens:
     core_compiler: gcc@8.5.0 arch=linux-rhel8-haswell
     python3: 3.10.4
-    target: sandybridge
+    target: x86_64_v3
