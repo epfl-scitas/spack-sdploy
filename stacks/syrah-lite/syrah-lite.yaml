@@ -46,6 +46,9 @@ gcc:
 
 # ------------------------------------------------------------------------------
 # PACKAGE PREFERENCES
+#
+# List for package preferences
+# > i.e., packages that goes into packages.yaml
 # ------------------------------------------------------------------------------
 preferences:
   metadata: { section: packages }
