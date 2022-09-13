@@ -36,4 +36,4 @@ extra_repos:
 concretizer:
   targets:
     granularity: generic
-    host_compatible: True
+    host_compatible: False
