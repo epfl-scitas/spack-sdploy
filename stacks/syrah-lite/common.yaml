@@ -2,7 +2,7 @@ spack_release: v0.18.1
 stack_release: syrah-lite
 
 # Path definitions
-work_directory: /home/scitasbuildpr/master
+work_directory: /home/scitasbuildpr/intel
 python_venv: py3-venv
 spack_external: external
 jenkins: jenkins/deploy/scripts
