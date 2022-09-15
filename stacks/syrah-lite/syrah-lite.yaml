@@ -78,7 +78,7 @@ serial_packages:
     - intel_stable
   packages:
     - fftw +openmp ~mpi
-    - hdf5: ~mpi +szip +hl +fortran +cxx
+    - hdf5 ~mpi +szip +hl +fortran +cxx
     - metis:
         default: { variants: +real64 }
     - perl:
