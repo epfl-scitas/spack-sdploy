@@ -149,15 +149,15 @@ mpi_lapack_python_packages:
     - python3
   packages:
     - boost +mpi
-#    - petsc:
-#        default:
-#          variants:
-#            common:  ~int64 +double +hdf5 +metis +mpi +superlu-dist +hypre +suite-sparse
-#            gpu:
-#              nvidia: +cuda
-#              none: ~cuda
-#        dependencies:
-#          - hdf5 +mpi
+    - petsc:
+        default:
+          variants:
+            common:  ~int64 +double +hdf5 +metis +mpi +superlu-dist +hypre +suite-sparse
+            gpu:
+              nvidia: +cuda
+              none: ~cuda
+        dependencies:
+          - hdf5 +mpi +szip +hl +fortran +cxx
 
 # PYTHON -----------------------------------------------------------------------
 #
