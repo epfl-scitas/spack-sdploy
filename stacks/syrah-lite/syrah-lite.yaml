@@ -79,8 +79,8 @@ serial_packages:
   packages:
     - fftw +openmp ~mpi
     - hdf5:
-        variants: ~mpi
-        default: { variants: +szip +hl +fortran +cxx }
+        variants: ~mpi +szip +hl +fortran +cxx
+        default: { variants: ~mpi +szip +hl +fortran +cxx }
     - metis:
         default: { variants: +real64 }
     - perl:
@@ -127,7 +127,7 @@ mpi_packages:
     - fftw:
         variants: +mpi +openmp
         default: { variants: +mpi ~openmp }
-    - hdf5 +mpi
+    - hdf5 +mpi +szip +hl +fortran +cxx
     - netcdf-c +mpi
     - netcdf-fortran
     - scotch +mpi
