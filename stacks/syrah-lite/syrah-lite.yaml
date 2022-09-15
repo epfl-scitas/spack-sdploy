@@ -38,3 +38,174 @@ gcc:
     gpu:
       nvidia: cuda@11.7.0
       none: ""
+# CORE -------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+core_packages:
+  metadata:
+    section: packages
+  pe:
+    - core
+  packages:
+    - cmake:
+        variants: +ncurses +ownlibs
+        default:
+          variants: +ownlibs ~ncurses ~qt
+    - perl:
+        default: { version: 5.32.0 }
+    - curl
+    - git
+    - git-lfs
+    - i7z
+    - libtool
+    - lmod
+    - m4
+    - tmux
+# ------------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages:
+  metadata:
+    section: packages
+  pe:
+    - gcc_stable
+    - intel_stable
+  packages:
+    - fftw +openmp ~mpi
+    - hdf5:
+        variants: ~mpi
+        default: { variants: +szip +hl +fortran +cxx }
+    - metis:
+        default: { variants: +real64 }
+    - perl:
+        default: { version: 5.32.0 }
+    - netcdf-c ~mpi ^hdf5 ~mpi
+    - netcdf-fortran ^netcdf-c ~mpi ^hdf5 ~mpi
+    - openssl:
+        default:
+          version: 1.1.1k
+          buildable: False
+        externals:
+          - spec: openssl@1.1.1k
+            prefix: /usr
+    - scotch ~mpi:
+        default: { variants: +esmumps ~metis }
+# BLAS -------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_blas:
+  metadata:
+    section: packages
+  pe:
+    - gcc_stable
+    - intel_stable
+  dependencies:
+    - blas
+  packages:
+    - superlu
+
+# MPI --------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_packages:
+  metadata:
+    section: packages
+  pe:
+    - gcc_stable
+    - intel_stable
+  dependencies:
+    - mpi
+  packages:
+    - fftw:
+        variants: +mpi +openmp
+        default: { variants: +mpi ~openmp }
+    - hdf5 +mpi
+    - netcdf-c +mpi
+    - netcdf-fortran
+    - scotch +mpi
+
+# MPI + BLAS -------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_blas_packages_gcc_stable:
+  metadata:
+    section: packages
+  pe:
+    - gcc_stable
+  dependencies:
+    - mpi
+    - blas
+  packages:
+    - mumps:
+        default: { variants: +mpi +parmetis +metis +scotch +ptscotch }
+        dependencies:
+          - scotch +mpi
+          - netlib-scalapack
+
+#mpi_blas_packages_intel_stable:
+#  metadata:
+#    section: packages
+#  pe:
+#    - intel_stable
+#  dependencies:
+#    - mpi
+#    - blas
+#  packages:
+#    - mumps+mpi+parmetis+metis+scotch+ptscotch
+
+# MPI + BLAS + PYTHON ----------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_lapack_python_packages:
+  metadata:
+    section: packages
+  pe:
+    - gcc_stable
+    - intel_stable
+  dependencies:
+    - mpi
+    - blas
+    - python3
+  packages:
+    - boost +mpi
+#    - petsc:
+#        default:
+#          variants:
+#            common:  ~int64 +double +hdf5 +metis +mpi +superlu-dist +hypre +suite-sparse
+#            gpu:
+#              nvidia: +cuda
+#              none: ~cuda
+#        dependencies:
+#          - hdf5 +mpi
+
+# PYTHON -----------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python_activated:
+  metadata:
+    section: packages
+    modules:
+      blacklist: True
+    activated: True
+  pe:
+    - gcc_stable
+    - intel_stable
+  dependencies:
+    - python3
+  packages:
+    - py-cython
+    - py-pip
+    - py-ply
+    - py-six
+    - py-sympy
+    - py-termcolor
+    - py-virtualenv
+    - py-wheel
+    - py-wrapt
