@@ -78,15 +78,13 @@ serial_packages:
     - intel_stable
   packages:
     - fftw +openmp ~mpi
-    - hdf5:
-        variants: ~mpi +szip +hl +fortran +cxx
-        default: { variants: ~mpi +szip +hl +fortran +cxx }
+    - hdf5: ~mpi +szip +hl +fortran +cxx
     - metis:
         default: { variants: +real64 }
     - perl:
         default: { version: 5.32.0 }
-    - netcdf-c ~mpi ^hdf5 ~mpi
-    - netcdf-fortran ^netcdf-c ~mpi ^hdf5 ~mpi
+#    - netcdf-c ~mpi ^hdf5
+#    - netcdf-fortran ^netcdf-c ~mpi ^hdf5
     - openssl:
         default:
           version: 1.1.1k
