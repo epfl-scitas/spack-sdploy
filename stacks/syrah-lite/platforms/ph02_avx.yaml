@@ -6,3 +6,4 @@ platform:
     core_compiler: gcc@8.5.0 arch=linux-rhel8-haswell
     python3: 3.10.4
     target: haswell
+    lmod_root: ph02_avx
