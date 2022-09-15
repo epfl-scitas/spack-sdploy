@@ -171,7 +171,6 @@ serial_packages_python_activated:
     activated: True
   pe:
     - gcc_stable
-    - intel_stable
   dependencies:
     - python3
   packages:
