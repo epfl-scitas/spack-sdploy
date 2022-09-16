@@ -183,3 +183,29 @@ serial_packages_python_activated:
     - py-virtualenv
     - py-wheel
     - py-wrapt
+
+# BENCHMARKS -------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+benchmarks:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  packages:
+    - stream
+    - stream+openmp
+
+mpi_benchmarks:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [mpi]
+  packages:
+    - osu-micro-benchmarks
+    - hp2p
+
+mpi_blas_benchmarks:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [mpi, blas]
+  packages:
+    - hpl~openmp
