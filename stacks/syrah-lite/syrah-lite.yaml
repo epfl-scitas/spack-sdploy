@@ -159,7 +159,7 @@ mpi_lapack_python_packages:
         dependencies:
           - hdf5 +mpi +szip +hl +fortran +cxx
 
-# PYTHON -----------------------------------------------------------------------
+# PYTHON ACTIVATED -------------------------------------------------------------
 #
 #
 # ------------------------------------------------------------------------------
@@ -169,20 +169,131 @@ serial_packages_python_activated:
     modules:
       blacklist: True
     activated: True
-  pe:
-    - gcc_stable
-  dependencies:
-    - python3
+  pe: [gcc_stable]
+  dependencies: [python3]
   packages:
+    - py-absl-py
+    - py-astunparse
     - py-cython
+    - py-gast
+    - py-google-pasta
+    - py-grpcio
     - py-pip
     - py-ply
+    - py-protobuf
+    - py-requests
+    - py-semver
     - py-six
     - py-sympy
     - py-termcolor
     - py-virtualenv
     - py-wheel
     - py-wrapt
+
+# PYTHON ACTIVATED - BLAS  -----------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python_blas_activated:
+  metadata:
+    section: packages
+    modules: { blacklist: True }
+    activated: True
+  pe: [gcc_stable]
+  dependencies: [python3, blas_parallel]
+  packages:
+    - py-keras-preprocessing
+    - py-matplotlib
+    - py-numpy
+    - py-opt-einsum
+    - py-pandas
+    - py-scipy
+    - py-xarray
+
+# PYTHON -----------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python:
+  metadata:
+    section: packages
+  pe: [gcc_stable]
+  dependencies: [python3]
+  packages:
+    - bedtools2
+    - bowtie2
+    - cairo:
+        default: { variants: +png +pdf +fc +ft }
+    - mercurial
+    - ninja
+    - prinseq-lite
+    - py-cutadapt
+    - py-h5py ^hdf5 ~mpi:
+        modules:
+          autoload: direct
+    - py-pybind11
+    - samtools
+    - scons
+    - snakemake
+
+# PYTHON BLAS ------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python_blas:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [python3, blas_parallel]
+  packages:
+    - boost:
+        variants: ~mpi
+        default: { variants: cxxstd=14 +icu +python +numpy }
+    - iq-tree +ipo@1.6.12
+    - iq-tree +ipo@2.0.6
+    - py-biopython
+    - py-deeptools
+    - py-keras ^py-h5py ^hdf5 ~mpi
+    - py-macs2
+    - py-pybigwig
+    - py-scikit-learn
+    - py-statsmodels
+
+# PYTHON - GCC ONLY ------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [python3]
+  packages:
+    # needs boost@1.54 (https://backwardincompatible.com/post/169360794395/compiling-illumina-bcl2fastq-220-on-ubuntu-with)
+    - bcl2fastq2
+    - blast-plus@2.9.0
+    - gdb +tui +source-highlight +lto +xz
+    - libgd
+    - mummer
+    #  Skipping build of polymake since perl-term-readline-gnu failed
+    - polymake@3.5
+    - openbabel +python
+    - py-torchvision
+    - r +external-lapack
+    - gatk
+    # - py-spython gpu only
+    - spades
+
+# MPI PYTHON --------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_python_packages:
+  metadata:
+    section: packages
+  pe: [gcc_stable]
+  dependencies [mpi, python3]
+  packages:
+    - py-h5py ^hdf5 +mpi
+    - py-mpi4py
 
 # BENCHMARKS -------------------------------------------------------------------
 #
