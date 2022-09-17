@@ -253,7 +253,7 @@ serial_packages_python_blas:
     - py-biopython
     - py-deeptools
     # - py-keras ^py-h5py ^hdf5 ~mpi
-    # - py-macs2
+    - py-macs2
     - py-pybigwig
     - py-scikit-learn
     # - py-statsmodels
