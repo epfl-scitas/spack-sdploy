@@ -128,12 +128,15 @@ serial_packages_gcc_stable:
     # julia >= 0.5 conflicts with intel compilers
     # it is not in the serial_packages_python_gcc_stable due to the dependecy to mkl
     - julia
-    - node-js:
-        dependencies:
-          - python@<python3> ~tkinter ~optimizations
+    # node-js fails compilation
+    # - node-js:
+    #     dependencies:
+    #       - python@<python3> ~tkinter ~optimizations
     # TODO: check if the reuse: True makes it use the proper node-js
     - npm
+    # This is already specified in the PE section
     - openblas threads=openmp
+    # This is already specified in the PE section
     - python:
         default:
           version: <python3>
