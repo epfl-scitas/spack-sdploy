@@ -57,6 +57,7 @@ core_packages:
     - lmod
     - m4
     - parallel
+    # Pourquoi l'utilisation de la version externe de perl dans syrah.yaml ?
     - perl:
         default: { version: 5.32.0 }
     - picard
@@ -75,10 +76,24 @@ serial_packages:
   pe:
     - gcc_stable
   packages:
+    - angsd
+    - bwa
+    - bzip2
+    - cmake
+    - eigen:
+        default: { variants: +ipo }
+    - fastqc
+    - ffmpeg
     - fftw +openmp ~mpi
+    - gsl
     - hdf5 ~mpi +szip +hl +fortran +cxx
+    - hisat2
+    - htslib
+    - libxc
+    - mafft
     - metis:
         default: { variants: +real64 }
+    - muscle
     - perl:
         default: { version: 5.32.0 }
     - netcdf-c ~mpi ^hdf5 ~ mpi +szip +hl +fortran +cxx
@@ -92,6 +107,13 @@ serial_packages:
             prefix: /usr
     - scotch ~mpi:
         default: { variants: +esmumps ~metis }
+    - stacks
+    - star
+    - subread
+    - tcl
+    - valgrind ~boost ~mpi
+    - voropp
+
 # BLAS -------------------------------------------------------------------------
 #
 #
