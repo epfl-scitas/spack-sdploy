@@ -114,6 +114,36 @@ serial_packages:
     - valgrind ~boost ~mpi
     - voropp
 
+# GCC ONLY ---------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  packages:
+    - intel-mkl
+    - ffmpeg +libx264
+    - glpk+gmp
+    # julia >= 0.5 conflicts with intel compilers
+    # it is not in the serial_packages_python_gcc_stable due to the dependecy to mkl
+    - julia
+    - node-js:
+        dependencies:
+          - python@<python3> ~tkinter ~optimizations
+    # TODO: check if the reuse: True makes it use the proper node-js
+    - npm
+    - openblas threads=openmp
+    - python:
+        default:
+          version: <python3>
+          variants: +tkinter +optimizations ~debug
+    - python@<python3> +tkinter ~optimizations +debug
+    - rdma-core:
+        default:
+          variants: +ipo
+    - sox
+
 # BLAS -------------------------------------------------------------------------
 #
 #
