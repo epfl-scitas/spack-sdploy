@@ -89,6 +89,10 @@ serial_packages:
     - hdf5 ~mpi +szip +hl +fortran +cxx
     - hisat2
     - htslib
+    - intel-tbb
+    - libfabric:
+        default:
+          variants: fabrics=tcp,udp,sockets,mlx,verbs
     - libxc
     - mafft
     - metis:
@@ -98,6 +102,7 @@ serial_packages:
         default: { version: 5.32.0 }
     - netcdf-c ~mpi ^hdf5 ~ mpi +szip +hl +fortran +cxx
     - netcdf-fortran ^netcdf-c ~mpi ^hdf5 ~mpi +szip +hl +fortran +cxx
+    - nfft ^fftw ~mpi
     - openssl:
         default:
           version: 1.1.1k
@@ -105,7 +110,8 @@ serial_packages:
         externals:
           - spec: openssl@1.1.1k
             prefix: /usr
-    - scotch ~mpi:
+    - scotch:
+        variants: ~mpi
         default: { variants: +esmumps ~metis }
     - stacks
     - star
@@ -136,12 +142,12 @@ serial_packages_gcc_stable:
     # npm fails to install due to node-js dependency
     # - npm
     # This is already specified in the PE section
-    - openblas threads=openmp
+    # - openblas threads=openmp
     # This is already specified in the PE section
-    - python:
-        default:
-          version: <python3>
-          variants: +tkinter +optimizations ~debug
+    # - python:
+    #     default:
+    #       version: <python3>
+    #       variants: +tkinter +optimizations ~debug
     - python@<python3> +tkinter ~optimizations +debug
     - rdma-core:
         default:
