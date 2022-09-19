@@ -40,20 +40,31 @@ core_packages:
   pe:
     - core
   packages:
+    - autoconf
+    - automake
     - cmake:
         variants: +ncurses +ownlibs
         default:
           variants: +ownlibs ~ncurses ~qt
-    - perl:
-        default: { version: 5.32.0 }
     - curl
+    - emacs +tls
+    - fastqc
+    - fio
     - git
     - git-lfs
     - i7z
     - libtool
     - lmod
     - m4
+    - parallel
+    - perl:
+        default: { version: 5.32.0 }
+    - picard
+    - sbt
+    - sratoolkit
     - tmux
+    - trimmomatic
+
 # ------------------------------------------------------------------------------
 #
 #
