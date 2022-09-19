@@ -133,7 +133,8 @@ serial_packages_gcc_stable:
     #     dependencies:
     #       - python@<python3> ~tkinter ~optimizations
     # TODO: check if the reuse: True makes it use the proper node-js
-    - npm
+    # npm fails to install due to node-js dependency
+    # - npm
     # This is already specified in the PE section
     - openblas threads=openmp
     # This is already specified in the PE section
