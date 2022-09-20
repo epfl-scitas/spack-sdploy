@@ -97,4 +97,6 @@ class ModulesYaml(StackFile):
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         self.modules['suffixes'] = {'+mpi': 'mpi',
                                     '+openmp': 'openmp',
-                                    'threads=openmp': 'openmp'}
+                                    'threads=openmp': 'openmp',
+                                    '+libx264': 'h264',
+                                    '+debug': 'dbg'}
