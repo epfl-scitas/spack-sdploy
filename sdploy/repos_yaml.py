@@ -85,10 +85,10 @@ class ReposYaml(StackFile):
                 'url': repo_url,
                 'tag': repo_tag
             }
-        
+
     def clone(self):
         """Read repositories declared in commons.yaml to be cloned and call clone method"""
-        for repo, info in self.repos.items(): 
+        for repo, info in self.repos.items():
             self._clone(repo, **info)
 
     def _clone(self, repo, url=None, path=None, tag=None):
@@ -101,11 +101,7 @@ class ReposYaml(StackFile):
                 print("Hello from here !")
                 git('fetch', 'origin')
                 git('checkout', tag)
+                git('pull')
         else:
             tty.debug("Clonining {}[{}] repository in {}".format(repo, url, path))
             git('clone', '-b', tag, url, path)
-
-
-
-
-
