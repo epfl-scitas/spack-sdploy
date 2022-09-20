@@ -16,4 +16,5 @@ _env_path=$(spack location --env ${environment} || true)
 
 if [ ! -z ${_env_path} ]; then
     export SPACK_SYSTEM_CONFIG_PATH=${_env_path}
+    echo "Setting SPACK_SYSTEM_CONFIG_PATH to: ${SPACK_SYSTEM_CONFIG_PATH}"
 fi
