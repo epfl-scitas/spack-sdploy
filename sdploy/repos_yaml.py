@@ -98,7 +98,6 @@ class ReposYaml(StackFile):
         if os.path.exists(path):
             tty.debug("Update repository {} in {}".format(repo, path))
             with working_dir(path):
-                print("Hello from here !")
                 git('fetch', 'origin')
                 git('checkout', tag)
                 git('pull')
