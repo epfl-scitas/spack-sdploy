@@ -35,10 +35,8 @@ gcc:
 #
 # ------------------------------------------------------------------------------
 core_packages:
-  metadata:
-    section: packages
-  pe:
-    - core
+  metadata: {section: packages }
+  pe: [core]
   packages:
     - autoconf
     - automake
@@ -57,12 +55,12 @@ core_packages:
     - lmod
     - m4
     - parallel
-    # Pourquoi l'utilisation de la version externe de perl dans syrah.yaml ?
     - perl:
         default: { version: 5.32.0 }
     - picard
     - sbt
     - sratoolkit
+    - tar
     - tmux
     - trimmomatic
 
@@ -71,10 +69,8 @@ core_packages:
 #
 # ------------------------------------------------------------------------------
 serial_packages:
-  metadata:
-    section: packages
-  pe:
-    - gcc_stable
+  metadata: { section: packages }
+  pe: [gcc_stable]
   packages:
     - angsd
     - bwa
@@ -90,6 +86,7 @@ serial_packages:
     - hisat2
     - htslib
     - intel-tbb
+    - jasper
     - libfabric:
         default:
           variants: fabrics=tcp,udp,sockets,mlx,verbs
@@ -98,6 +95,12 @@ serial_packages:
     - metis:
         default: { variants: +real64 }
     - muscle
+    - namd:
+        variants: interface=tcl
+        dependencies:
+          mpi:
+            infiniband:
+              - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
     - perl:
         default: { version: 5.32.0 }
     - netcdf-c ~mpi ^hdf5 ~ mpi +szip +hl +fortran +cxx
@@ -128,7 +131,8 @@ serial_packages_gcc_stable:
   metadata: { section: packages }
   pe: [gcc_stable]
   packages:
-    - intel-mkl
+    # The installation of intel-mkl create an empty directory
+    # - intel-mkl
     - ffmpeg +libx264
     - glpk+gmp
     # julia >= 0.5 conflicts with intel compilers
@@ -148,6 +152,62 @@ serial_packages_gcc_stable:
         default:
           variants: +ipo
     - sox
+
+# GPU --------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_gpu:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [gpu]
+  packages:
+    - hwloc:
+        default:
+          variants:
+            common: ~cairo
+            gpu:
+              nvidia: +cuda +nvml ~rocm
+              none: ~cuda ~rocm ~nvml
+              amd: +rocm ~cuda
+    - llvm:
+        default:
+          version: 14.0.2
+          variants:
+            common: +ipo
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch>
+              none: ~cuda
+    - ucx:
+        default:
+          variants:
+            common: +knem +cma +rdmacm +threads_multiple
+            mpi:
+              infiniband: +verbs
+              ethernet: ~verbs
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch> +gdrcopy ~rocm
+              none: ~cuda ~rocm ~gdrcopy
+              amd: +rocm ~cuda
+    - cudnn@8.0.3.39-11.0:
+        dependencies:
+          gpu:
+            nvidia: cuda@11.0.2
+
+# GPU (GCC ONLY) ---------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_gcc_stable_gpu:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [gpu]
+  packages:
+    - xgboost:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
 
 # BLAS -------------------------------------------------------------------------
 #
