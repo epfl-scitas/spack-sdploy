@@ -158,7 +158,16 @@ class SpackYaml(StackFile):
             self.pkgs_specs[pkg_list_name] = {}
             self.pkgs_specs[pkg_list_name]['compilers'] = pkg_list_cfg.get('pe')
             if 'dependencies' in pkg_list_cfg.keys():
-                self.pkgs_specs[pkg_list_name]['dependencies'] = pkg_list_cfg.get('dependencies')
+                # Add dependencies one by one and check against filters
+                # if dependency is equals to the string "none" in which
+                # case do not add the dependency. In the end, if the
+                # dependencies list is empty, remove it.
+                self.pkgs_specs[pkg_list_name]['dependencies'] = []
+                for d in pkg_list_cfg['dependencies']:
+                    if d in self.filters.keys() and self.filters[d] != 'none':
+                        self.pkgs_specs[pkg_list_name]['dependencies'].append(d)
+                if len(self.pkgs_specs[pkg_list_name]['dependencies']) == 0:
+                    self.pkgs_specs[pkg_list_name].pop('dependencies')
 
     def _filters_in_package(self, dic):
         """Return list of filters found in dictionary"""
@@ -221,14 +230,3 @@ class SpackYaml(StackFile):
                 yield from self._flatten_dict(v, new_key, sep=sep).items()
             else:
                 yield new_key, v
-
-#    # METHOD IS NOT CURRENTLY USED
-#    def _get_pe_list(self):
-#        """Return list with PE names"""
-#
-#        stack = self.group_sections(deepcopy(self.data), 'pe')
-#        pe_list = list(stack.keys())
-#        if 'metadata' in pe_list:
-#            pe_list.pop('metadata')
-#
-#        return(pe_list)
