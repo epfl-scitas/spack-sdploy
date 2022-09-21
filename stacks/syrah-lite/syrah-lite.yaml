@@ -96,12 +96,12 @@ serial_packages:
         default: { variants: +real64 }
     - muscle
     # ok syntax for namd
-    - namd:
-        variants: interface=tcl
-        dependencies:
-          mpi:
-            infiniband:
-              - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
+    #- namd:
+    #    variants: interface=tcl
+    #    dependencies:
+    #      mpi:
+    #        infiniband:
+    #          - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
     - perl:
         default: { version: 5.32.0 }
     - netcdf-c ~mpi ^hdf5 ~ mpi +szip +hl +fortran +cxx
