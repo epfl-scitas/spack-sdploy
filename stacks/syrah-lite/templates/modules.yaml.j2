@@ -21,3 +21,52 @@ modules:
 {% for variant, suffix in data['suffixes'].items() %}
           {{ variant }}: {{ suffix }}
 {% endfor %}
+          ^fftw+openmp: openmp
+          +cuda: cuda
+          +nvptx: cuda
+          hdf5=parallel: h5
+          ^python@:2.99: py2
+          +plumed: plumed
+          +double-gpu: double-gpu
+          +unwind: unwind
+          file_systems=nfs: nfs
+          device=ch3: ch3
+          device=ch4: ch4
+      whitelist:
+      - gcc@11.3.0
+      - mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
+      - openblas@0.3.20 threads=none +locking
+      - python@3.10.4 +tkinter +optimizations ~debug
+      - petsc
+      - openblas
+      - jasper
+      blacklist:
+      - cmake
+      - py-cython
+      - py-matplotlib
+      - py-numpy
+      - py-pandas
+      - py-pip
+      - py-ply
+      - py-requests
+      - py-scipy
+      - py-semver
+      - py-six
+      - py-sympy
+      - py-virtualenv
+      - py-xarray
+# # # # # # # # # # # # # extras for tensorflow 
+      - py-absl-py
+      - py-astunparse
+      - py-gast
+      - py-google-pasta
+      - py-grpcio
+      - py-keras-preprocessing
+      - py-opt-einsum
+      - py-protobuf
+      - py-termcolor
+      - py-wheel
+      - py-wrapt
+# # # # # # # # # # # # # extras for py-scikit-learn
+      - py-joblib
+      - py-threadpoolctl
