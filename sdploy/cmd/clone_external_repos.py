@@ -44,4 +44,4 @@ def clone_external_repos(parser, args):
     repos = ReposYaml(config)
 
     # Clone the repositories
-    repos.clone()    
+    repos.clone()
