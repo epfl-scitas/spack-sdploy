@@ -95,6 +95,7 @@ serial_packages:
     - metis:
         default: { variants: +real64 }
     - muscle
+    # ok syntax for namd
     - namd:
         variants: interface=tcl
         dependencies:
@@ -178,6 +179,9 @@ serial_packages_gpu:
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
+    # syntax tested: OK
+    # - ucx (==> spack.yaml)
+    # +knem +cma +rdmacm +threads_multiple ~cuda ~rocm ~gdrcopy +verbs (==> packages.yaml)
     - ucx:
         default:
           variants:
@@ -221,7 +225,49 @@ serial_packages_blas:
   dependencies:
     - blas
   packages:
+    - arpack-ng ~mpi
+    - gmsh:
+        variants: |
+          ~mpi +hdf5 +cgns +eigen ~opencascade +openmp ~fltk
+        dependencies:
+          - scotch ~mpi
+          - cgns ~mpi
+          - hdf5 ~mpi
+          - med ~mpi
+          - mmg
+    - ncview ^netcdf-c~mpi ^hdf5 ~mpi
     - superlu
+
+# BLAS + GPU -------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_blas_gpu:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [blas, gpu]
+  packages:
+    - suite-sparse:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
+    - magma:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+
+# BLAS (GCC ONLY) --------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_blas_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [blas]
+  packages:
+    - armadillo +hdf5 ^arpack-ng ~mpi ^hdf5 ~mpi
+    - octave
 
 # MPI --------------------------------------------------------------------------
 #
@@ -275,6 +321,7 @@ mpi_lapack_python_packages:
     - mpi
     - blas
     - python3
+    - gpu
   packages:
     - boost +mpi
     - petsc:
@@ -385,6 +432,21 @@ serial_packages_python_blas:
     - py-pybigwig
     - py-scikit-learn
     # - py-statsmodels
+
+# PYTHON BLAS GPU --------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python_blas_gpu:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [blas_parallel, python3, gpu]
+  packages:
+    - py-theano:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
 
 # PYTHON - GCC ONLY ------------------------------------------------------------
 #
