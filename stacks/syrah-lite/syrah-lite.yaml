@@ -132,7 +132,9 @@ serial_packages_gcc_stable:
   metadata: { section: packages }
   pe: [gcc_stable]
   packages:
-    # The installation of intel-mkl create an empty directory
+    # The installation of intel-mkl create an empty directory in the not haswell
+    # environment, but a question remains: does loading the package from the
+    # ivybridge environment will invoke the module from haswell ?
     # - intel-mkl
     - ffmpeg +libx264
     - glpk+gmp
@@ -141,7 +143,9 @@ serial_packages_gcc_stable:
     - julia
     - node-js
     # TODO: check if the reuse: True makes it use the proper node-js
-    - npm
+    # node-js@18.9.1 includes npm@8.19.1
+    # idea: make a new spack package with this version of npm
+    # - npm
     # This is already specified in the PE section
     # - openblas threads=openmp
     # This is already specified in the PE section
@@ -171,14 +175,27 @@ serial_packages_gpu:
               nvidia: +cuda +nvml ~rocm
               none: ~cuda ~rocm ~nvml
               amd: +rocm ~cuda
-    - llvm:
-        default:
-          version: 14.0.2
-          variants:
-            common: +ipo
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch>
-              none: ~cuda
+    # The following version compiler with success:
+    #
+    #  llvm@12.0.1%gcc@11.3.0+clang~code_signing+compiler-rt~cuda~flang+gold~internal_unwind+ipo+libcxx
+    #  +link_llvm_dylib+lld+lldb+llvm_dylib~mlir+omp_as_runtime~omp_debug~omp_tsan+polly~python~shared_libs
+    #  ~split_dwarf~z3 build_type=Release patches=10cb42f,88ae104,f920173 targets=amdgpu,bpf,nvptx,webassembly
+    #  version_suffix=jl arch=linux-rhel8-haswell
+    #
+    # The following version fails:
+    #
+    #  llvm@14.0.2%gcc@11.3.0+clang~code_signing+compiler-rt~cuda~flang+gold+internal_unwind+ipo+libcxx
+    #  ~link_llvm_dylib+lld+lldb~llvm_dylib~mlir+omp_as_runtime~omp_debug~omp_tsan+polly~python~shared_libs
+    #  ~split_dwarf~z3 build_type=Release patches=d85ef51,f920173 targets=none version_suffix=none arch=linux-rhel8-haswell
+    #
+    # - llvm:
+    #     default:
+    #       version: 14.0.2
+    #       variants:
+    #         common: +ipo
+    #         gpu:
+    #           nvidia: +cuda cuda_arch=<cuda_arch>
+    #           none: ~cuda
     # syntax tested: OK
     # - ucx (==> spack.yaml)
     # +knem +cma +rdmacm +threads_multiple ~cuda ~rocm ~gdrcopy +verbs (==> packages.yaml)
