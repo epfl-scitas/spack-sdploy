@@ -668,7 +668,7 @@ mpi_packages_gcc_stable:
   pe: [gcc_stable]
   dependencies: [mpi]
   packages:
-    - cpmd~openmp ^fftw+mpi~openmp
+    # - cpmd~openmp ^fftw+mpi~openmp
     - relion ~mklfft:
         variants:
           gpu:
@@ -686,13 +686,14 @@ mpi_blas_python_packages_gcc_stable:
   packages:
     - adios2:
         default: { variants: +hdf5 +mpi +python }
-    - amber +mpi:
-        variants:
-          gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch>
-            none: ~cuda
-        dependencies:
-          - boost +mpi
+    # Cannot fetch
+    # - amber +mpi:
+    #     variants:
+    #       gpu:
+    #         nvidia: +cuda cuda_arch=<cuda_arch>
+    #         none: ~cuda
+    #     dependencies:
+    #       - boost +mpi
     - cp2k +mpi ~plumed:
         variants:
           gpu:
