@@ -34,8 +34,8 @@ modules:
           device=ch4: ch4
       whitelist:
       - gcc@11.3.0
-      - mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
-      - openblas@0.3.20 threads=none +locking
+      # - mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
+      # - openblas@0.3.20 threads=none +locking
       - python@3.10.4 +tkinter +optimizations ~debug
       - petsc
       - openblas
