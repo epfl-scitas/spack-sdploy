@@ -135,7 +135,7 @@ serial_packages_gcc_stable:
     # The installation of intel-mkl create an empty directory in the not haswell
     # environment, but a question remains: does loading the package from the
     # ivybridge environment will invoke the module from haswell ?
-    # - intel-mkl
+    - intel-mkl
     - ffmpeg +libx264
     - glpk+gmp
     # julia >= 0.5 conflicts with intel compilers
@@ -617,7 +617,7 @@ mpi_python_gpu_packages:
   dependencies: [mpi, gpu, python3]
   packages:
     - py-torch:
-        variants: ~mpi
+        variants: +mpi
         default:
           variants:
             gpu:
