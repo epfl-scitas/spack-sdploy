@@ -149,14 +149,18 @@ class SpackYaml(StackFile):
                     self.pkgs_defs[pkg_list_name].append(((' '.join(package)).strip()))
 
     def create_pkgs_specs_dict(self):
-        """Regroup package lists with PE components to write the matrix specs"""
+        """Regroup package lists with PE components to write the matrix specs.
+        pkgs_specs is the dictionary we are constructing in this method."""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         self.pkgs_stack = self.group_sections(deepcopy(self.data), 'packages')
         for pkg_list_name, pkg_list_cfg in self.pkgs_stack.items():
+            # Create new entry
             self.pkgs_specs[pkg_list_name] = {}
+            # Add compilers
             self.pkgs_specs[pkg_list_name]['compilers'] = pkg_list_cfg.get('pe')
+            # Add dependencies
             if 'dependencies' in pkg_list_cfg.keys():
                 # Add dependencies one by one and check against filters
                 # if dependency is equals to the string "none" in which
@@ -165,6 +169,8 @@ class SpackYaml(StackFile):
                 self.pkgs_specs[pkg_list_name]['dependencies'] = []
                 for d in pkg_list_cfg['dependencies']:
                     if d in self.filters.keys() and self.filters[d] != 'none':
+                        self.pkgs_specs[pkg_list_name]['dependencies'].append(d)
+                    elif d not in self.filters.keys():
                         self.pkgs_specs[pkg_list_name]['dependencies'].append(d)
                 if len(self.pkgs_specs[pkg_list_name]['dependencies']) == 0:
                     self.pkgs_specs[pkg_list_name].pop('dependencies')
