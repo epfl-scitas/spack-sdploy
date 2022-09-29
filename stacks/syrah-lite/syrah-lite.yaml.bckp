@@ -1,0 +1,794 @@
+# ------------------------------------------------------------------------------
+# PROGRAMMING ENVIRONMENT SECTION (PE)
+#
+# The PE section follows the syntax: <pe_name>_<stack_name>_<package_name>.
+# for example: intel_stable_compiler. There is a parent child schema that must
+# be respected. The metadata key is ignored for this purpose. The core PE only
+# has one information and does not follow the same schema. Any key under the
+# <package_name> will be seen as a filter or it will be ignored. In the future
+# we may need to introduce a stack key and a dependencies key for the case where
+# we want to compile the compiler or stack libraries with GPU support. For now,
+# the core_compiler should have this name (this means 'core' key and 'compiler'
+# for subkey. We can also set section:core for the core PE.
+core:
+  metadata:
+    section: core
+  compiler: <core_compiler>
+
+gcc:
+  metadata:
+    section: pe
+  stable:
+    compiler: gcc@11.3.0
+    mpi:
+      infiniband: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
+      ethernet: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
+    blas: openblas@0.3.20 threads=none +locking
+    blas_parallel: openblas@0.3.20 threads=openmp +locking
+    python3: python@<python3> +tkinter +optimizations ~debug
+    python2: python@2.7.18 +tkinter ~debug
+    gpu:
+      nvidia: cuda@11.7.0
+      none: ""
+# CORE -------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+core_packages:
+  metadata: {section: packages }
+  pe: [core]
+  packages:
+    - autoconf
+    - automake
+    - cmake:
+        variants: +ncurses +ownlibs
+        default:
+          variants: +ownlibs ~ncurses ~qt
+    - curl
+    - emacs +tls
+    - fastqc
+    - fio
+    - git
+    - git-lfs
+    - i7z
+    - libtool
+    - lmod
+    - m4
+    - parallel
+    - perl:
+        default: { version: 5.32.0 }
+    - picard
+    - sbt
+    - sratoolkit
+    - tar
+    - tmux
+    - trimmomatic
+
+# ------------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  packages:
+    - angsd
+    - bwa
+    - bzip2
+    - cmake
+    - eigen:
+        default: { variants: +ipo }
+    - fastqc
+    - ffmpeg
+    - fftw +openmp ~mpi
+    - gsl
+    - hdf5 ~mpi +szip +hl +fortran +cxx
+    - hisat2
+    - htslib
+    - intel-tbb
+    - jasper
+    - libfabric:
+        default:
+          variants: fabrics=tcp,udp,sockets,mlx,verbs
+    - libxc
+    - mafft
+    - metis:
+        default: { variants: +real64 }
+    - muscle
+    # ok syntax for namd
+    #- namd:
+    #    variants: interface=tcl
+    #    dependencies:
+    #      mpi:
+    #        infiniband:
+    #          - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
+    - perl:
+        default: { version: 5.32.0 }
+    - netcdf-c ~mpi ^hdf5 ~ mpi +szip +hl +fortran +cxx
+    - netcdf-fortran ^netcdf-c ~mpi ^hdf5 ~mpi +szip +hl +fortran +cxx
+    - nfft ^fftw ~mpi
+    - openssl:
+        default:
+          version: 1.1.1k
+          buildable: False
+        externals:
+          - spec: openssl@1.1.1k
+            prefix: /usr
+    - scotch:
+        variants: ~mpi
+        default: { variants: +esmumps ~metis }
+    - stacks
+    - star
+    - subread
+    - tcl
+    - valgrind ~boost ~mpi
+    - voropp
+
+# GCC ONLY ---------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  packages:
+    # The installation of intel-mkl create an empty directory in the not haswell
+    # environment, but a question remains: does loading the package from the
+    # ivybridge environment will invoke the module from haswell ?
+    - intel-mkl
+    - ffmpeg +libx264
+    - glpk+gmp
+    # julia >= 0.5 conflicts with intel compilers
+    # it is not in the serial_packages_python_gcc_stable due to the dependecy to mkl
+    - julia
+    - node-js
+    # TODO: check if the reuse: True makes it use the proper node-js
+    # node-js@18.9.1 includes npm@8.19.1
+    # idea: make a new spack package with this version of npm
+    # - npm
+    # This is already specified in the PE section
+    # - openblas threads=openmp
+    # This is already specified in the PE section
+    # - python:
+    #     default:
+    #       version: <python3>
+    #       variants: +tkinter +optimizations ~debug
+    - rdma-core:
+        default:
+          variants: +ipo
+    - sox
+
+# GPU --------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_gpu:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [gpu]
+  packages:
+    - hwloc:
+        default:
+          variants:
+            common: ~cairo
+            gpu:
+              nvidia: +cuda +nvml ~rocm
+              none: ~cuda ~rocm ~nvml
+              amd: +rocm ~cuda
+    # The following version compiler with success:
+    #
+    #  llvm@12.0.1%gcc@11.3.0+clang~code_signing+compiler-rt~cuda~flang+gold~internal_unwind+ipo+libcxx
+    #  +link_llvm_dylib+lld+lldb+llvm_dylib~mlir+omp_as_runtime~omp_debug~omp_tsan+polly~python~shared_libs
+    #  ~split_dwarf~z3 build_type=Release patches=10cb42f,88ae104,f920173 targets=amdgpu,bpf,nvptx,webassembly
+    #  version_suffix=jl arch=linux-rhel8-haswell
+    #
+    # The following version fails:
+    #
+    #  llvm@14.0.2%gcc@11.3.0+clang~code_signing+compiler-rt~cuda~flang+gold+internal_unwind+ipo+libcxx
+    #  ~link_llvm_dylib+lld+lldb~llvm_dylib~mlir+omp_as_runtime~omp_debug~omp_tsan+polly~python~shared_libs
+    #  ~split_dwarf~z3 build_type=Release patches=d85ef51,f920173 targets=none version_suffix=none arch=linux-rhel8-haswell
+    #
+    # - llvm:
+    #     default:
+    #       version: 14.0.2
+    #       variants:
+    #         common: +ipo
+    #         gpu:
+    #           nvidia: +cuda cuda_arch=<cuda_arch>
+    #           none: ~cuda
+    # syntax tested: OK
+    # - ucx (==> spack.yaml)
+    # +knem +cma +rdmacm +threads_multiple ~cuda ~rocm ~gdrcopy +verbs (==> packages.yaml)
+    - ucx:
+        default:
+          variants:
+            common: +knem +cma +rdmacm +threads_multiple
+            mpi:
+              infiniband: +verbs
+              ethernet: ~verbs
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch> +gdrcopy ~rocm
+              none: ~cuda ~rocm ~gdrcopy
+              amd: +rocm ~cuda
+    - cudnn@8.0.3.39-11.0:
+        dependencies:
+          gpu:
+            nvidia: cuda@11.0.2
+
+# GPU (GCC ONLY) ---------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_gcc_stable_gpu:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [gpu]
+  packages:
+    - xgboost:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
+
+# BLAS -------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_blas:
+  metadata:
+    section: packages
+  pe:
+    - gcc_stable
+  dependencies:
+    - blas
+  packages:
+    - arpack-ng ~mpi
+    - gmsh:
+        variants: |
+          ~mpi +hdf5 +cgns +eigen ~opencascade +openmp ~fltk
+        dependencies:
+          - scotch ~mpi
+          - cgns ~mpi
+          - hdf5 ~mpi
+          - med ~mpi
+          - mmg
+    - ncview ^netcdf-c~mpi ^hdf5 ~mpi
+    - superlu
+
+# BLAS + GPU -------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_blas_gpu:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [blas, gpu]
+  packages:
+    - suite-sparse:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
+    - magma:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+
+# BLAS (GCC ONLY) --------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_blas_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [blas]
+  packages:
+    - armadillo +hdf5 ^arpack-ng ~mpi ^hdf5 ~mpi
+    - octave
+
+# MPI --------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_packages:
+  metadata:
+    section: packages
+  pe:
+    - gcc_stable
+  dependencies:
+    - mpi
+  packages:
+    - arpack-ng:
+        default: { variants: +mpi }
+    - fftw:
+        variants: +mpi +openmp
+        default: { variants: +mpi ~openmp }
+    - hdf5 +mpi +szip +hl +fortran +cxx
+    - netcdf-c +mpi ^hdf5 +mpi +szip +hl +fortran +cxx
+    - netcdf-fortran ^hdf5 +mpi +szip +hl +fortran +cxx
+    - openfoam-org +metis ^scotch+mpi
+    - parmetis:
+        default: { variants: +ipo }
+    # Problems with dependent packages
+    # - phylobayesmpi
+    - scotch +mpi
+
+# MPI + BLAS -------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_blas_packages_gcc_stable:
+  metadata:
+    section: packages
+  pe:
+    - gcc_stable
+  dependencies:
+    - mpi
+    - blas
+  packages:
+    - abinit +openmp +mpi +scalapack +wannier90
+    - elmerfem +mumps +openmp +hypre
+    - gromacs+mpi:
+        variants:
+          gpu:
+            nvidia: +cuda
+            none: ~cuda
+    - mumps:
+        default: { variants: +mpi +parmetis +metis +scotch +ptscotch }
+        dependencies:
+          - scotch +mpi
+          - netlib-scalapack
+    - netlib-scalapack:
+        default: { variants: +ipo }
+    - yambo+mpi io=iotk,etsf-io
+
+# MPI + BLAS ------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_lapack_packages:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [mpi, blas]
+  packages:
+    - gmsh +openmp +hdf5 ~fltk ~opencascade
+    - quantum-espresso+mpi+scalapack
+    - quantum-espresso+mpi+scalapack hdf5=parallel
+
+# MPI + BLAS + GPU -------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_lapack_gpu_packages:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [gpu, mpi, blas]
+  packages:
+    - hypre:
+        default:
+          variants:
+            gpu:
+              nvidia: +cuda
+              none: ~cuda
+    - superlu-dist:
+        default:
+          variants:
+            common: +ipo
+            gpu:
+              nvidia: +cuda
+              none: ~cuda
+
+# PYTHON ACTIVATED -------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python_activated:
+  metadata:
+    section: packages
+    modules:
+      blacklist: True
+    activated: True
+  pe: [gcc_stable]
+  dependencies: [python]
+  packages:
+    - py-absl-py
+    - py-astunparse
+    - py-cython
+    - py-gast
+    - py-google-pasta
+    - py-grpcio
+    - py-pip
+    - py-ply
+    - py-protobuf
+    - py-requests
+    - py-semver
+    - py-six
+    - py-sympy
+    - py-termcolor
+    - py-virtualenv
+    - py-wheel
+    - py-wrapt
+
+# PYTHON ACTIVATED - BLAS  -----------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python_blas_activated:
+  metadata:
+    section: packages
+    modules: { blacklist: True }
+    activated: True
+  pe: [gcc_stable]
+  dependencies: [python3, blas_parallel]
+  packages:
+    - py-keras-preprocessing
+    - py-matplotlib
+    - py-numpy
+    - py-opt-einsum
+    - py-pandas
+    # - py-scipy
+    - py-xarray
+
+# PYTHON -----------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python:
+  metadata:
+    section: packages
+  pe: [gcc_stable]
+  dependencies: [python3]
+  packages:
+    - bedtools2
+    - bowtie2
+    - cairo:
+        default: { variants: +png +pdf +fc +ft }
+    - mercurial
+    - ninja
+    - prinseq-lite
+    # - py-cutadapt
+    - py-h5py ^hdf5 ~mpi:
+        modules:
+          autoload: direct
+    - py-pybind11
+    - samtools
+    - scons
+    - snakemake
+
+# PYTHON BLAS ------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python_blas:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [python3, blas_parallel]
+  packages:
+    - boost:
+        variants: ~mpi
+        default: { variants: cxxstd=14 +icu +python +numpy }
+    - iq-tree +ipo@1.6.12
+    - iq-tree +ipo@2.0.6
+    - py-biopython
+    - py-deeptools
+    # - py-keras ^py-h5py ^hdf5 ~mpi
+    - py-macs2
+    - py-pybigwig
+    - py-scikit-learn
+    # - py-statsmodels
+
+# PYTHON BLAS GPU --------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python_blas_gpu:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [blas_parallel, python3, gpu]
+  packages:
+    - py-theano:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
+
+# serial_packages_python2_deprecated:
+#   metadata: { section: packages }
+#   pe: [gcc_stable]
+#   dependencies: [python2]
+#   packages:
+#     - jellyfish
+#     - scons
+#     - py-pip
+#     - py-virtualenv
+
+# PYTHON - GCC ONLY ------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [python3]
+  packages:
+    # needs boost@1.54 (https://backwardincompatible.com/post/169360794395/compiling-illumina-bcl2fastq-220-on-ubuntu-with)
+    # - bcl2fastq2
+    # - blast-plus@2.9.0
+    - gdb +tui +source-highlight +lto +xz
+    - libgd
+    - mummer
+    #  Skipping build of polymake since perl-term-readline-gnu failed
+    # - polymake@3.5
+    - openbabel +python
+    # - py-torchvision
+    - r +external-lapack
+    - gatk
+    # - py-spython gpu only
+    - spades
+
+# PYTHON + GPU (GCC ONLY) ------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python_gpu_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [python3, gpu]
+  packages:
+    - caffe ~opencv +python:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
+    - py-torch:
+        variants: ~mpi
+        default:
+          variants:
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch> +magma
+              none: ~cuda ~cudnn ~nccl
+              rocm: +magma +rocm
+        dependencies:
+          gpu:
+            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
+            rocm: [magma +rocm amdgpuarch=<amd_arch>]
+    - vtk +ipo+ffmpeg~mpi+opengl2+python~qt+xdmf:
+        variants:
+          gpu:
+            nvidia: ~osmesa
+            none: +osmesa
+
+# EXTERNAL ---------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+#external_packages:
+#  metadata:
+#    section: packages
+#    cloud: False
+#  pe: [core]
+#  packages:
+#    - openjdk:
+#        default:
+#          version: <jdk_version>
+#        externals:
+#          - spec: openjdk@<jdk_version>
+#            prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-2.el8_6.x86_64/jre
+#        modules:
+#          blacklist: True
+# - adf@2017.111
+# - ansys@19.2
+# - ansys@2022R1
+# - cfdplusplus@19.1
+# - comsol@5.6
+# - fdtd@2022-R1.1-2963
+# - gaussian@g16-C.01
+# - gurobi@9.1.0
+# - intel-vtune@2019.6.0.602217
+# - intel-advisor@2019.5.0.602216
+# - likwid@4.3.0
+# - maple@2017
+# - mathematica@13.0
+# # TODO install the latest version
+# - matlab@R2019b
+# - smr@2017.06
+# - totalview@2020.3.11
+
+# MPI PYTHON --------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_python_packages:
+  metadata:
+    section: packages
+  pe: [gcc_stable]
+  dependencies: [mpi, python3]
+  packages:
+    - py-h5py ^hdf5 +mpi
+    - py-mpi4py
+
+# MPI + PYTHON + GPU -----------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_python_gpu_packages:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [mpi, gpu, python3]
+  packages:
+    - py-torch:
+        variants: +mpi
+        default:
+          variants:
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch> +magma
+              none: ~cuda ~cudnn ~nccl
+              rocm: +magma +rocm
+
+# MPI + BLAS + PYTHON ----------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_lapack_python_packages:
+  metadata:
+    section: packages
+  pe:
+    - gcc_stable
+  dependencies:
+    - mpi
+    - blas
+    - python3
+    - gpu
+  packages:
+    - boost +mpi
+    - cgal ^boost+mpi
+    - iq-tree@1.6.12+mpi ^boost +mpi
+    - neuron +mpi +python
+    - plumed:
+        default: { variants: +mpi +gsl }
+    - petsc:
+        default:
+          variants:
+            common:  ~int64 +double +hdf5 +metis +mpi +superlu-dist +hypre +suite-sparse
+            gpu:
+              nvidia: +cuda
+              none: ~cuda
+        dependencies:
+          - hdf5 +mpi +szip +hl +fortran +cxx
+    - slepc:
+        default: { variants: +arpack }
+    - py-petsc4py
+
+# MPI (GCC ONLY) ---------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_packages_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [mpi]
+  packages:
+    # - cpmd~openmp ^fftw+mpi~openmp
+    - relion ~mklfft:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch> +double-gpu
+            none: ~cuda
+
+# MPI BLAS PYTHON (GCC ONLY) ---------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_blas_python_packages_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [mpi, blas, python3]
+  packages:
+    - adios2:
+        default: { variants: +hdf5 +mpi +python }
+    # Cannot fetch
+    # - amber +mpi:
+    #     variants:
+    #       gpu:
+    #         nvidia: +cuda cuda_arch=<cuda_arch>
+    #         none: ~cuda
+    #     dependencies:
+    #       - boost +mpi
+    - cp2k +mpi ~plumed:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
+        dependencies:
+          - boost +mpi
+    - cp2k +mpi +plumed:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
+        dependencies:
+          - boost +mpi
+    - fenics +parmetis +hdf5 +scotch +suite-sparse ~vtk ~trilinos ^boost +mpi
+    - gromacs@2019.4+mpi+plumed:
+        variants:
+          gpu:
+            nvidia: +cuda
+            none: ~cuda
+    - lammps@20220107:
+        variants:
+          common: |
+            build_type=Release +asphere +atc +body +class2 +colloid +compress
+            +coreshell +dipole +diffraction +extra-dump +granular +h5md +kspace
+            +latboltz +latte +lib +manybody +mc +misc +molecule +mpi +mpiio
+            +netcdf +peri ~poems +python +qeq +replica +rigid +shock +ml-snap
+            +srd +voronoi +plumed
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
+        dependencies:
+          - netcdf-c+mpi
+    - openfoam +metis ^boost +mpi
+    - paraview +shared +python3 +hdf5:
+        variants:
+          gpu:
+            nvidia: ~osmesa
+            rocm: ~osmesa
+            none: +osmesa
+        dependencies:
+          - netcdf-c+mpi
+    - py-horovod controllers=mpi frameworks=pytorch,tensorflow,keras:
+        variants:
+          gpu:
+            nvidia: tensor_ops=nccl +cuda cuda_arch=<cuda_arch>
+            none: tensor_ops=mpi ~cuda
+    - py-tensorflow:
+        default:
+          variants:
+            common: +mpi
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch>
+              none: ~cuda ~nccl
+        dependencies:
+          - bazel
+    - opencv +vtk +python3:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
+        dependencies:
+          - netcdf-c +mpi
+          - boost +mpi
+    - vtk+ffmpeg+mpi+opengl2+python~qt+xdmf:
+        variants:
+          gpu:
+            nvidia: ~osmesa
+            none: +osmesa
+        dependencies:
+          - netcdf-c +mpi
+          - boost +mpi
+
+# BENCHMARKS -------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+benchmarks:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  packages:
+    - stream
+    - stream+openmp
+
+mpi_benchmarks:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [mpi]
+  packages:
+    - osu-micro-benchmarks
+    - hp2p
+
+mpi_blas_benchmarks:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [mpi, blas]
+  packages:
+    - hpl~openmp
