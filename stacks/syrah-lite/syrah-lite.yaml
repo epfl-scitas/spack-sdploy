@@ -467,11 +467,7 @@ serial_packages_python_blas:
   packages:
     - boost:
         variants: ~mpi
-        default: |
-          { variants:
-          +atomic +chrono +container +date_time +exception +filesystem +graph +icu
-          +iostreams +locale +log +math +multithread +numpy +program_options +python +random
-          +regex +serialization +shared +signals +system +test +thread +timer +wave }
+        default: { variants: +atomic +chrono +container +date_time +exception +filesystem +graph +icu +iostreams +locale +log +math +multithread +numpy +program_options +python +random +regex +serialization +shared +signals +system +test +thread +timer +wave }
     - iq-tree +ipo@1.6.12
     - iq-tree +ipo@2.0.6
     - py-biopython
