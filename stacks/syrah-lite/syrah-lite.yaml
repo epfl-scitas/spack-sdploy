@@ -467,7 +467,8 @@ serial_packages_python_blas:
   packages:
     - boost:
         variants: ~mpi
-        default: { variants: |
+        default: |
+          { variants:
           +atomic +chrono +container +date_time +exception +filesystem +graph +icu
           +iostreams +locale +log +math +multithread +numpy +program_options +python +random
           +regex +serialization +shared +signals +system +test +thread +timer +wave }
