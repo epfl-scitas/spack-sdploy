@@ -49,97 +49,94 @@ pipeline {
     // A variable defined in a stage is bound to that stage.
     stages {
 
-//        stage('Do a fresh restart') {
+        stage('Do a fresh restart') {
+            steps {
+                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
+                sh 'rm -rf /home/scitasbuildpr/.spack'
+//              sh 'rm -rf /home/scitasbuildpr/gcc'
+                sh 'rm -rf /home/scitasbuildpr/gcc2'
+                sh 'rm -rf /home/scitasbuildpr/gcc3'
+                sh 'rm -rf /home/scitasbuildpr/gcc4'
+            }
+         }
+
+//        stage('Print variables') {
 //            steps {
-//                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
-//                sh 'rm -rf /home/scitasbuildpr/.spack'
-//                sh 'rm -rf /home/scitasbuildpr/cas1'
-//                sh 'rm -rf /home/scitasbuildpr/cas3'
-//                sh 'rm -rf /home/scitasbuildpr/gcc'
-//                sh 'rm -rf /home/scitasbuildpr/gcc2'
-//                sh 'rm -rf /home/scitasbuildpr/intel'
-//                sh 'rm -rf /home/scitasbuildpr/master'
-//                sh 'rm -rf /home/scitasbuildpr/pe'
+//                echo "The following values were read from common.yaml"
+//                echo "WORK_DIR: $WORK_DIR"
+//                echo "STACK_RELEASE: $STACK_RELEASE"
+//                echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUALENV_PATH}"
+//                echo "JENKINS: ${JENKINS}"
+//                echo "STACK: ${STACK}"
+//                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
+//                echo "STACK_PREFIX: ${STACK_PREFIX}"
+//                echo "SPACK_INSTALL_PATH: ${SPACK_INSTALL_PATH}"
+//                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
+//                echo "SPACK_SDPLOY_INSTALL_PATH: ${SPACK_SDPLOY_INSTALL_PATH}"
 //            }
-//         }
-
-        stage('Print variables') {
-            steps {
-                echo "The following values were read from common.yaml"
-                echo "WORK_DIR: $WORK_DIR"
-                echo "STACK_RELEASE: $STACK_RELEASE"
-                echo "PYTHON_VIRTUALENV_PATH: ${PYTHON_VIRTUALENV_PATH}"
-                echo "JENKINS: ${JENKINS}"
-                echo "STACK: ${STACK}"
-                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
-                echo "STACK_PREFIX: ${STACK_PREFIX}"
-                echo "SPACK_INSTALL_PATH: ${SPACK_INSTALL_PATH}"
-                echo "SPACK_RELEASE: ${SPACK_RELEASE}"
-                echo "SPACK_SDPLOY_INSTALL_PATH: ${SPACK_SDPLOY_INSTALL_PATH}"
-            }
-        }
-
-        stage('Install Python Environment') {
-            steps {
-                sh '${JENKINS}/update_production_configuration.sh'
-            }
-        }
-
-        stage('Install Spack') {  
-            steps {
-                sh '${JENKINS}/install_spack.sh'
-            }
-        }
-
-        stage('Install Spack extensions') {
-            steps {
-                sh '${JENKINS}/install_spack_sdploy.sh'
-            }
-        }
-
-        stage('Install External Repos') {
-            steps {
-                sh '${JENKINS}/clone_external_repos.sh'
-            }
-        }
-
-        stage('Initialize Spack environments') {
-            steps {
-                script {
-                    parallel(do_init_environments())
-                }
-            }
-        }
-
-        stage('Install compilers') {
-            steps {
-                script {
-                    parallel(do_install_compilers())
-                }
-            }
-        }
-
-       stage('Concretize') {
-           steps {
-               script {
-                   parallel(do_concretize())
-               }
-           }
-       }
-
-       stage('Populate mirror') {
-           steps {
-               sh '${JENKINS}/add_mirror.sh'
-           }
-       }
-
-       stage('Deploy software') { 
-           steps {
-               script {
-                  parallel(do_deploy())
-               }
-           }
-       }
+//        }
+//
+//        stage('Install Python Environment') {
+//            steps {
+//                sh '${JENKINS}/update_production_configuration.sh'
+//            }
+//        }
+//
+//        stage('Install Spack') {  
+//            steps {
+//                sh '${JENKINS}/install_spack.sh'
+//            }
+//        }
+//
+//        stage('Install Spack extensions') {
+//            steps {
+//                sh '${JENKINS}/install_spack_sdploy.sh'
+//            }
+//        }
+//
+//        stage('Install External Repos') {
+//            steps {
+//                sh '${JENKINS}/clone_external_repos.sh'
+//            }
+//        }
+//
+//        stage('Initialize Spack environments') {
+//            steps {
+//                script {
+//                    parallel(do_init_environments())
+//                }
+//            }
+//        }
+//
+//        stage('Install compilers') {
+//            steps {
+//                script {
+//                    parallel(do_install_compilers())
+//                }
+//            }
+//        }
+//
+//       stage('Concretize') {
+//           steps {
+//               script {
+//                   parallel(do_concretize())
+//               }
+//           }
+//       }
+//
+//       stage('Populate mirror') {
+//           steps {
+//               sh '${JENKINS}/add_mirror.sh'
+//           }
+//       }
+//
+//       stage('Deploy software') { 
+//           steps {
+//               script {
+//                  parallel(do_deploy())
+//               }
+//           }
+//       }
 
 //      stage('Activate packages') {
 //           steps {
