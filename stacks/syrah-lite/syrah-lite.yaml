@@ -82,7 +82,9 @@ serial_packages:
     - ffmpeg
     - fftw +openmp ~mpi
     - gsl
-    - hdf5 ~mpi +szip +hl +fortran +cxx
+    - hdf5:
+        default:
+          variants: +cxx +fortran +hl +ipo +shared +szip +tools
     - hisat2
     - htslib
     - intel-tbb
@@ -104,7 +106,7 @@ serial_packages:
     #          - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
     - perl:
         default: { version: 5.32.0 }
-    - netcdf-c ~mpi ^hdf5 ~ mpi +szip +hl +fortran +cxx
+    - netcdf-c ~mpi ^hdf5 ~mpi +szip +hl +fortran +cxx
     - netcdf-fortran ^netcdf-c ~mpi ^hdf5 ~mpi +szip +hl +fortran +cxx
     - nfft ^fftw ~mpi
     - openssl:
@@ -149,10 +151,10 @@ serial_packages_gcc_stable:
     # This is already specified in the PE section
     # - openblas threads=openmp
     # This is already specified in the PE section
-    # - python:
-    #     default:
-    #       version: <python3>
-    #       variants: +tkinter +optimizations ~debug
+    - python:
+        default:
+          version: <python3>
+          variants: +tkinter +optimizations ~debug
     - rdma-core:
         default:
           variants: +ipo
@@ -446,8 +448,7 @@ serial_packages_python:
     - mercurial
     - ninja
     - prinseq-lite
-    # - py-cutadapt
-    - py-h5py ^hdf5 ~mpi:
+    - py-h5py ^hdf5:
         modules:
           autoload: direct
     - py-pybind11
@@ -466,7 +467,9 @@ serial_packages_python_blas:
   packages:
     - boost:
         variants: ~mpi
-        default: { variants: cxxstd=14 +icu +python +numpy }
+        default: { variants: +atomic +chrono +container +date_time +exception +filesystem +graph +icu +iostreams +locale +log +math
+                             +multithread +numpy +program_options +python +random +regex +serialization +shared +signals +system
+                             +test +thread +timer +wave }
     - iq-tree +ipo@1.6.12
     - iq-tree +ipo@2.0.6
     - py-biopython
