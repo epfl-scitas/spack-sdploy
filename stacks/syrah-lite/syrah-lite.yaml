@@ -1,10 +1,10 @@
 # ------------------------------------------------------------------------------
 # PROGRAMMING ENVIRONMENT SECTION (PE)
 #
-# The PE section follows the syntax: <pe_name>_<stack_name>_<package_name>.
-# for example: intel_stable_compiler. There is a parent child schema that must
-# be respected. The metadata key is ignored for this purpose. The core PE only
-# has one information and does not follow the same schema. Any key under the
+# The PE section follows the syntax: <pe_name>_<stack_name>_<package_name>. for
+# example: intel_stable_compiler. There is a parent child schema that must be
+# respected. The metadata key is ignored for this purpose. The core PE only has
+# one information and does not follow the same schema. Any key under the
 # <package_name> will be seen as a filter or it will be ignored. In the future
 # we may need to introduce a stack key and a dependencies key for the case where
 # we want to compile the compiler or stack libraries with GPU support. For now,
@@ -82,9 +82,11 @@ serial_packages:
     - ffmpeg
     - fftw +openmp ~mpi
     - gsl
+    # zrxtwqu [this spec will enable] +mpi
+    # Now added ~mpi
     - hdf5:
         default:
-          variants: +cxx +fortran +hl +ipo +shared +szip +tools
+          variants: ~mpi +cxx +fortran +hl +ipo +shared +szip +tools
     - hisat2
     - htslib
     - intel-tbb
@@ -106,7 +108,9 @@ serial_packages:
     #          - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
     - perl:
         default: { version: 5.32.0 }
+    # ^hdf5@1.12.2 xkqh54e
     - netcdf-c ~mpi ^hdf5 ~mpi +szip +hl +fortran +cxx
+    # ^hdf5@1.12.2 xkqh54e
     - netcdf-fortran ^netcdf-c ~mpi ^hdf5 ~mpi +szip +hl +fortran +cxx
     - nfft ^fftw ~mpi
     - openssl:
@@ -245,6 +249,8 @@ serial_packages_blas:
     - blas
   packages:
     - arpack-ng ~mpi
+    # bzsotdv ^hdf5@1.10.7 +cxx+fortran+hl+ipo~java~mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo patches=2a1e311 arch=linux-rhel8-haswell
+    # +med ^hdf5@1.10.7
     - gmsh:
         variants: |
           ~mpi +hdf5 +cgns +eigen ~opencascade +openmp ~fltk
@@ -254,6 +260,7 @@ serial_packages_blas:
           - hdf5 ~mpi
           - med ~mpi
           - mmg
+    # xkqh54e
     - ncview ^netcdf-c~mpi ^hdf5 ~mpi
     - superlu
 
@@ -305,8 +312,11 @@ mpi_packages:
     - fftw:
         variants: +mpi +openmp
         default: { variants: +mpi ~openmp }
-    - hdf5 +mpi +szip +hl +fortran +cxx
+    # mq6tytu hdf5@1.12.2%gcc@11.3.0+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo arch=linux-rhel8-haswell
+    - hdf5 +mpi +szip +hl +fortran +cx
+    # mq6tytu hdf5+mpi
     - netcdf-c +mpi ^hdf5 +mpi +szip +hl +fortran +cxx
+    # mq6tytu hdf5+mpi
     - netcdf-fortran ^hdf5 +mpi +szip +hl +fortran +cxx
     - openfoam-org +metis ^scotch+mpi
     - parmetis:
@@ -328,8 +338,11 @@ mpi_blas_packages_gcc_stable:
     - mpi
     - blas
   packages:
+    # mq6tytu hdf5+mpi
     - abinit +openmp +mpi +scalapack +wannier90
-    - elmerfem +mumps +openmp +hypre
+    # bkfqomb hdf5@1.12.2%gcc@11.3.0+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo arch=linux-rhel8-haswell
+    # mq6tytu hdf5@1.12.2%gcc@11.3.0+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo arch=linux-rhel8-haswell
+    - elmerfem +mumps +openmp +hypre ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo
     - gromacs+mpi:
         variants:
           gpu:
@@ -728,7 +741,7 @@ mpi_blas_python_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - netcdf-c+mpi
-    - openfoam +metis ^boost +mpi
+    - openfoam +metis ^boost +mpi ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo
     - paraview +shared +python3 +hdf5:
         variants:
           gpu:
