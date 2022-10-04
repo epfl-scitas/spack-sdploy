@@ -313,7 +313,7 @@ mpi_packages:
         variants: +mpi +openmp
         default: { variants: +mpi ~openmp }
     # mq6tytu hdf5@1.12.2%gcc@11.3.0+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo arch=linux-rhel8-haswell
-    - hdf5 +mpi +szip +hl +fortran +cx
+    - hdf5 +mpi +szip +hl +fortran +cxx
     # mq6tytu hdf5+mpi
     - netcdf-c +mpi ^hdf5 +mpi +szip +hl +fortran +cxx
     # mq6tytu hdf5+mpi
