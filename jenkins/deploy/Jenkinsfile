@@ -124,19 +124,19 @@ pipeline {
            }
        }
 
-       stage('Populate mirror') {
-           steps {
-               sh '${JENKINS}/add_mirror.sh'
-           }
-       }
-
-       stage('Deploy software') { 
-           steps {
-               script {
-                  parallel(do_deploy())
-               }
-           }
-       }
+//       stage('Populate mirror') {
+//           steps {
+//               sh '${JENKINS}/add_mirror.sh'
+//           }
+//       }
+//
+//       stage('Deploy software') { 
+//           steps {
+//               script {
+//                  parallel(do_deploy())
+//               }
+//           }
+//       }
 
 //      stage('Activate packages') {
 //           steps {
