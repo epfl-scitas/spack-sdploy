@@ -49,16 +49,16 @@ pipeline {
     // A variable defined in a stage is bound to that stage.
     stages {
 
-//        stage('Do a fresh restart') {
-//            steps {
-//                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
-//                sh 'rm -rf /home/scitasbuildpr/.spack'
-//                sh 'rm -rf /home/scitasbuildpr/gcc'
-//                sh 'rm -rf /home/scitasbuildpr/gcc2'
-//                sh 'rm -rf /home/scitasbuildpr/gcc3'
-//                sh 'rm -rf /home/scitasbuildpr/gcc4'
-//            }
-//         }
+        stage('Do a fresh restart') {
+            steps {
+                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
+                sh 'rm -rf /home/scitasbuildpr/.spack'
+                sh 'rm -rf /home/scitasbuildpr/gcc'
+                sh 'rm -rf /home/scitasbuildpr/gcc2'
+                sh 'rm -rf /home/scitasbuildpr/gcc3'
+                sh 'rm -rf /home/scitasbuildpr/gcc4'
+            }
+         }
 
         stage('Print variables') {
             steps {
@@ -124,19 +124,19 @@ pipeline {
            }
        }
 
-//       stage('Populate mirror') {
-//           steps {
-//               sh '${JENKINS}/add_mirror.sh'
-//           }
-//       }
-//
-//       stage('Deploy software') { 
-//           steps {
-//               script {
-//                  parallel(do_deploy())
-//               }
-//           }
-//       }
+       stage('Populate mirror') {
+           steps {
+               sh '${JENKINS}/add_mirror.sh'
+           }
+       }
+
+       stage('Deploy software') { 
+           steps {
+               script {
+                  parallel(do_deploy())
+               }
+           }
+       }
 
 //      stage('Activate packages') {
 //           steps {
