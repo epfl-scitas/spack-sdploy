@@ -156,6 +156,7 @@ serial_packages_gcc_stable:
     # - openblas threads=openmp
     # This is already specified in the PE section
     - python:
+        variants: +tkinter +optimizations ~debug
         default:
           version: <python3>
           variants: +tkinter +optimizations ~debug
@@ -194,14 +195,14 @@ serial_packages_gpu:
     #  ~link_llvm_dylib+lld+lldb~llvm_dylib~mlir+omp_as_runtime~omp_debug~omp_tsan+polly~python~shared_libs
     #  ~split_dwarf~z3 build_type=Release patches=d85ef51,f920173 targets=none version_suffix=none arch=linux-rhel8-haswell
     #
-    # - llvm:
-    #     default:
-    #       version: 14.0.2
-    #       variants:
-    #         common: +ipo
-    #         gpu:
-    #           nvidia: +cuda cuda_arch=<cuda_arch>
-    #           none: ~cuda
+    - llvm:
+        default:
+          version: 14.0.2
+          variants:
+            common: +ipo
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch>
+              none: ~cuda
     # syntax tested: OK
     # - ucx (==> spack.yaml)
     # +knem +cma +rdmacm +threads_multiple ~cuda ~rocm ~gdrcopy +verbs (==> packages.yaml)
@@ -322,7 +323,7 @@ mpi_packages:
     - parmetis:
         default: { variants: +ipo }
     # Problems with dependent packages
-    # - phylobayesmpi
+    - phylobayesmpi
     - scotch +mpi
 
 # MPI + BLAS -------------------------------------------------------------------
@@ -342,7 +343,11 @@ mpi_blas_packages_gcc_stable:
     - abinit +openmp +mpi +scalapack +wannier90
     # bkfqomb hdf5@1.12.2%gcc@11.3.0+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo arch=linux-rhel8-haswell
     # mq6tytu hdf5@1.12.2%gcc@11.3.0+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo arch=linux-rhel8-haswell
-    - elmerfem +mumps +openmp +hypre ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo
+    - elmerfem +mumps +openmp +hypre:
+        variants:
+          dependencies:
+            - hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo
+            - netcdf-fortran@4.5.4%gcc@11.3.0~doc+pic+shared arch=linux-rhel8-haswell
     - gromacs+mpi:
         variants:
           dependencies:
@@ -444,7 +449,7 @@ serial_packages_python_blas_activated:
     - py-numpy
     - py-opt-einsum
     - py-pandas
-    # - py-scipy
+    - py-scipy
     - py-xarray
 
 # PYTHON -----------------------------------------------------------------------
@@ -488,11 +493,11 @@ serial_packages_python_blas:
     - iq-tree +ipo@2.0.6
     - py-biopython
     - py-deeptools
-    # - py-keras ^py-h5py ^hdf5 ~mpi
+    - py-keras ^py-h5py ^hdf5 ~mpi
     - py-macs2
     - py-pybigwig
     - py-scikit-learn
-    # - py-statsmodels
+    - py-statsmodels
 
 # PYTHON BLAS GPU --------------------------------------------------------------
 #
@@ -509,15 +514,19 @@ serial_packages_python_blas_gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
 
-# serial_packages_python2_deprecated:
-#   metadata: { section: packages }
-#   pe: [gcc_stable]
-#   dependencies: [python2]
-#   packages:
-#     - jellyfish
-#     - scons
-#     - py-pip
-#     - py-virtualenv
+# PYTHON 2 ---------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_python2_deprecated:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [python2]
+  packages:
+    - jellyfish
+    - scons
+    - py-pip
+    - py-virtualenv
 
 # PYTHON - GCC ONLY ------------------------------------------------------------
 #
@@ -529,18 +538,17 @@ serial_packages_python_gcc_stable:
   dependencies: [python3]
   packages:
     # needs boost@1.54 (https://backwardincompatible.com/post/169360794395/compiling-illumina-bcl2fastq-220-on-ubuntu-with)
-    # - bcl2fastq2
-    # - blast-plus@2.9.0
+    - bcl2fastq2
+    - blast-plus@2.9.0
     - gdb +tui +source-highlight +lto +xz ^boost@1.79.0+atomic+chrono~clanglibcpp+container~context~contract~coroutine+date_time~debug+exception~fiber+filesystem+graph~graph_parallel~icu+iostreams~json+locale+log+math~mpi+multithreaded~nowide+numpy~pic+program_options+python+random+regex+serialization+shared+signals~singlethreaded~stacktrace+system~taggedlayout+test+thread+timer~type_erasure~versionedlayout+wave cxxstd=98 patches=a440f96,b8569d7 visibility=hidden
     - libgd
     - mummer
     #  Skipping build of polymake since perl-term-readline-gnu failed
-    # - polymake@3.5
+    - polymake@3.5
     - openbabel +python
-    # - py-torchvision
+    - py-torchvision
     - r +external-lapack
     - gatk
-    # - py-spython gpu only
     - spades
 
 # PYTHON + GPU (GCC ONLY) ------------------------------------------------------
@@ -689,7 +697,7 @@ mpi_packages_gcc_stable:
   pe: [gcc_stable]
   dependencies: [mpi]
   packages:
-    # - cpmd~openmp ^fftw+mpi~openmp
+    - cpmd~openmp ^fftw+mpi~openmp
     - relion ~mklfft:
         variants:
           gpu:
