@@ -697,7 +697,8 @@ mpi_packages_gcc_stable:
   pe: [gcc_stable]
   dependencies: [mpi]
   packages:
-    - cpmd~openmp ^fftw+mpi~openmp
+    # cpmd fails to fetch
+    # - cpmd~openmp ^fftw+mpi~openmp
     - relion ~mklfft:
         variants:
           gpu:
