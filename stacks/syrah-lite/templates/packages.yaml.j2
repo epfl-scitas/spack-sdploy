@@ -9,11 +9,8 @@ packages:
 #                                                          #
 #                                                PROVIDERS #
 #                                                          #
-#     providers:                                           #
-#       blas: [openblas, intel-mkl]                        #
-#       fftw-api: [fftw]                                   #
-#       uuid: [util-linux-uuid]                            #
-#       glu: [mesa-glu]                                    #
+    providers:
+      mpi: [mvapich2]
 # {% for lib, provider in data['providers'].items() %}     #
 #       {{ lib }}: {{ provider }}                          # 
 # {% endfor %}                                             # 
