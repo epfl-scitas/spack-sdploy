@@ -64,6 +64,17 @@ core_packages:
     - tmux
     - trimmomatic
 
+# CORE (STABLE COMPILER) -------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+core_packages_stable:
+  metadata: {section: packages }
+  pe: [gcc_stable]
+  packages:
+    - flex:
+        default: { version: 2.6.4 }
+
 # ------------------------------------------------------------------------------
 #
 #
@@ -547,7 +558,8 @@ serial_packages_python_gcc_stable:
     - polymake@3.5
     - openbabel +python
     - py-torchvision
-    - r +external-lapack
+    - r:
+        default: {variants: +external-lapack}
     - gatk
     - spades
 
