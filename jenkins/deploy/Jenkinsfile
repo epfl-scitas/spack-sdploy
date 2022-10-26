@@ -1,5 +1,3 @@
-def STACK = 'syrah-lite'
-
 pipeline {
     agent {
         label 'ph02-syrah-rhel8'
@@ -14,10 +12,7 @@ pipeline {
     // A variable defined in environment block is available through all stages
     // and its value cannot be changed later.
     environment {
-
-        // <!> can't figure out where the ${STACK} variable comes from <!>
-        // The following statement does nothing
-        STACK = "syrah-lite-l2"
+        STACK = "syrah-lite-l1"
 
         // Variables read from commons.yaml using cat, grep and cut.
         WORK_DIR=sh(returnStdout:true,
