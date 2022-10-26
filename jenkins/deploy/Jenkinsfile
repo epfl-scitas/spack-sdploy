@@ -62,6 +62,8 @@ pipeline {
 
         stage('Print variables') {
             steps {
+	    	env
+
                 echo "The following values were read from common.yaml"
                 echo "WORK_DIR: $WORK_DIR"
                 echo "STACK_RELEASE: $STACK_RELEASE"
