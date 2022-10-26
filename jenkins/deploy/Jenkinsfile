@@ -62,7 +62,7 @@ pipeline {
 
         stage('Print variables') {
             steps {
-	    	env
+                env
 
                 echo "The following values were read from common.yaml"
                 echo "WORK_DIR: $WORK_DIR"
