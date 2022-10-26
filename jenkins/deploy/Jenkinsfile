@@ -49,13 +49,13 @@ pipeline {
     // A variable defined in a stage is bound to that stage.
     stages {
 
-        stage('Do a fresh restart') {
-            steps {
-                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
-                sh 'rm -rf /home/scitasbuildpr/.spack'
-                sh 'rm -rf /home/scitasbuildpr/gcc'
-            }
-         }
+//        stage('Do a fresh restart') {
+//            steps {
+//                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
+//                sh 'rm -rf /home/scitasbuildpr/.spack'
+//                sh 'rm -rf /home/scitasbuildpr/gcc'
+//            }
+//         }
 
         stage('Print variables') {
             steps {
