@@ -12,7 +12,7 @@ pipeline {
     // A variable defined in environment block is available through all stages
     // and its value cannot be changed later.
     environment {
-        STACK = "syrah-lite-l1"
+        STACK = "syrah-lite"
 
         // Variables read from commons.yaml using cat, grep and cut.
         WORK_DIR=sh(returnStdout:true,
