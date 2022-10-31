@@ -703,10 +703,6 @@ mpi_lapack_python_packages:
         dependencies:
           - py-torch+mpi~cuda
           - mvapich2 process_managers=slurm
-        gpu:
-          nvidia: +cuda cuda_arch=<cuda_arch> +magma
-          none: ~cuda ~cudnn ~nccl
-          rocm: +magma +rocm
 
 # MPI (GCC ONLY) ---------------------------------------------------------------
 #
