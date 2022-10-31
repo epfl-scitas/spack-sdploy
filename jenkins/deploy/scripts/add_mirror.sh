@@ -13,5 +13,5 @@ for environment in $(spack env list); do
     # Setting SPACK_SYSTEM_CONFIG_PATH here bacause the job jenkins running this script
     # is not environment aware and therefor it fails doing so in activate_spack.sh.
     export SPACK_SYSTEM_CONFIG_PATH=$(spack location --env ${environment} || true)
-    spack --env ${environment} mirror create -n -D -d ${SPACK_MIRROR} -a
+    spack --env ${environment} mirror -n create -D -d ${SPACK_MIRROR} -a
 done
