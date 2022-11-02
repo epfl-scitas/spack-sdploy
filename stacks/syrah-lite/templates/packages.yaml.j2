@@ -17,6 +17,8 @@ packages:
 #                                                          #
 #                                         DEFAULT PACKAGES #
 #                                                          #
+  mesa:
+    variants: ~llvm
 {% for pkg, definition in data['defaults'].items() %}
 {% if pkg not in data['externals'] %}
   {{ pkg }}:
