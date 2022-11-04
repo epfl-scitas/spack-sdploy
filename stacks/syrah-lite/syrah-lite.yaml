@@ -210,7 +210,7 @@ serial_packages_gpu:
         default:
           version: 14.0.2
           variants:
-            common: +ipo
+            common: +ipo targets=x86
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
