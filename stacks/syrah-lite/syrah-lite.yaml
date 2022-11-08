@@ -740,14 +740,14 @@ mpi_blas_python_packages_gcc_stable:
     #         none: ~cuda
     #     dependencies:
     #       - boost +mpi
-    - cp2k +mpi ~plumed:
+    - cp2k +mpi ~plumed smm=blas:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
         dependencies:
           - boost +mpi
-    - cp2k +mpi +plumed:
+    - cp2k +mpi +plumed smm=blas:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
