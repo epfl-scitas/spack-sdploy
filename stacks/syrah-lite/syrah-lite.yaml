@@ -208,7 +208,7 @@ serial_packages_gpu:
     #
     - llvm:
         default:
-          version: 14.0.2
+          version: 12.0.1
           variants:
             common: +ipo
             gpu:
