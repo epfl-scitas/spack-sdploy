@@ -5,5 +5,5 @@ platform:
   tokens:
     core_compiler: gcc@8.5.0
     python3: 3.10.4
-    jdk_version: 1.8.0.342.b07-2
-    # cuda_arch: 70
+    target: icelake
+    lmod_root: jed

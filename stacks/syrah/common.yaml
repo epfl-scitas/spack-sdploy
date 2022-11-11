@@ -2,7 +2,7 @@ spack_release: v0.18.1
 stack_release: syrah
 
 # Path definitions
-work_directory: /work/stack
+work_directory: /scratch/syrah/stack
 python_venv: py3-venv
 spack_external: external
 jenkins: jenkins/deploy/scripts
@@ -10,11 +10,14 @@ extensions: spack-config
 spack: spack
 spack_sdploy: spack-sdploy
 stack_version: v1
+lmod_roots: share/spack/lmod
+tcl_roots: share/spack/modules
 
 environments: # platforms
-  - ph02-avx
-  - ph02-avx2
+  - jed
 
+# The mirrors paths are common to all stacks.
+# They are created under `work_directory`.
 mirrors:
   local: spack-mirror
   restricted: spack-mirror-restricted
@@ -28,3 +31,8 @@ extra_repos:
     repo: http://github.com/epfl-scitas/scitas-spack-packages.git
     path: scitas-spack-packages/
     tag: releases/syrah
+
+concretizer:
+  targets:
+    granularity: microarchitectures
+    host_compatible: False
