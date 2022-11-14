@@ -80,7 +80,7 @@ echo ' /        \  |    |    |        \ |    |      |   |'
 echo '/_______  /  |____|   /_______  / |____|      |___|'
 echo '        \/                    \/                   '
 echo
-echo > update_production_configuration
+echo '> update_production_configuration.sh'
 echo
 ${_PREFIX}/update_production_configuration.sh | tee ${LOGS}/01_update_production_configuration.${execution_timestamp}.log
 
@@ -114,7 +114,7 @@ echo ' /        \  |    |    |        \ |    |     /    ^   /'
 echo '/_______  /  |____|   /_______  / |____|     \____   | '
 echo '        \/                    \/                  |__| '
 echo
-echo > clone_external_repos.sh
+echo '> clone_external_repos.sh'
 echo
 ${_PREFIX}/clone_external_repos.sh | tee ${LOGS}/04_clone_external_repos.${execution_timestamp}.log
 
