@@ -13,6 +13,7 @@ config:
   extensions:
   - ${SPACK_SDPLOY_INSTALL_PATH}
   db_lock_timeout: 10
+  build_jobs: 32
 EOF
 
 echo "spack config blame config"
