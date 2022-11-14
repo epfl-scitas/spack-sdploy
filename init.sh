@@ -4,8 +4,8 @@
 #
 #
 # CONFIGURATION
-export STACK=mkl
-export ENVIRONMENT=avx2
+export STACK=syrah
+export ENVIRONMENT=jed
 
 # Variables needed to run this script
 _BASE_DIR="."
