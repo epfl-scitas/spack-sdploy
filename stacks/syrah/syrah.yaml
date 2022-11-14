@@ -21,8 +21,8 @@ gcc:
   stable:
     compiler: gcc@11.3.0
     mpi:
-      infiniband: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
-      ethernet: mvapich2@2.3.7 fabrics=mrail process_managers=slurm threads=multiple
+      infiniband: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm
+      ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm
     blas: openblas@0.3.20 threads=none +locking
     blas_parallel: openblas@0.3.20 threads=openmp +locking
     python3: python@<python3> +tkinter +optimizations ~debug
@@ -93,8 +93,7 @@ serial_packages:
     - ffmpeg
     - fftw +openmp ~mpi
     - gsl
-    # zrxtwqu [this spec will enable] +mpi
-    # Now added ~mpi
+    - gzip
     - hdf5:
         default:
           variants: ~mpi +cxx +fortran +hl +ipo +shared +szip +tools
@@ -119,9 +118,7 @@ serial_packages:
     #          - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
     - perl:
         default: { version: 5.32.0 }
-    # ^hdf5@1.12.2 xkqh54e
     - netcdf-c ~mpi ^hdf5 ~mpi +szip +hl +fortran +cxx
-    # ^hdf5@1.12.2 xkqh54e
     - netcdf-fortran ^netcdf-c ~mpi ^hdf5 ~mpi +szip +hl +fortran +cxx
     - nfft ^fftw ~mpi
     - openssl:
@@ -131,15 +128,35 @@ serial_packages:
         externals:
           - spec: openssl@1.1.1k
             prefix: /usr
+    - rdma-core:
+        default:
+          variants: +ipo
+	  buildable: False
+        externals:
+          - spec: rdma-core@40.1
+            prefix: /usr
     - scotch:
         variants: ~mpi
         default: { variants: +esmumps ~metis }
+    - slurm:
+        default:
+          buildable: false
+        externals:
+          - spec: slurm@22-05-2
+            prefix: /usr
     - stacks
     - star
     - subread
     - tcl
     - valgrind ~boost ~mpi
     - voropp
+    - xpmem:
+        default:
+          buildable: false
+        externals:
+          - spec: xpmem +kernel-module@2.6.3
+            paths: /usr
+    - zlib
 
 # GCC ONLY ---------------------------------------------------------------------
 #
@@ -150,7 +167,7 @@ serial_packages_gcc_stable:
   pe: [gcc_stable]
   packages:
     # The installation of intel-mkl create an empty directory in the not haswell
-    # environment, but a question remains: does loading the package from the
+    # environment, but one question remains : does loading the package from the
     # ivybridge environment will invoke the module from haswell ?
     - intel-mkl
     - ffmpeg +libx264
@@ -164,16 +181,12 @@ serial_packages_gcc_stable:
     # idea: make a new spack package with this version of npm
     # - npm
     # This is already specified in the PE section
-    # - openblas threads=openmp
-    # This is already specified in the PE section
+    # Here we are just making sure it will go into packages.yaml
     - python:
         variants: +tkinter +optimizations ~debug
         default:
           version: <python3>
           variants: +tkinter +optimizations ~debug
-    - rdma-core:
-        default:
-          variants: +ipo
     - sox
 
 # GPU --------------------------------------------------------------------------
@@ -214,20 +227,10 @@ serial_packages_gpu:
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
-    # syntax tested: OK
-    # - ucx (==> spack.yaml)
-    # +knem +cma +rdmacm +threads_multiple ~cuda ~rocm ~gdrcopy +verbs (==> packages.yaml)
     - ucx:
         default:
           variants:
-            common: +knem +cma +rdmacm +threads_multiple
-            mpi:
-              infiniband: +verbs
-              ethernet: ~verbs
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch> +gdrcopy ~rocm
-              none: ~cuda ~rocm ~gdrcopy
-              amd: +rocm ~cuda
+            common: +rdmacm +rc +dc +ud +cm +cma +mlx5_dv +parameter_checking +thread_multiple +verbs
     - cudnn@8.0.3.39-11.0:
         dependencies:
           gpu:
@@ -324,16 +327,12 @@ mpi_packages:
     - fftw:
         variants: +mpi +openmp
         default: { variants: +mpi ~openmp }
-    # mq6tytu hdf5@1.12.2%gcc@11.3.0+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo arch=linux-rhel8-haswell
     - hdf5 +mpi +szip +hl +fortran +cxx
-    # mq6tytu hdf5+mpi
     - netcdf-c +mpi ^hdf5 +mpi +szip +hl +fortran +cxx
-    # mq6tytu hdf5+mpi
     - netcdf-fortran ^hdf5 +mpi +szip +hl +fortran +cxx
     - openfoam-org +metis ^scotch+mpi
     - parmetis:
         default: { variants: +ipo }
-    # Problems with dependent packages
     - phylobayesmpi
     - scotch +mpi
 
@@ -350,10 +349,7 @@ mpi_blas_packages_gcc_stable:
     - mpi
     - blas
   packages:
-    # mq6tytu hdf5+mpi
     - abinit +openmp +mpi +scalapack +wannier90
-    # bkfqomb hdf5@1.12.2%gcc@11.3.0+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo arch=linux-rhel8-haswell
-    # mq6tytu hdf5@1.12.2%gcc@11.3.0+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo arch=linux-rhel8-haswell
     - elmerfem +mumps +openmp +hypre:
         variants:
           dependencies:
@@ -554,7 +550,6 @@ serial_packages_python_gcc_stable:
     - gdb +tui +source-highlight +lto +xz ^boost@1.79.0+atomic+chrono~clanglibcpp+container~context~contract~coroutine+date_time~debug+exception~fiber+filesystem+graph~graph_parallel~icu+iostreams~json+locale+log+math~mpi+multithreaded~nowide+numpy~pic+program_options+python+random+regex+serialization+shared+signals~singlethreaded~stacktrace+system~taggedlayout+test+thread+timer~type_erasure~versionedlayout+wave cxxstd=98 patches=a440f96,b8569d7 visibility=hidden
     - libgd
     - mummer
-    #  Skipping build of polymake since perl-term-readline-gnu failed
     - polymake@3.5
     - openbabel +python
     - r:
@@ -590,37 +585,35 @@ serial_packages_python_gpu_gcc_stable:
 #
 #
 # ------------------------------------------------------------------------------
-#external_packages:
-#  metadata:
-#    section: packages
-#    cloud: False
-#  pe: [core]
-#  packages:
-#    - openjdk:
-#        default:
-#          version: <jdk_version>
-#        externals:
-#          - spec: openjdk@<jdk_version>
-#            prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.342.b07-2.el8_6.x86_64/jre
-#        modules:
-#          blacklist: True
-# - adf@2017.111
-# - ansys@19.2
-# - ansys@2022R1
-# - cfdplusplus@19.1
-# - comsol@5.6
-# - fdtd@2022-R1.1-2963
-# - gaussian@g16-C.01
-# - gurobi@9.1.0
-# - intel-vtune@2019.6.0.602217
-# - intel-advisor@2019.5.0.602216
-# - likwid@4.3.0
-# - maple@2017
-# - mathematica@13.0
-# # TODO install the latest version
-# - matlab@R2019b
-# - smr@2017.06
-# - totalview@2020.3.11
+external_packages:
+  metadata:
+    section: packages
+    cloud: False
+  pe: [core]
+  packages:
+    - openjdk:
+        default:
+          version: <jdk_version>
+        externals:
+          - spec: openjdk@<jdk_version>
+	    prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.el8_5.x86_64/jre
+        modules:
+          blacklist: True
+    - adf@2017.111
+    - ansys@19.2
+    - ansys@2022R1
+    - cfdplusplus@19.1
+    - comsol@5.6
+    - comsol@6.0
+    - fdtd@2022-R1.1-2963
+    - gaussian@g16-C.01
+    - gurobi@9.5.2
+    - likwid@4.3.0
+    - maple@2017
+    - mathematica@13.0
+    - matlab@R2019b
+    - smr@2017.06
+    - totalview@2020.3.11
 
 # MPI PYTHON --------------------------------------------------------------------
 #
@@ -634,25 +627,6 @@ mpi_python_packages:
   packages:
     - py-h5py ^hdf5 +mpi
     - py-mpi4py
-
-# MPI + PYTHON + GPU -----------------------------------------------------------
-#
-#
-# ------------------------------------------------------------------------------
-# Mooved py-torch to mpi_lapack_python_packages list
-#mpi_python_gpu_packages:
-#  metadata: { section: packages }
-#  pe: [gcc_stable]
-#  dependencies: [mpi, gpu, python3]
-#  packages:
-#    - py-torch:
-#        variants: +mpi
-#        default:
-#          variants:
-#            gpu:
-#              nvidia: +cuda cuda_arch=<cuda_arch> +magma
-#              none: ~cuda ~cudnn ~nccl
-#              rocm: +magma +rocm
 
 # MPI + BLAS + PYTHON ----------------------------------------------------------
 #
@@ -702,7 +676,6 @@ mpi_lapack_python_packages:
     - py-torchvision:
         dependencies:
           - py-torch+mpi~cuda
-          - mvapich2 process_managers=slurm
 
 # MPI (GCC ONLY) ---------------------------------------------------------------
 #

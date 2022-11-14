@@ -1,9 +1,10 @@
 platform:
   filters:
     gpu: none
-    mpi: infiniband
+    mpi: ethernet
   tokens:
     core_compiler: gcc@8.5.0
     python3: 3.10.4
     target: icelake
     lmod_root: jed
+    jdk_version: 1.8.0_332
