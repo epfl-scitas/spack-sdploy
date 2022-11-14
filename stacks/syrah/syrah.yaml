@@ -131,7 +131,7 @@ serial_packages:
     - rdma-core:
         default:
           variants: +ipo
-	  buildable: False
+          buildable: False
         externals:
           - spec: rdma-core@40.1
             prefix: /usr
