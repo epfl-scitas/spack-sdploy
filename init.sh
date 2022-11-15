@@ -82,7 +82,7 @@ echo '        \/                    \/                   '
 echo
 echo '> update_production_configuration.sh'
 echo
-${_PREFIX}/update_production_configuration.sh | tee ${LOGS}/01_update_production_configuration.${execution_timestamp}.log
+${_PREFIX}/update_production_configuration.sh 2>&1 | tee ${LOGS}/01_update_production_configuration.${execution_timestamp}.log
 
 echo '  _________________________________________  ________  '
 echo ' /   _____/\__    ___/\_   _____/\______   \ \_____  \ '
@@ -93,7 +93,7 @@ echo '        \/                    \/                     \/'
 echo
 echo '> install_spack.sh'
 echo
-${_PREFIX}/install_spack.sh | tee ${LOGS}/02_install_spack.${execution_timestamp}.log
+${_PREFIX}/install_spack.sh 2>&1 | tee ${LOGS}/02_install_spack.${execution_timestamp}.log
 
 echo '  _________________________________________  ________  '
 echo ' /   _____/\__    ___/\_   _____/\______   \ \_____  \ '
@@ -104,7 +104,7 @@ echo '        \/                    \/                    \/ '
 echo
 echo '> install_spack_sdploy.sh'
 echo
-${_PREFIX}/install_spack_sdploy.sh | tee ${LOGS}/03_install_spack_sdploy.${execution_timestamp}.log
+${_PREFIX}/install_spack_sdploy.sh 2>&1 | tee ${LOGS}/03_install_spack_sdploy.${execution_timestamp}.log
 
 
 echo '  _________________________________________     _____  '
@@ -116,7 +116,7 @@ echo '        \/                    \/                  |__| '
 echo
 echo '> clone_external_repos.sh'
 echo
-${_PREFIX}/clone_external_repos.sh | tee ${LOGS}/04_clone_external_repos.${execution_timestamp}.log
+${_PREFIX}/clone_external_repos.sh 2>&1 | tee ${LOGS}/04_clone_external_repos.${execution_timestamp}.log
 
 echo '  _________________________________________   .________'
 echo ' /   _____/\__    ___/\_   _____/\______   \  |   ____/'
@@ -127,7 +127,7 @@ echo '        \/                    \/                    \/ '
 echo
 echo '> init_environment.sh'
 echo
-${_PREFIX}/init_environment.sh | tee ${LOGS}/05_init_environment.${execution_timestamp}.log
+${_PREFIX}/init_environment.sh 2>&1 | tee ${LOGS}/05_init_environment.${execution_timestamp}.log
 
 echo '  _________________________________________    ________'
 echo ' /   _____/\__    ___/\_   _____/\______   \  /  _____/'
@@ -138,7 +138,7 @@ echo '        \/                    \/                    \/ '
 echo
 echo '> install_compilers_parallel.sh'
 echo
-${_PREFIX}/install_compilers_parallel.sh | tee ${LOGS}/06_install_compilers_parallel.${execution_timestamp}.log
+${_PREFIX}/install_compilers_parallel.sh 2>&1 | tee ${LOGS}/06_install_compilers_parallel.${execution_timestamp}.log
 
 echo '  _________________________________________  _________ '
 echo ' /   _____/\__    ___/\_   _____/\______   \ \______  \'
@@ -149,7 +149,7 @@ echo '        \/                    \/                       '
 echo
 echo '> concretize.sh'
 echo
-${_PREFIX}/concretize.sh | tee ${LOGS}/07_concretize.${execution_timestamp}.log
+${_PREFIX}/concretize.sh 2>&1 | tee ${LOGS}/07_concretize.${execution_timestamp}.log
 
 echo '  _________________________________________    ______  '
 echo ' /   _____/\__    ___/\_   _____/\______   \  /  __  \ '
@@ -160,7 +160,7 @@ echo '        \/                    \/                    \/ '
 echo
 echo '> add_mirror.sh'
 echo
-${_PREFIX}/add_mirror.sh | tee ${LOGS}/08_add_mirror.${execution_timestamp}.log
+${_PREFIX}/add_mirror.sh 2>&1 | tee ${LOGS}/08_add_mirror.${execution_timestamp}.log
 
 echo '  _________________________________________   ________ '
 echo ' /   _____/\__    ___/\_   _____/\______   \ /   __   \'
@@ -171,4 +171,4 @@ echo '        \/                    \/                       '
 echo
 echo '> install_stack.sh'
 echo
-${_PREFIX}/install_stack.sh | tee ${LOGS}/09_install_stack.${execution_timestamp}.log
+${_PREFIX}/install_stack.sh 2>&1 | tee ${LOGS}/09_install_stack.${execution_timestamp}.log
