@@ -2,7 +2,7 @@ spack_release: v0.18.1
 stack_release: syrah
 
 # Path definitions
-work_directory: /scratch/syrah/stack
+work_directory: /scratch/syrah/spack
 python_venv: py3-venv
 spack_external: external
 jenkins: jenkins/deploy/scripts
