@@ -6,3 +6,5 @@ tests/
 yareed/YAML_Reader.egg-info/
 compilers.list
 mirrors.list
+install_compilers.xml
+install_stack.xml
