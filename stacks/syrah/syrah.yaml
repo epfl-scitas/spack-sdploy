@@ -105,6 +105,8 @@ serial_packages:
         default:
           variants: fabrics=tcp,udp,sockets,mlx,verbs
     - libxc
+    - libxml2:
+        default: { version: 2.7.8 }
     - mafft
     - metis:
         default: { variants: +real64 }
@@ -230,7 +232,7 @@ serial_packages_gpu:
     - ucx:
         default:
           variants:
-            common: +rdmacm +rc +dc +ud +cm +cma +mlx5_dv +parameter_checking +thread_multiple +verbs
+            common: +rdmacm +rc +dc +ud +cm +cma +verbs +mlx5_dv +parameter_checking +thread_multiple
     - cudnn@8.0.3.39-11.0:
         dependencies:
           gpu:
