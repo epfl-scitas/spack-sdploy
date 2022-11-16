@@ -363,8 +363,8 @@ mpi_blas_packages_gcc_stable:
             nvidia: +cuda
             none: ~cuda
         dependencies:
-	    - fftw~mpi+openmp
-	    - openblas
+          - fftw~mpi+openmp
+          - openblas
     # These dependencies (of mumps) will not go into packages.yaml
     - mumps:
         default: { variants: +mpi +parmetis +metis +scotch +ptscotch }
@@ -737,8 +737,8 @@ mpi_blas_python_packages_gcc_stable:
             nvidia: +cuda
             none: ~cuda
         dependencies:
-	    - fftw~mpi+openmp
-	    - openblas
+          - fftw~mpi+openmp
+          - openblas
     - lammps@20220107:
         variants:
           common: |
