@@ -266,7 +266,6 @@ serial_packages_blas:
     - blas
   packages:
     - arpack-ng ~mpi
-    # bzsotdv ^hdf5@1.10.7 +cxx+fortran+hl+ipo~java~mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo patches=2a1e311 arch=linux-rhel8-haswell
     # +med ^hdf5@1.10.7
     - gmsh:
         variants: |
@@ -277,8 +276,7 @@ serial_packages_blas:
           - hdf5 ~mpi
           - med ~mpi
           - mmg
-    # xkqh54e
-    - ncview ^netcdf-c~mpi ^hdf5~mpi ^boost@1.79.0+atomic+chrono~clanglibcpp+container~context~contract~coroutine+date_time~debug+exception~fiber+filesystem+graph~graph_parallel~icu+iostreams~json+locale+log+math~mpi+multithreaded~nowide+numpy~pic+program_options+python+random+regex+serialization+shared+signals~singlethreaded~stacktrace+system~taggedlayout+test+thread+timer~type_erasure~versionedlayout+wave cxxstd=98 patches=a440f96,b8569d7 visibility=hidden
+    - ncview ^hdf5~mpi ^netcdf-c~mpi~parallel-netcdf
     - superlu
 
 # BLAS + GPU -------------------------------------------------------------------
@@ -357,13 +355,16 @@ mpi_blas_packages_gcc_stable:
           dependencies:
             - hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo
             - netcdf-fortran@4.5.4%gcc@11.3.0~doc+pic+shared arch=linux-rhel8-haswell
-    - gromacs+mpi:
+    - gromacs:
+        version: 2021.4
         variants:
-          dependencies:
-            - boost@1.79.0+atomic+chrono~clanglibcpp+container~context~contract~coroutine+date_time~debug+exception~fiber+filesystem+graph~graph_parallel~icu+iostreams~json+locale+log+math+mpi+multithreaded~nowide+numpy~pic+program_options+python+random+regex+serialization+shared+signals~singlethreaded~stacktrace+system~taggedlayout+test+thread+timer~type_erasure~versionedlayout+wave cxxstd=98 patches=a440f96,b8569d7 visibility=hidden
+          common: +mpi+blas+lapack
           gpu:
             nvidia: +cuda
             none: ~cuda
+        dependencies:
+	    - fftw~mpi+openmp
+	    - openblas
     # These dependencies (of mumps) will not go into packages.yaml
     - mumps:
         default: { variants: +mpi +parmetis +metis +scotch +ptscotch }
@@ -730,11 +731,14 @@ mpi_blas_python_packages_gcc_stable:
         dependencies:
           - boost +mpi
     - fenics +parmetis +hdf5 +scotch +suite-sparse ~vtk ~trilinos ^boost +mpi
-    - gromacs@2019.4+mpi+plumed:
+    - gromacs@2021.4+mpi+plumed+blas+lapack:
         variants:
           gpu:
             nvidia: +cuda
             none: ~cuda
+        dependencies:
+	    - fftw~mpi+openmp
+	    - openblas
     - lammps@20220107:
         variants:
           common: |
