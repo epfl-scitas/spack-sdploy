@@ -151,6 +151,11 @@ echo '> concretize.sh'
 echo
 ${_PREFIX}/concretize.sh 2>&1 | tee ${LOGS}/07_concretize.${execution_timestamp}.log
 
+if [[ $1 = "concretize" ]]; then
+    echo "program stopped at concretization step"
+    return
+fi
+
 echo '  _________________________________________    ______  '
 echo ' /   _____/\__    ___/\_   _____/\______   \  /  __  \ '
 echo ' \_____  \   |    |    |    __)_  |     ___/  >      < '
