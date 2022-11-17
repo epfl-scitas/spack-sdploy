@@ -761,7 +761,7 @@ mpi_blas_python_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - boost +mpi+icu+python+numpy cxxstd=14
-          - fftw+mpi+openmp	  
+          - fftw+mpi+openmp
     - fenics +parmetis +hdf5 +scotch +suite-sparse ~vtk ~trilinos ^boost+mpi+icu+python+numpy cxxstd=14
     - gromacs@2021.4+mpi+plumed:
         variants:
