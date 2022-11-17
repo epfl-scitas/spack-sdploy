@@ -266,6 +266,7 @@ serial_packages_blas:
     - blas
   packages:
     - arpack-ng ~mpi
+    # bzsotdv ^hdf5@1.10.7 +cxx+fortran+hl+ipo~java~mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo patches=2a1e311 arch=linux-rhel8-haswell
     # +med ^hdf5@1.10.7
     - gmsh:
         variants: |
@@ -276,7 +277,8 @@ serial_packages_blas:
           - hdf5 ~mpi
           - med ~mpi
           - mmg
-    - ncview ^hdf5~mpi ^netcdf-c~mpi~parallel-netcdf
+    # xkqh54e
+    - ncview ^netcdf-c~mpi ^hdf5~mpi ^boost@1.79.0+atomic+chrono~clanglibcpp+container~context~contract~coroutine+date_time~debug+exception~fiber+filesystem+graph~graph_parallel~icu+iostreams~json+locale+log+math~mpi+multithreaded~nowide+numpy~pic+program_options+python+random+regex+serialization+shared+signals~singlethreaded~stacktrace+system~taggedlayout+test+thread+timer~type_erasure~versionedlayout+wave cxxstd=98 patches=a440f96,b8569d7 visibility=hidden
     - superlu
 
 # BLAS + GPU -------------------------------------------------------------------
@@ -355,6 +357,13 @@ mpi_blas_packages_gcc_stable:
           dependencies:
             - hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo
             - netcdf-fortran@4.5.4%gcc@11.3.0~doc+pic+shared arch=linux-rhel8-haswell
+    - gromacs@2021.4+mpi:
+        variants:
+          dependencies:
+            - fftw~mpi+openmp
+          gpu:
+            nvidia: +cuda
+            none: ~cuda
     # These dependencies (of mumps) will not go into packages.yaml
     - mumps:
         default: { variants: +mpi +parmetis +metis +scotch +ptscotch }
@@ -364,13 +373,6 @@ mpi_blas_packages_gcc_stable:
     - netlib-scalapack:
         default: { variants: +ipo }
     - yambo+mpi io=iotk,etsf-io
-    - gromacs@2021.4+mpi:
-        variants:
-          gpu:
-            nvidia: +cuda
-            none: ~cuda
-        dependencies:
-          - fftw~mpi+openmp
 
 # MPI + BLAS ------------------------------------------------------------------
 #
