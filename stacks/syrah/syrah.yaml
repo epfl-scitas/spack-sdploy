@@ -148,9 +148,13 @@ serial_packages:
     #          - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
     - perl:
         default: { version: 5.32.0 }
-    - netcdf-c ~mpi ^hdf5 ~mpi +szip +hl +fortran +cxx
-    - netcdf-fortran ^netcdf-c ~mpi ^hdf5 ~mpi +szip +hl +fortran +cxx
-    - nfft ^fftw ~mpi
+    - ncview:
+        dependencies:
+          - hdf5 ~mpi+szip+hl+fortran+cxx
+          - netcdf-c ~mpi~parallel-netcdf
+    - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
+    - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
+    - nfft ^fftw~mpi+openmp
     - openssl:
         default:
           version: 1.1.1k
@@ -304,10 +308,6 @@ serial_packages_blas:
           - hdf5 ~mpi
           - med ~mpi
           - mmg
-    - ncview:
-        dependencies:
-          - netcdf-c~mpi~parallel-netcdf
-          - hdf5~mpi
     - superlu
 
 # BLAS + GPU -------------------------------------------------------------------
@@ -401,7 +401,7 @@ mpi_blas_packages_gcc_stable:
           - netlib-scalapack
     - netlib-scalapack:
         default: { variants: +ipo }
-    - yambo+mpi io=iotk,etsf-io
+    - yambo+mpi io=iotk,etsf-io ^fftw+mpi+openmp
 
 # MPI + BLAS ------------------------------------------------------------------
 #
@@ -413,8 +413,8 @@ mpi_lapack_packages:
   dependencies: [mpi, blas]
   packages:
     - gmsh +openmp +hdf5 ~fltk ~opencascade
-    - quantum-espresso+mpi+scalapack
-    - quantum-espresso+mpi+scalapack hdf5=parallel
+    - quantum-espresso+mpi+scalapack ^fftw+mpi+openmp
+    - quantum-espresso+mpi+scalapack hdf5=parallel ^fftw+mpi+openmp
 
 # MPI + BLAS + GPU -------------------------------------------------------------
 #
@@ -526,7 +526,7 @@ serial_packages_python_blas:
   packages:
     - boost:
         variants: ~mpi
-        default: { variants: +atomic +chrono +container +date_time +exception +filesystem +graph +icu +iostreams +locale +log +math +multithread +numpy +program_options +python +random +regex +serialization +shared +signals +system +test +thread +timer +wave }
+        default: { variants: cxxstd=14 +icu~mpi+python+numpy }
     - iq-tree +ipo@1.6.12
     - iq-tree +ipo@2.0.6
     - py-biopython
@@ -578,7 +578,7 @@ serial_packages_python_gcc_stable:
     # needs boost@1.54 (https://backwardincompatible.com/post/169360794395/compiling-illumina-bcl2fastq-220-on-ubuntu-with)
     - bcl2fastq2
     - blast-plus@2.9.0
-    - gdb +tui +source-highlight +lto +xz ^boost@1.79.0+atomic+chrono~clanglibcpp+container~context~contract~coroutine+date_time~debug+exception~fiber+filesystem+graph~graph_parallel~icu+iostreams~json+locale+log+math~mpi+multithreaded~nowide+numpy~pic+program_options+python+random+regex+serialization+shared+signals~singlethreaded~stacktrace+system~taggedlayout+test+thread+timer~type_erasure~versionedlayout+wave cxxstd=98 patches=a440f96,b8569d7 visibility=hidden
+    - gdb +tui +source-highlight +lto +xz ^boost@1.79.0 cxxstd=14 +icu~mpi+python+numpy
     - libgd
     - mummer
     - polymake@3.5
@@ -604,14 +604,14 @@ serial_packages_python_gpu_gcc_stable:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
         dependencies:
-          - boost@1.79.0+atomic+chrono~clanglibcpp+container~context~contract~coroutine+date_time~debug+exception~fiber+filesystem+graph~graph_parallel~icu+iostreams~json+locale+log+math~mpi+multithreaded~nowide+numpy~pic+program_options+python+random+regex+serialization+shared+signals~singlethreaded~stacktrace+system~taggedlayout+test+thread+timer~type_erasure~versionedlayout+wave cxxstd=98 patches=a440f96,b8569d7 visibility=hidden
+          - boost@1.79.0 cxxstd=14 +icu~mpi+python+numpy
     - vtk +ipo+ffmpeg~mpi+opengl2+python~qt+xdmf:
         variants:
           gpu:
             nvidia: ~osmesa
             none: +osmesa
         dependencies:
-          - boost@1.79.0+atomic+chrono~clanglibcpp+container~context~contract~coroutine+date_time~debug+exception~fiber+filesystem+graph~graph_parallel~icu+iostreams~json+locale+log+math~mpi+multithreaded~nowide+numpy~pic+program_options+python+random+regex+serialization+shared+signals~singlethreaded~stacktrace+system~taggedlayout+test+thread+timer~type_erasure~versionedlayout+wave cxxstd=98 patches=a440f96,b8569d7 visibility=hidden
+          - boost@1.79.0 cxxstd=14 +icu~mpi+python+numpy
 # EXTERNAL ---------------------------------------------------------------------
 #
 #
@@ -674,9 +674,9 @@ mpi_lapack_python_packages:
     - python3
     - gpu
   packages:
-    - boost +mpi
-    - cgal ^boost+mpi
-    - iq-tree@1.6.12+mpi ^boost +mpi
+    - boost +mpi+icu+python+numpy cxxstd=14
+    - cgal ^boost+mpi+icu+python+numpy cxxstd=14
+    - iq-tree@1.6.12+mpi ^boost+mpi+icu+python+numpy cxxstd=14
     - neuron +mpi +python
     - plumed:
         default: { variants: +mpi +gsl }
@@ -724,6 +724,8 @@ mpi_packages_gcc_stable:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch> +double-gpu
             none: ~cuda
+	dependencies:
+          - fftw+mpi+openmp
 
 # MPI BLAS PYTHON (GCC ONLY) ---------------------------------------------------
 #
@@ -743,22 +745,24 @@ mpi_blas_python_packages_gcc_stable:
     #         nvidia: +cuda cuda_arch=<cuda_arch>
     #         none: ~cuda
     #     dependencies:
-    #       - boost +mpi
+    #       - boost +mpi+icu+python+numpy cxxstd=14
     - cp2k +mpi ~plumed smm=blas:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
         dependencies:
-          - boost +mpi
+          - boost+mpi+icu+python+numpy cxxstd=14
+          - fftw+mpi+openmp
     - cp2k +mpi +plumed smm=blas:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
         dependencies:
-          - boost +mpi
-    - fenics +parmetis +hdf5 +scotch +suite-sparse ~vtk ~trilinos ^boost +mpi
+          - boost +mpi+icu+python+numpy cxxstd=14
+          - fftw+mpi+openmp	  
+    - fenics +parmetis +hdf5 +scotch +suite-sparse ~vtk ~trilinos ^boost+mpi+icu+python+numpy cxxstd=14
     - gromacs@2021.4+mpi+plumed:
         variants:
           gpu:
@@ -779,7 +783,8 @@ mpi_blas_python_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - netcdf-c+mpi
-    - openfoam +metis ^boost +mpi ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo
+          - fftw+mpi+openmp	  
+    - openfoam +metis ^boost+mpi+icu+python+numpy cxxstd=14 ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools ^fftw+mpi+openmp
     - paraview +shared +python3 +hdf5:
         variants:
           gpu:
@@ -809,7 +814,7 @@ mpi_blas_python_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - netcdf-c +mpi
-          - boost +mpi
+          - boost+mpi+icu+python+numpy cxxstd=14
     - vtk+ffmpeg+mpi+opengl2+python~qt+xdmf:
         variants:
           gpu:
@@ -817,7 +822,7 @@ mpi_blas_python_packages_gcc_stable:
             none: +osmesa
         dependencies:
           - netcdf-c +mpi
-          - boost +mpi
+          - boost+mpi+icu+python+numpy cxxstd=14
 
 # BENCHMARKS -------------------------------------------------------------------
 #
