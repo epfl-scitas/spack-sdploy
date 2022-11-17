@@ -783,7 +783,7 @@ mpi_blas_python_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - netcdf-c+mpi
-          - fftw+mpi+openmp	  
+          - fftw+mpi+openmp
     - openfoam +metis ^boost+mpi+icu+python+numpy cxxstd=14 ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools ^fftw+mpi+openmp
     - paraview +shared +python3 +hdf5:
         variants:
