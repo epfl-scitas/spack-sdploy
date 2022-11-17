@@ -724,7 +724,7 @@ mpi_packages_gcc_stable:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch> +double-gpu
             none: ~cuda
-	dependencies:
+        dependencies:
           - fftw+mpi+openmp
 
 # MPI BLAS PYTHON (GCC ONLY) ---------------------------------------------------
