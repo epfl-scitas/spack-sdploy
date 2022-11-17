@@ -49,8 +49,8 @@ gcc:
   stable:
     compiler: gcc@11.3.0
     mpi:
-      infiniband: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm
-      ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm
+      infiniband: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker
+      ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker
     blas: openblas@0.3.20 threads=none +locking
     blas_parallel: openblas@0.3.20 threads=openmp +locking
     python3: python@<python3> +tkinter +optimizations ~debug
@@ -172,7 +172,7 @@ serial_packages:
         default:
           buildable: false
         externals:
-          - spec: slurm@22-05-2
+          - spec: slurm@22-05-2 ~mariadb
             prefix: /usr
     - stacks
     - star
@@ -383,7 +383,7 @@ mpi_blas_packages_gcc_stable:
     - elmerfem +mumps +openmp +hypre:
         dependencies:
           - hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo
-          - netcdf-fortran@4.5.4%gcc@11.3.0~doc+pic+shared arch=linux-rhel8-haswell
+          - netcdf-fortran@4.5.4%gcc@11.3.0~doc+pic+shared
     - gromacs@2021.4+mpi:
         variants:
           gpu:
@@ -391,6 +391,7 @@ mpi_blas_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - fftw~mpi+openmp
+	  - openmpi@4.1.3%gcc@11.3.0~atomics~cuda~cxx~cxx_exceptions~gpfs~internal-hwloc~java~legacylaunchers~lustre~memchecker+pmi+romio+rsh~singularity+static+vt+wrapper-rpath fabrics=ucx schedulers=slurm
     # These dependencies (of mumps) will not go into packages.yaml
     - mumps:
         default: { variants: +mpi +parmetis +metis +scotch +ptscotch }
