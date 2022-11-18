@@ -162,7 +162,7 @@ serial_packages:
         externals:
           - spec: openssl@1.1.1k
             prefix: /usr
-	  buildable: false
+          buildable: false
     - rdma-core:
         default:
           variants: +ipo
