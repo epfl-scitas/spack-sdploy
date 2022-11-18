@@ -162,6 +162,7 @@ serial_packages:
         externals:
           - spec: openssl@1.1.1k
             prefix: /usr
+	  buildable: false
     - rdma-core:
         default:
           variants: +ipo
@@ -172,12 +173,7 @@ serial_packages:
     - scotch:
         variants: ~mpi
         default: { variants: +esmumps ~metis }
-    - slurm:
-        default:
-          buildable: false
-        externals:
-          - spec: slurm@22-05-2 ~mariadb
-            prefix: /usr
+    - slurm
     - stacks
     - star
     - subread
@@ -392,7 +388,6 @@ mpi_blas_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - fftw~mpi+openmp
-          - openmpi@4.1.3%gcc@11.3.0~atomics~cuda~cxx~cxx_exceptions~gpfs~internal-hwloc~java~legacylaunchers~lustre~memchecker+pmi+romio+rsh~singularity+static+vt+wrapper-rpath fabrics=ucx schedulers=slurm
     # These dependencies (of mumps) will not go into packages.yaml
     - mumps:
         default: { variants: +mpi +parmetis +metis +scotch +ptscotch }
@@ -526,7 +521,6 @@ serial_packages_python_blas:
   packages:
     - boost:
         variants: ~mpi
-        default: { variants: cxxstd=14 +icu~mpi+python+numpy }
     - iq-tree +ipo@1.6.12
     - iq-tree +ipo@2.0.6
     - py-biopython
@@ -578,7 +572,7 @@ serial_packages_python_gcc_stable:
     # needs boost@1.54 (https://backwardincompatible.com/post/169360794395/compiling-illumina-bcl2fastq-220-on-ubuntu-with)
     - bcl2fastq2
     - blast-plus@2.9.0
-    - gdb +tui +source-highlight +lto +xz ^boost@1.79.0 cxxstd=14 +icu~mpi+python+numpy
+    - gdb +tui +source-highlight +lto +xz ^boost~mpi
     - libgd
     - mummer
     - polymake@3.5
@@ -604,14 +598,14 @@ serial_packages_python_gpu_gcc_stable:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
         dependencies:
-          - boost@1.79.0 cxxstd=14 +icu~mpi+python+numpy
+          - boost~mpi
     - vtk +ipo+ffmpeg~mpi+opengl2+python~qt+xdmf:
         variants:
           gpu:
             nvidia: ~osmesa
             none: +osmesa
         dependencies:
-          - boost@1.79.0 cxxstd=14 +icu~mpi+python+numpy
+          - boost~mpi
 # EXTERNAL ---------------------------------------------------------------------
 #
 #
@@ -674,9 +668,9 @@ mpi_lapack_python_packages:
     - python3
     - gpu
   packages:
-    - boost +mpi+icu+python+numpy cxxstd=14
-    - cgal ^boost+mpi+icu+python+numpy cxxstd=14
-    - iq-tree@1.6.12+mpi ^boost+mpi+icu+python+numpy cxxstd=14
+    - boost +mpi
+    - cgal ^boost+mpi
+    - iq-tree@1.6.12+mpi ^boost+mpi
     - neuron +mpi +python
     - plumed:
         default: { variants: +mpi +gsl }
@@ -745,14 +739,14 @@ mpi_blas_python_packages_gcc_stable:
     #         nvidia: +cuda cuda_arch=<cuda_arch>
     #         none: ~cuda
     #     dependencies:
-    #       - boost +mpi+icu+python+numpy cxxstd=14
+    #       - boost+mpi
     - cp2k +mpi ~plumed smm=blas:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
         dependencies:
-          - boost+mpi+icu+python+numpy cxxstd=14
+          - boost+mpi
           - fftw+mpi+openmp
     - cp2k +mpi +plumed smm=blas:
         variants:
@@ -760,9 +754,9 @@ mpi_blas_python_packages_gcc_stable:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
         dependencies:
-          - boost +mpi+icu+python+numpy cxxstd=14
+          - boost+mpi
           - fftw+mpi+openmp
-    - fenics +parmetis +hdf5 +scotch +suite-sparse ~vtk ~trilinos ^boost+mpi+icu+python+numpy cxxstd=14
+    - fenics +parmetis +hdf5 +scotch +suite-sparse ~vtk ~trilinos ^boost+mpi
     - gromacs@2021.4+mpi+plumed:
         variants:
           gpu:
@@ -784,7 +778,7 @@ mpi_blas_python_packages_gcc_stable:
         dependencies:
           - netcdf-c+mpi
           - fftw+mpi+openmp
-    - openfoam +metis ^boost+mpi+icu+python+numpy cxxstd=14 ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools ^fftw+mpi+openmp
+    - openfoam +metis ^boost+mpi ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools ^fftw+mpi+openmp
     - paraview +shared +python3 +hdf5:
         variants:
           gpu:
@@ -814,7 +808,7 @@ mpi_blas_python_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - netcdf-c +mpi
-          - boost+mpi+icu+python+numpy cxxstd=14
+          - boost+mpi
     - vtk+ffmpeg+mpi+opengl2+python~qt+xdmf:
         variants:
           gpu:
@@ -822,7 +816,7 @@ mpi_blas_python_packages_gcc_stable:
             none: +osmesa
         dependencies:
           - netcdf-c +mpi
-          - boost+mpi+icu+python+numpy cxxstd=14
+          - boost+mpi
 
 # BENCHMARKS -------------------------------------------------------------------
 #

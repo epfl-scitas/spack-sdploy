@@ -22,6 +22,9 @@ packages:
   openmpi:
     version: [4.1.3]
     variants: ~memchecker +pmi fabrics=ucx schedulers=slurm ^slurm@22-05-2 ~mariadb
+  boost:
+    version: [1.79.0]
+    variants: cxxstd=14 +icu~mpi+python+numpy+atomic+chrono~container+date_time+filesystem+graph+iostreams~json+locale+log+math~pic+program_options+random+regex+serialization+shared+signals~singlethreaded~stacktrace+system~taggedlayout+test+thread+timer~type_erasure~versionedlayout+wave
 {% for pkg, definition in data['defaults'].items() %}
 {% if pkg not in data['externals'] %}
   {{ pkg }}:
@@ -33,6 +36,10 @@ packages:
 #                                                          #
 #                                        EXTERNAL PACKAGES #
 #                                                          #
+  slurm:
+    externals:
+    - {spec: slurm@22-05-2 ~mariadb, prefix: /usr}
+    buildable: false
 {% for pkg, definition in data['externals'].items() %}
   {{ pkg }}:
 {% if pkg in data['defaults'] %}
