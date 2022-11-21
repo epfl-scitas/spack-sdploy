@@ -70,7 +70,7 @@ echo "NODE_LABELS: ${NODE_LABELS}"
 LOGS=${WORK_DIR}/logs
 mkdir -p ${LOGS}
 
-execution_timestamp=`date +%y%m%d.%k%m%M`
+execution_timestamp=`date +%y%m%d.%H%m%M`
 echo "Execution timestamp: ${execution_timestamp}"
 echo
 echo '  _________________________________________   ____ '
