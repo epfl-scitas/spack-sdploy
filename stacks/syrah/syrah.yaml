@@ -478,7 +478,8 @@ serial_packages_python_blas_activated:
   packages:
     - py-keras-preprocessing
     - py-matplotlib
-    - py-numpy
+    - py-numpy:
+        default: { variants: ^<blas_parallel>}
     - py-opt-einsum
     - py-pandas
     - py-scipy

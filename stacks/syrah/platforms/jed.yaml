@@ -8,3 +8,4 @@ platform:
     target: icelake
     lmod_root: jed
     jdk_version: 1.8.0_332
+    blas_parallel: openblas@0.3.20 threads=openmp +locking
