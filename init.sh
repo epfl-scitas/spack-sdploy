@@ -1,3 +1,7 @@
+#!/bin/bash
+set -eo pipefail
+option=$1
+set -u
 #
 #
 #
@@ -10,14 +14,7 @@ export ENVIRONMENT=jed
 # Variables needed to run this script
 _BASE_DIR="."
 
-set_base_dir () {
-    _pwd=`pwd`
-    cd ${_BASE_DIR}
-    BASE_DIR=`pwd`
-    cd ${_pwd}
-}
-
-set_base_dir
+BASE_DIR=`realpath ${_BASE_DIR}`
 echo "spack-sdploy found: ${BASE_DIR}"
 
 # Variables read from commons.yaml using cat, grep and cut.
@@ -151,7 +148,7 @@ echo '> concretize.sh'
 echo
 ${_PREFIX}/concretize.sh 2>&1 | tee ${LOGS}/07_concretize.${execution_timestamp}.log
 
-if [[ $1 = "concretize" ]]; then
+if [[ $option = "concretize" ]]; then
     echo "program stopped at concretization step"
     return
 fi
