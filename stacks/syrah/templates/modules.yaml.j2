@@ -9,12 +9,157 @@ modules:
     lmod:
       hash_length: 0
       core_compilers:
-      - {{ data['core_compiler'] }}
+      - gcc@8.5.0
       hierarchy:
       - mpi
-      blacklist_implicits: true
-    all:
-      suffixes:
+      all:
+        environment:
+          set:
+            ${PACKAGE}_ROOT: ${PREFIX}
+        suffixes:
 {% for variant, suffix in data['suffixes'].items() %}
-        {{ variant }}: {{ suffix }}
+          {{ variant }}: {{ suffix }}
 {% endfor %}
+          +mpi: mpi
+          +openmp: openmp
+          threads=openmp: openmp
+          ^fftw+openmp: openmp
+          hdf5=parallel: h5
+          +cuda: cuda
+          +nvptx: cuda
+          +double-gpu: double-gpu
+          file_systems=nfs: nfs
+          device=ch3: ch3
+          device=ch4: ch4
+          ^python@:2.99: py2
+          +plumed: plumed
+          +unwind: unwind
+          +debug: dbg
+          +ilp64: f64
+      whitelist:
+      - gcc@11.3.0
+      - python@3.10.4 +tkinter +optimizations ~debug
+      - petsc
+      - openblas
+      - jasper
+      blacklist:
+      - cmake
+      - py-cython
+      - py-matplotlib
+      - py-numpy
+      - py-pandas
+      - py-pip
+      - py-ply
+      - py-requests
+      - py-scipy
+      - py-semver
+      - py-six
+      - py-sympy
+      - py-virtualenv
+      - py-xarray
+# # # # # # # # # # # # # extras for tensorflow 
+      - py-absl-py
+      - py-astunparse
+      - py-gast
+      - py-google-pasta
+      - py-grpcio
+      - py-keras-preprocessing
+      - py-opt-einsum
+      - py-protobuf
+      - py-termcolor
+      - py-wheel
+      - py-wrapt
+# # # # # # # # # # # # # extras for py-scikit-learn
+      - py-joblib
+      - py-threadpoolctl
+      - boost^py-numpy^openblas threads=openmp
+      blacklist_implicits: true
+      gcc@11.3.0:
+        environment:
+          set:
+            CC: gcc
+            CXX: g++
+            F77: gfortran
+            FC: gfortran
+            F90: gfortran
+          prepend_path:
+            LD_LIBRARY_PATH: /ssoft/spack/syrah/v1/opt/spack/linux-rhel8-icelake/gcc-8.4.1/gcc-8.4.0-bliwls6tnqmpkxzizwjgxprgiwvndhc7/lib64
+      openmpi:
+        environment:
+          set:
+            SLURM_MPI_TYPE: pmi2
+            OMPI_MCA_btl_openib_warn_default_gid_prefix: '0'
+      openblas threads=none:
+        environment:
+          set:
+            OPENBLAS_NUM_THREADS: '1'
+#      adf:
+#        template: modules/group_restricted.lua
+#        load:
+#        - intel
+#        - intel-mpi
+      comsol:
+        environment:
+          prepend_path:
+            MATLABPATH: ${PREFIX}/mli
+      crystal17:
+        template: modules/group_restricted.lua
+      fdtd:
+        environment:
+          prepend_path:
+            PATH: ${PREFIX}/mpich2/nemesis/bin
+            LD_LIBRARY_PATH: ${PREFIX}/mpich2/nemesis/lib
+          set:
+            SLURM_MPI_TYPE: pmi2
+      gaussian:
+        template: modules/group_restricted.lua
+      hdf5~mpi+cxx:
+        environment:
+          set:
+            HDF5_CC: h5cc
+            HDF5_CXX: h5c++
+            HDF5_FC: h5fc
+      hdf5+mpi~cxx:
+        environment:
+          set:
+            HDF5_CC: h5pcc
+            HDF5_FC: h5pfc
+      metis:
+        suffixes:
+          ~real64: sp
+      molpro:
+        template: modules/group_restricted.lua
+      plumed:
+        environment:
+          set:
+            PLUMED_KERNEL: ${PREFIX}/lib/libplumedKernel.so
+          unset:
+          - PLUMED_ROOT
+      py-horovod:
+        autoload: direct
+      py-keras:
+        autoload: direct
+      py-tensorflow:
+        autoload: direct
+      py-theano:
+        autoload: direct
+      py-torch:
+        autoload: direct
+      py-torchvision:
+        autoload: direct
+      quantum-espresso:
+        suffixes:
+          hdf5=parallel: hdf5
+      scala:
+        autoload: direct
+      scons:
+        suffixes:
+          ^python@:2.99: py2
+          '^python@3:': py3
+      spark:
+        autoload: direct
+        environment:
+          prepend_path:
+            PATH: /ssoft/spack/scripts/all/spark
+      vasp:
+        template: modules/group_restricted.lua

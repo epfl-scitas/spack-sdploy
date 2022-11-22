@@ -31,6 +31,7 @@ class PackagesYaml(StackFile):
         """Declare class structs"""
 
         super().__init__(config)
+        self.schema = spack.schema.packages.schema
 
         # These variables will be used in StackFile class.
         # Each command that write an Yaml file must define these 4 variables.
@@ -93,11 +94,11 @@ class PackagesYaml(StackFile):
                     tty.debug(f'Reading "{attr}": {defaults[attr]}')
                     try:
                         _packages_yaml_pkg = getattr(PackagesYaml, '_packages_yaml_packages_' + attr, )
-                        result =  _packages_yaml_pkg(self, defaults[attr])
+                        result = _packages_yaml_pkg(self, defaults[attr])
                     except FilterException as fe:
                         tty.debug(f'Ignoring package {pkg_name} in `packages.yaml` due to missing value for {fe.filter_value} in filter {fe.filter}')
 
-                    if result:
+                    if result is not None:
                         self.defaults[pkg_name][attr] = result
 
     def _packages_yaml_packages_version(self, version_attributes):

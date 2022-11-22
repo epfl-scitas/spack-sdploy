@@ -52,9 +52,6 @@ pipeline {
 //                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
 //                sh 'rm -rf /home/scitasbuildpr/.spack'
 //                sh 'rm -rf /home/scitasbuildpr/gcc'
-//                sh 'rm -rf /home/scitasbuildpr/gcc2'
-//                sh 'rm -rf /home/scitasbuildpr/gcc3'
-//                sh 'rm -rf /home/scitasbuildpr/gcc4'
 //            }
 //         }
 
@@ -141,7 +138,7 @@ pipeline {
 //      stage('Activate packages') {
 //           steps {
 //              script {
-//                  parallel(activate_packages())
+//                  parallel(do_activate_packages())
 //              }
 //          }
 //      }
@@ -204,11 +201,13 @@ def _define_stages(prefix, script, message, do_junit = false) {
     return jobs
 }
 
-def do_deploy_spack_environment() {
-    return _define_stages("Deploy spack Configuration",
-                          "${env.JENKINS}/deploy_spack_environment.sh",
-                          "Run a stage in parallel")
-}
+# Does not seem to be used
+#
+#def do_deploy_spack_environment() {
+#    return _define_stages("Deploy spack Configuration",
+#                          "${env.JENKINS}/deploy_spack_environment.sh",
+#                          "Run a stage in parallel")
+#}
 
 def do_init_environments() {
     return _define_stages("Initialize spack environments",
@@ -239,7 +238,7 @@ def do_deploy() {
 }
 
 def do_activate_packages() {
-    return _define_stages('activate',
-                          'jenkins/deploy/scripts/activate_packages.sh',
-                          'Activation of packages')
+    return _define_stages("Activate packages",
+                          "${env.JENKINS}/activate_packages.sh",
+                          "Activation of packages")
 }

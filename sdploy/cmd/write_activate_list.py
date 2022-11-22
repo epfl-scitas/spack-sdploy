@@ -22,26 +22,24 @@ from llnl.util.filesystem import mkdirp, working_dir
 import spack.paths
 from spack.util.executable import ProcessError, which
 
-_SPACK_UPSTREAM = 'https://github.com/spack/spack'
-
-description = "install external repositories"
+description = "write list of packages to activate"
 section = "Sdploy"
 level = "short"
 
 # spack sdploy imports
-from ..repos_yaml import ReposYaml
+from ..activate_pkgs import ActivatePkgs
 from ..util import *
 from ..config import *
 from ..config_manager import Config
 from ..common_parser import setup_parser
 
-def write_repos_yaml(parser, args):
+def write_activate_list(parser, args):
 
     # spack-sdploy setup
     config = Config(args)
 
-    # Instantiate ReposYaml class
-    repos = ReposYaml(config)
+    # Instantiate class
+    pkgs = ActivatePkgs(config)
 
-    # Main action
-    repos.write_yaml(data = repos.repos)
+    # Write list
+    pkgs.write_activated_pkgs()

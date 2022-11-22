@@ -64,6 +64,17 @@ core_packages:
     - tmux
     - trimmomatic
 
+# CORE (STABLE COMPILER) -------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+core_packages_stable:
+  metadata: {section: packages }
+  pe: [gcc_stable]
+  packages:
+    - flex:
+        default: { version: 2.6.4 }
+
 # ------------------------------------------------------------------------------
 #
 #
@@ -197,7 +208,7 @@ serial_packages_gpu:
     #
     - llvm:
         default:
-          version: 14.0.2
+          version: 12.0.1
           variants:
             common: +ipo
             gpu:
@@ -546,8 +557,8 @@ serial_packages_python_gcc_stable:
     #  Skipping build of polymake since perl-term-readline-gnu failed
     - polymake@3.5
     - openbabel +python
-    - py-torchvision
-    - r +external-lapack
+    - r:
+        default: {variants: +external-lapack}
     - gatk
     - spades
 
@@ -568,18 +579,6 @@ serial_packages_python_gpu_gcc_stable:
             none: ~cuda
         dependencies:
           - boost@1.79.0+atomic+chrono~clanglibcpp+container~context~contract~coroutine+date_time~debug+exception~fiber+filesystem+graph~graph_parallel~icu+iostreams~json+locale+log+math~mpi+multithreaded~nowide+numpy~pic+program_options+python+random+regex+serialization+shared+signals~singlethreaded~stacktrace+system~taggedlayout+test+thread+timer~type_erasure~versionedlayout+wave cxxstd=98 patches=a440f96,b8569d7 visibility=hidden
-    - py-torch:
-        variants: ~mpi
-        default:
-          variants:
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch> +magma
-              none: ~cuda ~cudnn ~nccl
-              rocm: +magma +rocm
-        dependencies:
-          gpu:
-            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
-            rocm: [magma +rocm amdgpuarch=<amd_arch>]
     - vtk +ipo+ffmpeg~mpi+opengl2+python~qt+xdmf:
         variants:
           gpu:
@@ -640,19 +639,20 @@ mpi_python_packages:
 #
 #
 # ------------------------------------------------------------------------------
-mpi_python_gpu_packages:
-  metadata: { section: packages }
-  pe: [gcc_stable]
-  dependencies: [mpi, gpu, python3]
-  packages:
-    - py-torch:
-        variants: +mpi
-        default:
-          variants:
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch> +magma
-              none: ~cuda ~cudnn ~nccl
-              rocm: +magma +rocm
+# Mooved py-torch to mpi_lapack_python_packages list
+#mpi_python_gpu_packages:
+#  metadata: { section: packages }
+#  pe: [gcc_stable]
+#  dependencies: [mpi, gpu, python3]
+#  packages:
+#    - py-torch:
+#        variants: +mpi
+#        default:
+#          variants:
+#            gpu:
+#              nvidia: +cuda cuda_arch=<cuda_arch> +magma
+#              none: ~cuda ~cudnn ~nccl
+#              rocm: +magma +rocm
 
 # MPI + BLAS + PYTHON ----------------------------------------------------------
 #
@@ -687,6 +687,22 @@ mpi_lapack_python_packages:
     - slepc:
         default: { variants: +arpack }
     - py-petsc4py
+    - py-torch:
+        variants: +mpi
+        default:
+          variants:
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch> +magma
+              none: ~cuda ~cudnn ~nccl
+              rocm: +magma +rocm
+        dependencies:
+          gpu:
+            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
+            rocm: [magma +rocm amdgpuarch=<amd_arch>]
+    - py-torchvision:
+        dependencies:
+          - py-torch+mpi~cuda
+          - mvapich2 process_managers=slurm
 
 # MPI (GCC ONLY) ---------------------------------------------------------------
 #
@@ -724,14 +740,14 @@ mpi_blas_python_packages_gcc_stable:
     #         none: ~cuda
     #     dependencies:
     #       - boost +mpi
-    - cp2k +mpi ~plumed:
+    - cp2k +mpi ~plumed smm=blas:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
         dependencies:
           - boost +mpi
-    - cp2k +mpi +plumed:
+    - cp2k +mpi +plumed smm=blas:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
