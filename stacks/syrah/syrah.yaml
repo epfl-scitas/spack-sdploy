@@ -124,6 +124,7 @@ serial_packages:
     - gzip
     - hdf5:
         default:
+          version: 1.12.2
           variants: ~mpi +cxx +fortran +hl +ipo +shared +szip +tools
     - hisat2
     - htslib
@@ -299,14 +300,18 @@ serial_packages_blas:
   packages:
     - arpack-ng ~mpi
     # +med ^hdf5@1.10.7
+    - boost:
+        default:
+          variants: cxxstd=14 +icu ~mpi +python +numpy +atomic +chrono +container +date_time +filesystem +graph +iostreams ~json +locale +log +math ~pic +program_options +random +regex +serialization +shared +signals ~singlethreaded ~stacktrace +system ~taggedlayout +test +thread +timer ~type_erasure ~versionedlayout +wave
+        dependencies:
+          - python@<python3> +tkinter +optimizations ~debug
     - gmsh:
         variants: |
-          ~mpi +hdf5 +cgns +eigen ~opencascade +openmp ~fltk
+          ~mpi +hdf5 +cgns +eigen ~opencascade +openmp ~fltk ~med
         dependencies:
           - scotch ~mpi
           - cgns ~mpi
           - hdf5 ~mpi
-          - med ~mpi
           - mmg
     - superlu
 
@@ -411,7 +416,7 @@ mpi_lapack_packages:
   pe: [gcc_stable]
   dependencies: [mpi, blas]
   packages:
-    - gmsh +openmp +hdf5 ~fltk ~opencascade
+    - gmsh +openmp +hdf5 ~fltk ~opencascade ~med
     - quantum-espresso+mpi+scalapack ^fftw+mpi+openmp
     - quantum-espresso+mpi+scalapack hdf5=parallel ^fftw+mpi+openmp
 
@@ -483,8 +488,7 @@ serial_packages_python_blas_activated:
   packages:
     - py-keras-preprocessing
     - py-matplotlib
-    - py-numpy:
-        default: { variants: ^<blas_parallel>}
+    - py-numpy
     - py-opt-einsum
     - py-pandas
     - py-scipy
@@ -507,7 +511,7 @@ serial_packages_python:
     - mercurial
     - ninja
     - prinseq-lite
-    - py-h5py ^hdf5:
+    - py-h5py ^hdf5~mpi:
         modules:
           autoload: direct
     - py-pybind11
@@ -524,8 +528,6 @@ serial_packages_python_blas:
   pe: [gcc_stable]
   dependencies: [python3, blas_parallel]
   packages:
-    - boost:
-        variants: ~mpi
     - iq-tree +ipo@1.6.12
     - iq-tree +ipo@2.0.6
     - py-biopython
