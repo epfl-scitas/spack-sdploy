@@ -24,4 +24,6 @@ config:
   - {{ build_stage }}
 {% endfor %}
 {% endif %}
-  build_jobs: 32
+{% if 'core_per_socket' in tokens %}
+  build_jobs: {{tokens['core_per_socket']}}
+{% endif %}

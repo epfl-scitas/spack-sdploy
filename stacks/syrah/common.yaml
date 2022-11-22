@@ -35,4 +35,4 @@ extra_repos:
 concretizer:
   targets:
     granularity: microarchitectures
-    host_compatible: False
+    host_compatible: True
