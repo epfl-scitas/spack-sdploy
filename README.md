@@ -104,3 +104,13 @@ spack write-spack-yaml
 ```
 spack write-packages-yaml
 ```
+
+## write-activate-list
+
+```
+spack write-activate-list -p <platform> -s <stack>
+```
+
+Write to file named `packages_to_activate` list of packages to activate, using `spack activate <package>`. Packages are writen one per line.
+
+Packages to activate can be marked in the stack file in two possible ways: by adding the keyword `activate: true` in the metadata section of a list of packages or by adding the keyword `activate: true` to an individual package. Duplicates are removed.
