@@ -22,18 +22,18 @@ if [ ! -z ${_env_path} ]; then
 fi
 
 echo "Deploying manifest for ${environment}"
-spack --env ${environment} -d write-spack-yaml -s ${STACK_RELEASE}
+spack --env ${environment} write-spack-yaml -s ${STACK_RELEASE}
 
 echo "Installing packages configuration for ${environment}"
-spack --env ${environment} -d write-packages-yaml -s ${STACK_RELEASE}
+spack --env ${environment} write-packages-yaml -s ${STACK_RELEASE}
 spack --env ${environment} config blame packages
 
 echo "Installing modules configuration for ${environment}"
-spack --env ${environment} -d write-modules-yaml -s ${STACK_RELEASE}
+spack --env ${environment} write-modules-yaml -s ${STACK_RELEASE}
 spack --env ${environment} config blame modules
 
 echo "Installing config.yaml for ${environment}"
-spack --env ${environment} -d write-config-yaml -s ${STACK_RELEASE}
+spack --env ${environment} write-config-yaml -s ${STACK_RELEASE}
 spack --env ${environment} config blame config
 
 echo "Installing external repos for ${environment}"
