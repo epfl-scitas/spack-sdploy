@@ -172,7 +172,12 @@ serial_packages:
     - scotch:
         variants: ~mpi
         default: { variants: +esmumps ~metis }
-    - slurm
+    - slurm:
+        default:
+          buildable: false
+        externals:
+          - spec: slurm@22-05-2 ~mariadb
+            prefix: /usr
     - stacks
     - star
     - subread
