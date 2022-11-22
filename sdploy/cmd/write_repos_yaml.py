@@ -40,9 +40,8 @@ def write_repos_yaml(parser, args):
     # spack-sdploy setup
     config = Config(args)
 
-    # Instantiate ModulesYaml class
+    # Instantiate ReposYaml class
     repos = ReposYaml(config)
 
-    # Write mirrors file.
-    # Each commend must pass the dictionary in the contents variable.
+    # Main action
     repos.write_yaml(data = repos.repos)
