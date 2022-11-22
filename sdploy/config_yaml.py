@@ -41,6 +41,7 @@ class ConfigYaml(StackFile):
         """Declare class structs"""
 
         super().__init__(config)
+        self.schema = spack.schema.config.schema
 
         # These variables will be used in StackFile class.
         # Each command that write an Yaml file must define these 4 variables.

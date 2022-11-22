@@ -29,55 +29,51 @@ import llnl.util.tty as tty
 
 from llnl.util.filesystem import mkdirp, working_dir
 from spack.util.executable import ProcessError, which
+
 from jinja2 import Environment, FileSystemLoader
 
 from .stack_file import StackFile
 from .util import *
 
-class ConcretizerYaml(StackFile):
-    """Provides methods to write the concretizer.yaml configuration"""
+class ActivatePkgs(StackFile):
+    """Manage the packages whose activation is necessary"""
 
     def __init__(self, config):
         """Declare class structs"""
 
         super().__init__(config)
-        self.schema = spack.schema.concretizer.schema
+        self.pkglist = []
+        self._add_activated_lists()
+        self._add_activated_pkgs()
+        self.pkglist = set(self.pkglist)
 
-        # These variables will be used in StackFile class.
-        # Each command that write an Yaml file must define these 4 variables.
-        # This technique allows for individual command customization of each
-        # one of these parameters and at the same time the reuse of the functions
-        # all gathered in a single module.
-        self.templates_path = self.config.templates_path
-        self.template_file = self.config.concretizer_yaml_template
-        self.yaml_path = self.config.spack_config_path
-        self.yaml_file = self.config.concretizer_yaml
+    def _add_activated_lists(self):
+        """Add packages from lists having 'activate: true' attribute"""
 
-        self.concretizer = {}
-        self._create_dictionary()
+        for _, v in self.data.items():
+            # if activated in metadata then it is a packages list
+            if 'activated' in v['metadata']:
+                for pkg in v['packages']:
+                    if isinstance(pkg, str):
+                        self.pkglist.append(pkg)
+                    elif isinstance(pkg, dict):
+                        self.pkglist.append(list(pkg.keys()).pop())
 
-    def _create_dictionary(self):
-        """Populates dictionary with the values it will
-        need to write the modules.yaml file"""
+    def _add_activated_pkgs(self):
+        """Add packages from lists NOT having 'activate: true' attribute.
+        This packages are activated using its own attribute."""
 
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+        for _, v in self.data.items():
+            if v['metadata']['section'] == 'packages':
+                for pkg in v['packages']:
+                    if isinstance(pkg, dict):
+                        for pkg_name, prop in pkg.items():
+                            if 'activated' in prop:
+                                self.pkglist.append(pkg_name)
 
-        self._read_configuration()
-        self._load_configuration()
+    def write_activated_pkgs(self):
+        """Write activated packages to file, one per line"""
 
-    def _read_configuration(self):
-        """Read 'concretizer' section from commons.yaml"""
-
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-
-        commons = ReadYaml()
-        commons.read(os.path.join(self.config.commons_yaml))
-        if 'concretizer' in commons.data.keys():
-            self.config = commons.data['concretizer']
-
-    def _load_configuration(self):
-        """Add concretizer features"""
-
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-
-        self.concretizer = self.config
+        with open('packages_to_activate', 'w') as f:
+            for p in self.pkglist:
+                f.write(p + '\n')
