@@ -17,7 +17,7 @@ compilers=$(cat compilers.list)
 # command if the compilers are already installed.
 echo "Installing compilers"
 echo "spack install --log-format junit --log-file install_compilers.xml ${compilers}"
-spack -d install --log-format junit --log-file install_compilers.xml ${compilers}
+spack install --log-format junit --log-file install_compilers.xml ${compilers}
 
 echo "Adding stack compilers to ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml"
 while read -r spec
