@@ -73,8 +73,7 @@ core_packages:
         default:
           variants: +ownlibs ~ncurses ~qt
     - curl:
-        default:
-          variants: +libidn2 ~libssh ~libssh2 tls=gnutls
+        default: { variants: +libidn2 ~libssh +libssh2 tls=openssl +nghttp2 }
     - emacs +tls
     - fastqc
     - fio
@@ -82,6 +81,8 @@ core_packages:
     - git-lfs
     - i7z
     - libtool
+    - libssh2:
+        default: { variants: crypto=openssl }
     - lmod
     - m4
     - parallel
@@ -160,10 +161,10 @@ serial_packages:
     - nfft ^fftw~mpi+openmp
     - openssl:
         default:
-          version: 1.1.1k
-          buildable: False
+          version: develop
+          buildable: true
         externals:
-          - spec: openssl@1.1.1k
+          - spec: openssl@develop
             prefix: /usr
     - rdma-core:
         default:
@@ -589,7 +590,7 @@ serial_packages_python_gcc_stable:
   packages:
     # needs boost@1.54 (https://backwardincompatible.com/post/169360794395/compiling-illumina-bcl2fastq-220-on-ubuntu-with)
     - bcl2fastq2
-    - blast-plus@2.9.0
+    - blast-plus
     - gdb +tui +source-highlight +lto +xz ^boost~mpi
     - libgd
     - mummer
