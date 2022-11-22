@@ -7,33 +7,31 @@ pipeline {
     options {
         timestamps()
         ansiColor('xterm')
+	buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
     }
 
     // A variable defined in environment block is available through all stages
     // and its value cannot be changed later.
     environment {
-
-        // <!> can't figure out where the ${STACK} variable comes from <!>
-        // The following statement does nothing
-        STACK = "syrah-lite-l2"
+        STACK = "syrah-lite"
 
         // Variables read from commons.yaml using cat, grep and cut.
         WORK_DIR=sh(returnStdout:true,
-            script:'cat stacks/${STACK}/common.yaml |grep work_directory: | cut -n -d " " -f 2').trim()
+            script:"""cat stacks/${STACK}/common.yaml |grep work_directory: | cut -n -d " " -f 2""").trim()
         STACK_RELEASE=sh(returnStdout:true,
-            script:'cat stacks/${STACK}/common.yaml |grep stack_release: | cut -n -d " " -f 2').trim()
+            script:"""cat stacks/${STACK}/common.yaml |grep stack_release: | cut -n -d " " -f 2""").trim()
         PYTHON_VENV=sh(returnStdout:true,
-            script:'cat stacks/${STACK}/common.yaml |grep python_venv: | cut -n -d " " -f 2').trim()
+            script:"""cat stacks/${STACK}/common.yaml |grep python_venv: | cut -n -d " " -f 2""").trim()
         SPACK_RELEASE = sh(returnStdout:true,
-            script:'cat stacks/${STACK}/common.yaml |grep spack_release: | cut -n -d " " -f 2').trim()
+            script:"""cat stacks/${STACK}/common.yaml |grep spack_release: | cut -n -d " " -f 2""").trim()
         SPACK_EXTENSION = sh(returnStdout:true,
-            script:'cat stacks/${STACK}/common.yaml |grep extensions: | cut -n -d " " -f 2').trim()
+            script:"""cat stacks/${STACK}/common.yaml |grep extensions: | cut -n -d " " -f 2""").trim()
         STACK_RELEASE_VER = sh(returnStdout:true,
-            script:'cat stacks/${STACK}/common.yaml |grep stack_version: | cut -n -d " " -f 2').trim()
+            script:"""cat stacks/${STACK}/common.yaml |grep stack_version: | cut -n -d " " -f 2""").trim()
         SPACK_PATH = sh(returnStdout:true,
-            script:'cat stacks/${STACK}/common.yaml |grep spack: | cut -n -d " " -f 2').trim()
+            script:"""cat stacks/${STACK}/common.yaml |grep spack: | cut -n -d " " -f 2""").trim()
         SPACK_SDPLOY = sh(returnStdout:true,
-            script:'cat stacks/${STACK}/common.yaml |grep spack_sdploy: | cut -n -d " " -f 2').trim()
+            script:"""cat stacks/${STACK}/common.yaml |grep spack_sdploy: | cut -n -d " " -f 2""").trim()
 
         // This variable makes sens to be hardcoded here.
         JENKINS = "jenkins/deploy/scripts"
@@ -62,6 +60,8 @@ pipeline {
 
         stage('Print variables') {
             steps {
+                env
+
                 echo "The following values were read from common.yaml"
                 echo "WORK_DIR: $WORK_DIR"
                 echo "STACK_RELEASE: $STACK_RELEASE"
