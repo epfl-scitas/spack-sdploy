@@ -67,7 +67,6 @@ class PackagesYaml(StackFile):
 
         for pkg_list_name, pkg_list_cfg in self.stack.items():
             tty.debug(f'Entering package list: {pkg_list_name}')
-
             for pkg_list in pkg_list_cfg.get('packages'):
                 if not isinstance(pkg_list, dict):
                     continue
@@ -84,9 +83,8 @@ class PackagesYaml(StackFile):
                     continue
 
                 defaults = pkg_attributes['default']
-
                 self.defaults[pkg_name] = {}
-                for attr in ['version', 'variants', 'buildable']:
+                for attr in ['version', 'variants', 'buildable', 'permissions']:
                     result = None
                     if attr not in defaults:
                         continue
@@ -108,12 +106,19 @@ class PackagesYaml(StackFile):
         version = self._handle_filter(version_attributes)
         return version
 
+    def _packages_yaml_packages_permissions(self, permission_attributes):
+        """Adds permissions to dictionary"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+        result = {}
+        for k, v in permission_attributes.items():
+            result[k] = v
+        return result
 
     def _packages_yaml_packages_variants(self, variants_attributes):
         """Adds variants to dictionary"""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-
         variants = []
         if 'common' in variants_attributes:
             variants.append(variants_attributes.get('common'))
@@ -135,7 +140,6 @@ class PackagesYaml(StackFile):
         """
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-
         for pkg_list_cfg in self.stack.values():
             for pkg_list in pkg_list_cfg['packages']:
                 if isinstance(pkg_list, dict):
