@@ -6,6 +6,8 @@ platform:
     core_compiler: gcc@8.5.0
     python3: 3.10.4
     target: icelake
+    arch: linux-rhel8-icelake
     lmod_root: jed
     jdk_version: 1.8.0_332
     core_per_socket: 36
+    external_prefix: /ssoft/spack/external

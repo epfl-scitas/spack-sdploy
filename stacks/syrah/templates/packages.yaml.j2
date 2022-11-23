@@ -7,14 +7,6 @@ packages:
     target: [{{tokens['target']}}]
 {% endif %}
 #                                                          #
-#                                                PROVIDERS #
-#                                                          #
-#    providers:
-#      mpi: [mvapich2]
-# {% for lib, provider in data['providers']|dictsort %}     #
-#       {{ lib }}: {{ provider }}                          # 
-# {% endfor %}                                             # 
-#                                                          #
 #                                         DEFAULT PACKAGES #
 #                                                          #
 {% for pkg, definition in data['defaults'] | dictsort %}

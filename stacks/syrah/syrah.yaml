@@ -189,10 +189,9 @@ serial_packages:
     #         prefix: /usr
     - rdma-core:
         default:
-          variants: +ipo
           buildable: False
         externals:
-          - spec: rdma-core@40.1
+          - spec: rdma-core@40.1 +ipo
             prefix: /usr
     - scotch:
         variants: ~mpi
@@ -633,39 +632,149 @@ serial_packages_python_gpu_gcc_stable:
           - boost~mpi
 # EXTERNAL ---------------------------------------------------------------------
 #
-#
+# 
 # ------------------------------------------------------------------------------
-#external_packages:
-#  metadata:
-#    section: packages
-#    cloud: False
-#  pe: [core]
-#  packages:
-#    - openjdk:
-#        default:
-#          version: <jdk_version>
-#        externals:
-#          - spec: openjdk@<jdk_version>
-#            prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.el8_5.x86_64/jre
-#        modules:
-#          blacklist: True
-#    - adf@2017.111:
-#        default: { buildable: false }
-#        externals { spec: adf@2017.111, prefix: <external_prefix>/adf/ }
-#    - ansys@19.2
-#    - ansys@2022R1
-#    - cfdplusplus@19.1
-#    - comsol@5.6
-#    - comsol@6.0
-#    - fdtd@2022-R1.1-2963
-#    - gaussian@g16-C.01
-#    - gurobi@9.5.2
-#    - likwid@4.3.0
-#    - maple@2017
-#    - mathematica@13.0
-#    - matlab@R2019b
-#    - smr@2017.06
-#    - totalview@2020.3.11
+#
+# This packages will be always written to packages.yaml and will always have the
+# flag buildable: false. This type of information should be veiculated in the
+# metadata section of the list and we should avoid repeat it for every package.
+# In a second remark, these packages are already being written to packages.yaml
+# even without expliciting the keyword `default`.
+# IMO, `externals` keywork should be placed inside `default` keyword. In a more
+# general way, it is the default keyword that sets a package to be written to
+# packages.yaml.
+external_packages:
+  metadata:
+    section: packages
+    cloud: False
+  pe: [core]
+  packages:
+    - openjdk:
+        default:
+          buildable: false
+        externals:
+          - spec: openjdk@<jdk_version>
+            prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.el8_5.x86_64/jre
+        modules:
+          blacklist: True
+    - adf:
+        default: { buildable: false }
+        externals:
+          - spec: adf@2017.11 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/adf
+    - ansys:
+        default:
+          buildable: false
+        externals:
+          - spec: ansys@2020R2 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/ansys/2020R2/v202
+          - spec: ansys@2022R1 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/ansys/2022R1/v221
+    - cfdplusplus:
+        default:
+          buildable: false
+        externals:
+        - spec: cfdplusplus@16.1 %<core_compiler> arch=<arch>
+          prefix: <external_prefix>/CFD++/2016.05
+        - spec: cfdplusplus@19.1 %<core_compiler> arch=<arch>
+          prefix: <external_prefix>/CFD++/19.1
+    - comsol:
+        default:
+          buildable: false
+          permissions:
+            read: group
+            group: comsol-soft
+        externals:
+          - spec: comsol@5.6 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/comsol/5.6/comsol56/multiphysics/
+          - spec: comsol@6.0 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/comsol/6.0
+    - fdtd:
+        default:
+          buildable: false
+          permissions:
+            read: group
+            group: fdtd-soft
+        externals:
+          - spec: fdtd@2020-R2-2387 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/fdtd/8.24.2387
+          - spec: fdtd@2020-R2.4-2502 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/fdtd/2020-R2.4-2502
+          - spec: fdtd@2021-R2.2-2806 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/fdtd/2021-R2.2-2806
+          - spec: fdtd@2022-R1.1-2963 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/fdtd/2022-R1.1-2963
+
+    - gurobi:
+        default:
+          buildable: false
+        externals:
+          - spec: gurobi@8.1.1 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/gurobi/8.1.1
+          - spec: gurobi@9.5.2 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/gurobi/9.5.2
+
+    - gaussian:
+        default:
+          buildable: false
+        externals::
+          - spec: gaussian@g16-A.03 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/gaussian/g16-A.03
+          - spec: gaussian@g16-C.01 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/gaussian/g16-C.01
+    - matlab:
+        default:
+          buildable: false
+        externals:
+          - spec: matlab@R2018a %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/MATLAB/R2018a
+          - spec: matlab@R2019b %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/MATLAB/R2019b
+    - maple:
+        default:
+          buildable: false
+        externals:
+          - spec: maple@2017 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/Maple/2017
+    - mathematica:
+        default:
+          buildable: false
+        externals:
+          - spec: mathematica@11.1.1 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/Mathematica/11.1.1
+          - spec: mathematica@13. %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/Mathematica/13.0
+    - smr:
+        default:
+          buildable: false
+        externals:
+          - spec: smr@2017.06 %gcc@4.8.5 arch=linux-rhel7-haswell
+            prefix: <external_prefix>/SMR/2017.06
+    - totalview:
+        buildable: false
+        externals:
+          - spec: totalview@2017.2.11 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/toolworks/totalview.2017.2.11
+          - spec: totalview@2020.3.11 %<core_compiler> arch=<arch>
+            prefix: <external_prefix>/toolworks/totalview.2020.3.11
+    - crystal17:
+        default:
+          buildable: true
+          permissions:
+            read: group
+            group: crystal-soft
+    - molpro:
+        default:
+          buildable: true
+          permissions:
+            read: group
+            group: molpro-soft
+    - vasp:
+        default:
+          buildable: true
+          permissions:
+            read: group
+            group: vasp-soft
 
 # MPI PYTHON --------------------------------------------------------------------
 #
