@@ -50,14 +50,31 @@ gcc:
     compiler: gcc@11.3.0
     mpi:
       infiniband: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh
-      ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh
+      ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^pmix ~docs ^libevent +openssl
     blas: openblas@0.3.20 threads=none +locking
     blas_parallel: openblas@0.3.20 threads=openmp +locking
-    python3: python@<python3> +tkinter +optimizations ~debug
+    python3: python@<python3> +tkinter +optimizations ~debug +ssl
     python2: python@2.7.18 +tkinter ~debug
     gpu:
       nvidia: cuda@11.7.0
       none: ""
+
+# intel:
+#   metadata:
+#     section: pe
+#   stable:
+#     compiler:
+#     mpi:
+#       infiniband: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh
+#       ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh
+#     blas: openblas@0.3.20 threads=none +locking
+#     blas_parallel: openblas@0.3.20 threads=openmp +locking
+#     python3: python@<python3> +tkinter +optimizations ~debug +ssl
+#     python2: python@2.7.18 +tkinter ~debug
+#     gpu:
+#       nvidia: cuda@11.7.0
+#       none: ""
+
 # CORE -------------------------------------------------------------------------
 #
 #
@@ -72,7 +89,6 @@ core_packages:
         variants: +ncurses +ownlibs
         default:
           variants: +ownlibs ~ncurses ~qt
-    - curl
     - emacs +tls
     - fastqc
     - fio
@@ -128,6 +144,14 @@ serial_packages:
           variants: ~mpi +cxx +fortran +hl +ipo +shared +szip +tools
     - hisat2
     - htslib
+    - hwloc:
+        default:
+          variants:
+            common: ~cairo ~gl ~libudev +libxml2 ~netloc +pci
+            gpu:
+              nvidia: +cuda +nvml ~rocm
+              none: ~cuda ~rocm ~nvml
+              amd: +rocm ~cuda
     - intel-tbb
     - jasper
     - libfabric:
@@ -156,13 +180,13 @@ serial_packages:
     - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - nfft ^fftw~mpi+openmp
-    - openssl:
-        default:
-          version: 1.1.1k
-          buildable: False
-        externals:
-          - spec: openssl@1.1.1k
-            prefix: /usr
+    # - openssl:
+    #     default:
+    #       version: develop
+    #       buildable: true
+    #     externals:
+    #       - spec: openssl@develop
+    #         prefix: /usr
     - rdma-core:
         default:
           variants: +ipo
@@ -185,12 +209,6 @@ serial_packages:
     - tcl
     - valgrind ~boost ~mpi
     - voropp
-    - xpmem:
-        default:
-          buildable: false
-        externals:
-          - spec: xpmem +kernel-module@2.6.3
-            paths: /usr
     - zlib
 
 # GCC ONLY ---------------------------------------------------------------------
@@ -216,6 +234,9 @@ serial_packages_gcc_stable:
         module:
           blacklist: true
     - node-js
+    - mesa:
+        default:
+          variants: ~llvm
     - pmix:
         default:
           version: 4.1.2
@@ -227,10 +248,10 @@ serial_packages_gcc_stable:
     # This is already specified in the PE section
     # Here we are just making sure it will go into packages.yaml
     - python:
-        variants: +tkinter +optimizations ~debug
+        variants: +tkinter +optimizations ~debug +ssl
         default:
           version: <python3>
-          variants: +tkinter +optimizations ~debug
+          variants: +tkinter +optimizations ~debug +ssl
     - sox
 
 # GPU --------------------------------------------------------------------------
@@ -242,14 +263,6 @@ serial_packages_gpu:
   pe: [gcc_stable]
   dependencies: [gpu]
   packages:
-    - hwloc:
-        default:
-          variants:
-            common: ~cairo
-            gpu:
-              nvidia: +cuda +nvml ~rocm
-              none: ~cuda ~rocm ~nvml
-              amd: +rocm ~cuda
     # The following version compiler with success:
     #
     #  llvm@12.0.1%gcc@11.3.0+clang~code_signing+compiler-rt~cuda~flang+gold~internal_unwind+ipo+libcxx
@@ -321,7 +334,7 @@ serial_packages_blas:
           - scotch ~mpi
           - cgns ~mpi
           - hdf5 ~mpi
-          - mmg
+          - mmg +ipo ~vtk
     - superlu
 
 # BLAS + GPU -------------------------------------------------------------------
@@ -399,13 +412,13 @@ mpi_blas_packages_gcc_stable:
         dependencies:
           - hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools api=default build_type=RelWithDebInfo
           - netcdf-fortran@4.5.4%gcc@11.3.0~doc+pic+shared
-    - gromacs@2021.4+mpi:
-        variants:
-          gpu:
-            nvidia: +cuda
-            none: ~cuda
-        dependencies:
-          - fftw~mpi+openmp
+    # - gromacs@2021.4+mpi:
+    #     variants:
+    #       gpu:
+    #         nvidia: +cuda
+    #         none: ~cuda
+    #     dependencies:
+    #       - fftw~mpi+openmp
     # These dependencies (of mumps) will not go into packages.yaml
     - mumps:
         default: { variants: +mpi +parmetis +metis +scotch +ptscotch }
@@ -425,7 +438,10 @@ mpi_lapack_packages:
   pe: [gcc_stable]
   dependencies: [mpi, blas]
   packages:
-    - gmsh +openmp +hdf5 ~fltk ~opencascade ~med
+    - gmsh +eigen +openmp +hdf5 ~fltk ~opencascade ~med:
+        dependencies:
+          - hdf5 +mpi
+          - mmg +ipo ~vtk
     - quantum-espresso+mpi+scalapack ^fftw+mpi+openmp
     - quantum-espresso+mpi+scalapack hdf5=parallel ^fftw+mpi+openmp
 
@@ -587,7 +603,7 @@ serial_packages_python_gcc_stable:
   packages:
     # needs boost@1.54 (https://backwardincompatible.com/post/169360794395/compiling-illumina-bcl2fastq-220-on-ubuntu-with)
     - bcl2fastq2
-    - blast-plus@2.9.0
+    - blast-plus
     - gdb +tui +source-highlight +lto +xz ^boost~mpi
     - libgd
     - mummer
@@ -613,13 +629,6 @@ serial_packages_python_gpu_gcc_stable:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
-        dependencies:
-          - boost~mpi
-    - vtk +ipo+ffmpeg~mpi+opengl2+python~qt+xdmf:
-        variants:
-          gpu:
-            nvidia: ~osmesa
-            none: +osmesa
         dependencies:
           - boost~mpi
 # EXTERNAL ---------------------------------------------------------------------
@@ -827,8 +836,9 @@ mpi_blas_python_packages_gcc_stable:
         dependencies:
           - netcdf-c +mpi
           - boost+mpi
-    - vtk+ffmpeg+mpi+opengl2+python~qt+xdmf:
-        variants:
+    - vtk:
+        default:
+          variants: +ffmpeg +python +xdmf +mpi ~qt +ipo +opengl2
           gpu:
             nvidia: ~osmesa
             none: +osmesa
