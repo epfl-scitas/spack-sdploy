@@ -748,7 +748,7 @@ external_packages:
         default:
           buildable: false
         externals:
-          - spec: smr@2017.06 %gcc@4.8.5 arch=linux-rhel7-haswell
+          - spec: smr@2017.0 %<core_compiler> arch=<arch>
             prefix: <external_prefix>/SMR/2017.06
     - totalview:
         buildable: false
@@ -757,24 +757,24 @@ external_packages:
             prefix: <external_prefix>/toolworks/totalview.2017.2.11
           - spec: totalview@2020.3.11 %<core_compiler> arch=<arch>
             prefix: <external_prefix>/toolworks/totalview.2020.3.11
-    - crystal17:
-        default:
-          buildable: true
-          permissions:
-            read: group
-            group: crystal-soft
+#    - crystal17:
+#        default:
+#          buildable: true
+#          permissions:
+#            read: group
+#            group: crystal-soft
     - molpro:
         default:
           buildable: true
           permissions:
             read: group
             group: molpro-soft
-    - vasp:
-        default:
-          buildable: true
-          permissions:
-            read: group
-            group: vasp-soft
+#    - vasp:
+#        default:
+#          buildable: true
+#          permissions:
+#            read: group
+#            group: vasp-soft
 
 # MPI PYTHON --------------------------------------------------------------------
 #
