@@ -62,7 +62,7 @@ class SpackYaml(StackFile):
 
         for pe, stack in data.items():
             for stack_name in stack.keys():
-                self.pe_specs[pe + '_' + stack_name] = list(data.get(pe).get(stack_name).keys())
+                self.pe_specs[pe + '_' + stack_name] = list(stack[stack_name].keys())
                 # compiler is defined by default
                 self.pe_specs[pe + '_' + stack_name].pop(0)
 
@@ -83,12 +83,9 @@ class SpackYaml(StackFile):
         for pe, stack in self.pe_stack.items():
             for stack_name, stack_env in stack.items():
                 for filter in self.filters.keys():
-                    if (filter in stack_env
-                       and isinstance(self.pe_stack.get(pe).get(stack_name).get(filter), dict)):
-
-                        spec = self.pe_stack.get(pe).get(stack_name).get(filter) \
-                                .get(self.filters.get(filter))
-                        self.pe_stack[pe][stack_name][filter] = spec
+                    if filter in stack_env and isinstance(stack_env[filter], dict):
+                        spec = stack_env[filter][self.filters[filter]]
+                        stack_env[filter] = spec
 
         self.pe_defs = self._flatten_dict(self.pe_stack)
 
