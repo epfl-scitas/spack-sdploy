@@ -71,6 +71,7 @@ class ConfigYaml(StackFile):
         self._add_build_stage()
         self._add_module_roots()
         self._add_extensions()
+        self._add_install_paths()
 
     def _add_license_dir(self):
         self.conf['license_dir'] = os.path.join(self.commons.data['work_directory'],
@@ -118,3 +119,13 @@ class ConfigYaml(StackFile):
             self.commons.data['stack_version'],
             self.commons.data['tcl_roots'])
 
+    def _add_install_paths(self):
+        """Add modules installation paths"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        self.conf['install_tree'] = os.path.join(
+            self.commons.data['work_directory'],
+            self.commons.data['stack_release'],
+            self.commons.data['stack_version'],
+            'opt', 'spack')

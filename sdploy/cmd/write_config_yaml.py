@@ -42,4 +42,4 @@ def write_config_yaml(parser, args):
     conf = ConfigYaml(config)
 
     # Write config yaml file
-    conf.write_yaml(data = conf.conf)
+    conf.write_yaml(data=conf.conf)
