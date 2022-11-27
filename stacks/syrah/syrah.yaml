@@ -200,7 +200,7 @@ serial_packages:
         default:
           buildable: false
         externals:
-          - spec: slurm@22-05-2 ~mariadb
+          - spec: slurm@<slurm_version> ~mariadb
             prefix: /usr
     - stacks
     - star
@@ -275,7 +275,7 @@ serial_packages_gpu:
     #  ~link_llvm_dylib+lld+lldb~llvm_dylib~mlir+omp_as_runtime~omp_debug~omp_tsan+polly~python~shared_libs
     #  ~split_dwarf~z3 build_type=Release patches=d85ef51,f920173 targets=none version_suffix=none arch=linux-rhel8-haswell
     #
-    - llvm:
+    - llvm@14.0.6:
         default:
           version: 14.0.6
           variants:
@@ -452,12 +452,12 @@ serial_packages_python_blas:
   pe: [gcc_stable]
   dependencies: [python3, blas_parallel]
   packages:
-    - bcl2fastq2
+    #- bcl2fastq2
     - iq-tree +ipo@1.6.12
     - iq-tree +ipo@2.0.6
     - py-biopython
     - py-deeptools
-    - py-keras ^py-h5py ^hdf5 ~mpi
+    #- py-keras ^py-h5py ^hdf5 ~mpi
     - py-macs2
     - py-pybigwig
     - py-scikit-learn
@@ -505,7 +505,7 @@ serial_packages_python_gcc_stable:
     - gdb +tui +source-highlight +lto +xz ^boost~mpi
     - libgd
     - mummer
-    - polymake@3.5
+    - polymake
     - openbabel +python
     - r:
         default: {variants: +external-lapack}
@@ -689,12 +689,12 @@ mpi_packages:
         default: { variants: +ipo }
     - phylobayesmpi
     - scotch +mpi
-    - vasp:
+    - vasp@5.4.4:
         default:
           buildable: true
-          # permissions:
-          #   read: group
-          #   group: vasp-soft
+          permissions:
+            read: group
+            group: vasp-soft
 
 # MPI + BLAS -------------------------------------------------------------------
 #
@@ -709,10 +709,10 @@ mpi_blas_packages_gcc_stable:
     - mpi
     - blas
   packages:
-    - abinit +openmp +mpi +scalapack +wannier90:
-        dependencies:
-          - hdf5 +mpi
-          - netcdf-c +mpi
+    # - abinit +openmp +mpi +scalapack +wannier90:
+    #     dependencies:
+    #       - hdf5 +mpi
+    #       - netcdf-c +mpi
     - elmerfem +mumps +openmp +hypre:
         dependencies:
           - hdf5 +mpi
@@ -740,12 +740,12 @@ mpi_lapack_packages:
           - mmg +ipo ~vtk
     - quantum-espresso+mpi+scalapack ^fftw+mpi+openmp
     - quantum-espresso+mpi+scalapack hdf5=parallel ^fftw+mpi+openmp
-    - molpro:
-        default:
-          buildable: true
-          # permissions:
-          #   read: group
-          #   group: molpro-soft
+    # - molpro:
+    #     default:
+    #       buildable: true
+    #       permissions:
+    #         read: group
+    #         group: molpro-soft
 
 # MPI + BLAS + GPU -------------------------------------------------------------
 #
@@ -901,20 +901,21 @@ mpi_blas_python_packages_gcc_stable:
             none: +osmesa
         dependencies:
           - netcdf-c+mpi
-    - py-horovod controllers=mpi frameworks=pytorch,tensorflow,keras:
-        variants:
-          gpu:
-            nvidia: tensor_ops=nccl +cuda cuda_arch=<cuda_arch>
-            none: tensor_ops=mpi ~cuda
-    - py-tensorflow:
-        default:
-          variants:
-            common: +mpi
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch>
-              none: ~cuda ~nccl
-        dependencies:
-          - bazel
+    # - py-horovod controllers=mpi frameworks=pytorch,tensorflow,keras:
+    #     variants:
+    #       gpu:
+    #         nvidia: tensor_ops=nccl +cuda cuda_arch=<cuda_arch>
+    #         none: tensor_ops=mpi ~cuda
+    # - py-tensorflow:
+    #     default:
+    #       version: 2.10.0
+    #       variants:
+    #         common: +mpi
+    #         gpu:
+    #           nvidia: +cuda cuda_arch=<cuda_arch>
+    #           none: ~cuda ~nccl ~rocm amdgpu_target=none cuda_arch=none
+    #     dependencies:
+    #       - bazel
     - opencv +vtk +python3:
         variants:
           gpu:
@@ -947,7 +948,7 @@ mpi_blas_parallel_python_packages_gcc_stable:
         dependencies:
           - boost+mpi
           - fftw+mpi+openmp
-    - cp2k@9.1 +mpi +plumed +openmp:
+    - cp2k@9.1 +mpi +plumed +openmp smm=blas:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
