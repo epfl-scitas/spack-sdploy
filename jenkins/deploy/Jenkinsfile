@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'ph02-syrah-rhel8'
+        label 'jed-login'
     }
 
     // Adds timestamps to console logs
@@ -13,7 +13,7 @@ pipeline {
     // A variable defined in environment block is available through all stages
     // and its value cannot be changed later.
     environment {
-        STACK = "syrah-lite"
+        STACK = "syrah"
 
         // Variables read from commons.yaml using cat, grep and cut.
         WORK_DIR=sh(returnStdout:true,
@@ -46,15 +46,6 @@ pipeline {
 
     // A variable defined in a stage is bound to that stage.
     stages {
-
-//        stage('Do a fresh restart') {
-//            steps {
-//                sh 'echo STACK_PREFIX: ${STACK_PREFIX}'
-//                sh 'rm -rf /home/scitasbuildpr/.spack'
-//                sh 'rm -rf /home/scitasbuildpr/gcc'
-//            }
-//         }
-
         stage('Print variables') {
             steps {
                 echo "The following values were read from common.yaml"
