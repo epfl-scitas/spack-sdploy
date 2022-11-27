@@ -62,7 +62,7 @@ pipeline {
             }
         }
 
-        stage('Initialize Spack environments') {
+        stage('Test parallel agents') {
             steps {
                 script {
                     parallel(do_test_parallel())
