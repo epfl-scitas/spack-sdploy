@@ -154,7 +154,6 @@ def get_prefix(branch_name, stack_name) {
 }
 
 def get_agent_name(platform) {
-    env.environment = environment
     os_version_=sh(returnStdout:true,
                    script:"""cat stacks/${STACK}/platforms/${platform}.yaml |grep os: | cut -n -d ":" -f 2""").trim()
     slurm_version=sh(returnStdout:true,
