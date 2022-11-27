@@ -3,7 +3,8 @@ config:
   license_dir: {{data['license_dir']}}
 {% endif %}
 {% if 'install_tree' in data.keys() %}
-  install_tree: {{data['install_tree']}}
+  install_tree:
+    root: {{data['install_tree']}}
 {% endif %}
 #                                             BUILD STAGES #
 {% if 'core_per_socket' in tokens %}
