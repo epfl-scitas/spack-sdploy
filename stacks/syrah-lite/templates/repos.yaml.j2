@@ -1,8 +1,0 @@
-repos:
-{% if data | length %}
-{% for repo in data %}
-- {{ data[repo]['path'] }}
-{% endfor %}
-{% else %}
-{}
-{% endif %}

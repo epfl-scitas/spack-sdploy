@@ -1,8 +1,0 @@
-platform:
-  filters:
-    gpu: none
-    mpi: infiniband
-  tokens:
-    core_compiler: gcc@4.8.5 arch=linux-rhel7-cascadelake
-    python3: 3.10.4
-    arch: x86_64_v3
