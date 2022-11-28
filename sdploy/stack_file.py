@@ -112,3 +112,78 @@ class StackFile(ReadYaml):
             filename = os.path.join(self.yaml_path, self.yaml_file)
             tty.msg(f'Writing file {filename}')
             self._write_yaml(output, filename)
+
+    def _define_PEs(self):
+        pes = self.group_sections(self.data, 'pe')
+        pe_defs = {}
+        for pe_name, pe in pes:
+            for stack_name, stack in pe:
+                res = {}
+                for def_name, definition in stack:
+                    res[def_name] = self._handle_filter(definition)
+                pe_defs[f'{pe_name}_{definition}'] = res
+        return pe_defs
+
+    def _handle_package_dictionary(self, pkg_list):
+        """missing docstring"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        if len(pkg_list.keys()) > 1:
+            raise KeyError()
+
+        pkg_name = list(pkg_list.keys())[0]
+        pkg_attributes = pkg_list[pkg_name]
+
+        try:
+            package = [pkg_name]
+            tty.debug(f'Reading package: {package}')
+
+            # Do not force user to use `variants` if he only wants a filter
+            for filter in self._filters_in_package(pkg_attributes):
+                package.append(pkg_attributes[filter][self.filters[filter]])
+
+            for attr in ['version', 'variants', 'dependencies']:
+                if attr in pkg_attributes:
+                    _spack_pkg = getattr(SpackYaml, '_spack_pkg_' + attr)
+
+                    #calling self._spack_yaml_pkg_<attr>
+                    package.append(_spack_pkg(self, pkg_attributes[attr]))
+            return package
+        except FilterException as fe:
+            tty.debug(f'Ignoring package {pkg_name} in `spack.yaml` due to'
+                      f'missing value for {fe.filter_value} in filter {fe.filter}')
+            return None
+
+    def _spack_pkg_version(self, version_attributes):
+        """Returns package version"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+        version = self._handle_filter(version_attributes)
+        return(self._remove_newline(' '.join(version)))
+
+
+    def _spack_pkg_variants(self, variants_attributes):
+        """Returns package variants"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+        variants = []
+        if 'common' in variants_attributes:
+            variants.append(variants_attributes.get('common'))
+
+        variants.extend(self._handle_filter(variants_attributes))
+
+        return(self._remove_newline(' '.join(variants)))
+
+    def _spack_pkg_dependencies(self, dependencies_attributes):
+        """Returns package dependencies"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+        dependencies = []
+        # We are just checking that version_attributes is not a structure (dict, list, etc)
+        if isinstance(dependencies_attributes, list):
+            dependencies = dependencies_attributes
+        else:
+            dependencies = self._handle_filter(dependencies_attributes)
+
+        return(self._remove_newline(' ^' + ' ^'.join(dependencies)))

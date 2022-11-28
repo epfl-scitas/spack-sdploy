@@ -43,33 +43,52 @@ class ActivatePkgs(StackFile):
 
         super().__init__(config)
         self.pkglist = []
+        self._pe_definitions = self._define_PEs()
         self._add_activated_lists()
         self._add_activated_pkgs()
         self.pkglist = set(self.pkglist)
+
+    def _get_pe_spec(self, definition):
+        pe = self._pe_definitions[definition['pe']]
+        spec = f'''%{pe['compiler']}'''
+        if 'dependencies' in definition:
+            for dep in definition['dependencies']:
+                spec = f'^{dep} {spec}'
+        return spec
+
 
     def _add_activated_lists(self):
         """Add packages from lists having 'activate: true' attribute"""
 
         for _, v in self.data.items():
             # if activated in metadata then it is a packages list
-            if 'activated' in v['metadata']:
-                for pkg in v['packages']:
-                    if isinstance(pkg, str):
-                        self.pkglist.append(pkg)
-                    elif isinstance(pkg, dict):
-                        self.pkglist.append(list(pkg.keys()).pop())
+            if 'activated' not in v['metadata']:
+                continue
+            if not v['metadata']['activated']:
+                continue
+
+            spec = self._get_pe_spec(v)
+            for pkg in v['packages']:
+                if isinstance(pkg, dict):
+                    pkg = ' '.join(self._handle_package_dictionary(pkg))
+
+                self.pkglist.append(f'{pkg} {spec}')
+
 
     def _add_activated_pkgs(self):
         """Add packages from lists NOT having 'activate: true' attribute.
         This packages are activated using its own attribute."""
+        data = self.group_sections(self.data, 'packages')
 
-        for _, v in self.data.items():
-            if v['metadata']['section'] == 'packages':
-                for pkg in v['packages']:
-                    if isinstance(pkg, dict):
-                        for pkg_name, prop in pkg.items():
-                            if 'activated' in prop:
-                                self.pkglist.append(pkg_name)
+        for _, v in data.items():
+            spec = self._get_pe_spec(v)
+            for pkg in v['packages']:
+                if not isinstance(pkg, dict):
+                    continue
+
+                if 'activated' in pkg and pkg['activated']:
+                    pkg_spec = ' '.join(self._handle_package_dictionary(pkg))
+                    self.pkglist.append(f'{pkg_spec} {spec}')
 
     def write_activated_pkgs(self):
         """Write activated packages to file, one per line"""

@@ -164,21 +164,14 @@ class ReadYaml(object):
         tmp = {}
         for key in dic:
             if dic[key]['metadata']['section'] == section:
-                dic[key].pop('metadata')
                 tmp[key] = dic[key]
-        return(tmp)
-
+                tmp[key].pop('metadata')
+        return tmp
     #
     #
     # END
     #
     #
-
-
-
-
-
-
     def do_choose(self, stack, dic, token):
         """Replace token keys in dictionary
 

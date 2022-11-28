@@ -76,7 +76,7 @@ class SpackYaml(StackFile):
         # Hack for adding core_compiler definition
         if core:
             core_compiler = self.group_sections(deepcopy(self.data), 'core')
-            for k,v in core_compiler.items():
+            for k, v in core_compiler.items():
                 self.pe_stack[k] = v
 
         # Check for filters presence and applies filters
@@ -88,37 +88,6 @@ class SpackYaml(StackFile):
                         stack_env[filter] = spec
 
         self.pe_defs = self._flatten_dict(self.pe_stack)
-
-    def _handle_package_dictionary(self, pkg_list):
-        """missing docstring"""
-
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-
-        if len(pkg_list.keys()) > 1:
-            raise KeyError()
-
-        pkg_name = list(pkg_list.keys())[0]
-        pkg_attributes = pkg_list[pkg_name]
-
-        try:
-            package = [pkg_name]
-            tty.debug(f'Reading package: {package}')
-
-            # Do not force user to use `variants` if he only wants a filter
-            for filter in self._filters_in_package(pkg_attributes):
-                package.append(pkg_attributes[filter][self.filters[filter]])
-
-            for attr in ['version', 'variants', 'dependencies']:
-                if attr in pkg_attributes:
-                    _spack_yaml_pkg = getattr(SpackYaml, '_spack_yaml_pkg_' + attr)
-
-                    #calling self._spack_yaml_pkg_<attr>
-                    package.append(_spack_yaml_pkg(self, pkg_attributes[attr]))
-            return package
-        except FilterException as fe:
-            tty.debug(f'Ignoring package {pkg_name} in `spack.yaml` due to'
-                      f'missing value for {fe.filter_value} in filter {fe.filter}')
-            return None
 
     def create_pkgs_definitions_dict(self):
         """Regroup package lists with their specs"""
@@ -182,39 +151,6 @@ class SpackYaml(StackFile):
             if filter in dic:
                 result.append(filter)
         return(result)
-
-    def _spack_yaml_pkg_version(self, version_attributes):
-        """Returns package version"""
-
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-        version = self._handle_filter(version_attributes)
-        return(self._remove_newline(' '.join(version)))
-
-
-    def _spack_yaml_pkg_variants(self, variants_attributes):
-        """Returns package variants"""
-
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-        variants = []
-        if 'common' in variants_attributes:
-            variants.append(variants_attributes.get('common'))
-
-        variants.extend(self._handle_filter(variants_attributes))
-
-        return(self._remove_newline(' '.join(variants)))
-
-    def _spack_yaml_pkg_dependencies(self, dependencies_attributes):
-        """Returns package dependencies"""
-
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-        dependencies = []
-        # We are just checking that version_attributes is not a structure (dict, list, etc)
-        if isinstance(dependencies_attributes, list):
-            dependencies = dependencies_attributes
-        else:
-            dependencies = self._handle_filter(dependencies_attributes)
-
-        return(self._remove_newline(' ^' + ' ^'.join(dependencies)))
 
     def _flatten_dict(self, d: MutableMapping, parent_key: str = '', sep: str = '_'):
         """Returns a flat dict
