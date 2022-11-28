@@ -72,6 +72,7 @@ class ConfigYaml(StackFile):
         self._add_module_roots()
         self._add_extensions()
         self._add_install_paths()
+        self._add_template_dirs()
 
     def _add_license_dir(self):
         self.conf['license_dir'] = os.path.join(self.commons.data['work_directory'],
@@ -120,7 +121,7 @@ class ConfigYaml(StackFile):
             self.commons.data['tcl_roots'])
 
     def _add_install_paths(self):
-        """Add modules installation paths"""
+        """Add installation paths"""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
@@ -129,3 +130,18 @@ class ConfigYaml(StackFile):
             self.commons.data['stack_release'],
             self.commons.data['stack_version'],
             'opt', 'spack')
+
+    def _add_template_dirs(self):
+        """Add template paths"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+
+        self.conf['template_dirs'] = [
+            os.path.join('$spack', 'share', 'spack', 'templates')]
+
+        env = ev.active_environment()
+        if env:
+            self.conf['template_dirs'].append(
+                os.path.join(
+                    os.path.dirname(os.path.realpath(env.manifest_path)),
+                    'templates'))

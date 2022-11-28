@@ -6,6 +6,13 @@ config:
   install_tree:
     root: {{data['install_tree']}}
 {% endif %}
+{% if 'template_dirs' in data.keys() %}
+  template_dirs:
+  {% for dir in data['template_dirs'] %}
+  - {{ dir }}
+  {% endfor %}
+{% endif %}
+
 #                                             BUILD STAGES #
 {% if 'core_per_socket' in tokens %}
   build_jobs: {{tokens['core_per_socket']}}
