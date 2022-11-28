@@ -53,7 +53,7 @@ gcc:
       ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^pmix ~docs ^libevent +openssl ^hwloc ~libxml2
     blas: openblas@0.3.20 threads=none +locking
     blas_parallel: openblas@0.3.20 threads=openmp +locking
-    python3: python@<python3> +tkinter +optimizations ~debug +ssl
+    python3: python@<python3> +tkinter +optimizations ~debug +ssl ~libxml2
     python2: python@2.7.18 +tkinter ~debug
     gpu:
       nvidia: cuda@11.7.0
@@ -127,7 +127,6 @@ serial_packages:
   metadata: { section: packages }
   pe: [gcc_stable]
   packages:
-    - angsd
     - bwa
     - bzip2
     - cmake
@@ -173,6 +172,17 @@ serial_packages:
     #          - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
     - perl:
         default: { version: 5.32.0 }
+    # TODO: check if the reuse: True makes it use the proper node-js
+    # node-js@18.9.1 includes npm@8.19.1
+    # idea: make a new spack package with this version of npm
+    # - npm
+    # This is already specified in the PE section
+    # Here we are just making sure it will go into packages.yaml
+    - python:
+        variants: +tkinter +optimizations ~debug +ssl ~libxml2
+        default:
+          version: <python3>
+          variants: +tkinter +optimizations ~debug +ssl ~libxml2
     - ncview:
         dependencies:
           - hdf5 ~mpi+szip+hl+fortran+cxx
@@ -226,86 +236,35 @@ serial_packages_gcc_stable:
     - glpk+gmp
     # julia >= 0.5 conflicts with intel compilers
     # it is not in the serial_packages_python_gcc_stable due to the dependecy to mkl
-    - julia
     - libevent:
         default:
           variants: +openssl
         module:
           blacklist: true
-    - node-js
-    - mesa:
-        default:
-          variants: ~llvm
     - pmix:
         default:
           version: 4.1.2
           variants: ~docs
-    # TODO: check if the reuse: True makes it use the proper node-js
-    # node-js@18.9.1 includes npm@8.19.1
-    # idea: make a new spack package with this version of npm
-    # - npm
-    # This is already specified in the PE section
-    # Here we are just making sure it will go into packages.yaml
-    - python:
-        variants: +tkinter +optimizations ~debug +ssl
-        default:
-          version: <python3>
-          variants: +tkinter +optimizations ~debug +ssl
     - sox
+    - ucx:
+        default:
+          variants:
+            common: +rdmacm +rc +dc +ud +cm +cma +verbs +mlx5_dv +parameter_checking +thread_multiple
+
 
 # GPU --------------------------------------------------------------------------
 #
 #
 # ------------------------------------------------------------------------------
-serial_packages_gpu:
-  metadata: { section: packages }
-  pe: [gcc_stable]
-  dependencies: [gpu]
-  packages:
-    # The following version compiler with success:
-    #
-    #  llvm@12.0.1%gcc@11.3.0+clang~code_signing+compiler-rt~cuda~flang+gold~internal_unwind+ipo+libcxx
-    #  +link_llvm_dylib+lld+lldb+llvm_dylib~mlir+omp_as_runtime~omp_debug~omp_tsan+polly~python~shared_libs
-    #  ~split_dwarf~z3 build_type=Release patches=10cb42f,88ae104,f920173 targets=amdgpu,bpf,nvptx,webassembly
-    #  version_suffix=jl arch=linux-rhel8-haswell
-    #
-    # The following version fails:
-    #
-    #  llvm@14.0.2%gcc@11.3.0+clang~code_signing+compiler-rt~cuda~flang+gold+internal_unwind+ipo+libcxx
-    #  ~link_llvm_dylib+lld+lldb~llvm_dylib~mlir+omp_as_runtime~omp_debug~omp_tsan+polly~python~shared_libs
-    #  ~split_dwarf~z3 build_type=Release patches=d85ef51,f920173 targets=none version_suffix=none arch=linux-rhel8-haswell
-    #
-    - llvm@14.0.6:
-        default:
-          version: 14.0.6
-          variants:
-            common: +ipo
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch>
-              none: ~cuda
-    - ucx:
-        default:
-          variants:
-            common: +rdmacm +rc +dc +ud +cm +cma +verbs +mlx5_dv +parameter_checking +thread_multiple
-    - cudnn@8.0.3.39-11.0:
-        dependencies:
-          gpu:
-            nvidia: cuda@11.0.2
-
-# GPU (GCC ONLY) ---------------------------------------------------------------
-#
-#
-# ------------------------------------------------------------------------------
-serial_packages_gcc_stable_gpu:
-  metadata: { section: packages }
-  pe: [gcc_stable]
-  dependencies: [gpu]
-  packages:
-    - xgboost:
-        variants:
-          gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch>
-            none: ~cuda
+# serial_packages_gpu:
+#   metadata: { section: packages }
+#   pe: [gcc_stable]
+#   dependencies: [gpu]
+#   packages:
+#     - cudnn@8.0.3.39-11.0:
+#         dependencies:
+#           gpu:
+#             nvidia: cuda@11.0.2
 
 # BLAS -------------------------------------------------------------------------
 #
@@ -321,19 +280,6 @@ serial_packages_blas:
   packages:
     - arpack-ng ~mpi
     # +med ^hdf5@1.10.7
-    - boost:
-        default:
-          variants: cxxstd=14 +icu ~mpi +python +numpy +atomic +chrono +container +date_time +filesystem +graph +iostreams ~json +locale +log +math ~pic +program_options +random +regex +serialization +shared +signals ~singlethreaded ~stacktrace +system ~taggedlayout +test +thread +timer ~type_erasure ~versionedlayout +wave +exception
-        dependencies:
-          - python@<python3> +tkinter +optimizations ~debug
-    - gmsh:
-        variants: |
-          ~mpi +hdf5 +cgns +eigen ~opencascade +openmp ~fltk ~med
-        dependencies:
-          - scotch ~mpi
-          - cgns ~mpi
-          - hdf5 ~mpi
-          - mmg +ipo ~vtk
     - superlu
 
 # BLAS + GPU -------------------------------------------------------------------
@@ -428,10 +374,19 @@ serial_packages_python:
   pe: [gcc_stable]
   dependencies: [python3]
   packages:
+    - angsd
     - bedtools2
     - bowtie2
     - cairo:
         default: { variants: +png +pdf +fc +ft }
+    - llvm@14.0.6:
+        default:
+          version: 14.0.6
+          variants:
+            common: +ipo
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch>
+              none: ~cuda
     - mercurial
     - ninja
     - prinseq-lite
@@ -452,9 +407,21 @@ serial_packages_python_blas:
   pe: [gcc_stable]
   dependencies: [python3, blas_parallel]
   packages:
+    - boost:
+        default:
+          variants: cxxstd=14 +icu ~mpi +python +numpy +atomic +chrono +container +date_time +filesystem +graph +iostreams ~json +locale +log +math ~pic +program_options +random +regex +serialization +shared +signals ~singlethreaded ~stacktrace +system ~taggedlayout +test +thread +timer ~type_erasure ~versionedlayout +wave +exception
     #- bcl2fastq2
+    - gmsh:
+        variants: |
+          ~mpi +hdf5 +cgns +eigen ~opencascade +openmp ~fltk ~med
+        dependencies:
+          - scotch ~mpi
+          - cgns ~mpi
+          - hdf5 ~mpi
+          - mmg +ipo ~vtk
     - iq-tree +ipo@1.6.12
     - iq-tree +ipo@2.0.6
+    - polymake
     - py-biopython
     - py-deeptools
     #- py-keras ^py-h5py ^hdf5 ~mpi
@@ -462,6 +429,7 @@ serial_packages_python_blas:
     - py-pybigwig
     - py-scikit-learn
     - py-statsmodels
+
 
 # PYTHON BLAS GPU --------------------------------------------------------------
 #
@@ -504,13 +472,22 @@ serial_packages_python_gcc_stable:
     - blast-plus
     - gdb +tui +source-highlight +lto +xz ^boost~mpi
     - libgd
+    - julia+openlibm@1.8.3
+    - node-js
+    - mesa:
+        default:
+          variants: ~llvm
     - mummer
-    - polymake
     - openbabel +python
     - r:
         default: {variants: +external-lapack}
     - gatk
     - spades
+    - xgboost:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
 
 # PYTHON + GPU (GCC ONLY) ------------------------------------------------------
 #
@@ -689,12 +666,12 @@ mpi_packages:
         default: { variants: +ipo }
     - phylobayesmpi
     - scotch +mpi
-    - vasp@5.4.4:
-        default:
-          buildable: true
-          permissions:
-            read: group
-            group: vasp-soft
+    #- vasp@5.4.4:
+    #    default:
+    #      buildable: true
+    #      permissions:
+    #        read: group
+    #        group: vasp-soft
 
 # MPI + BLAS -------------------------------------------------------------------
 #
@@ -893,14 +870,6 @@ mpi_blas_python_packages_gcc_stable:
           - netcdf-c+mpi
           - fftw+mpi+openmp
     - openfoam +metis ^boost+mpi ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools ^fftw+mpi+openmp
-    - paraview +shared +python3 +hdf5:
-        variants:
-          gpu:
-            nvidia: ~osmesa
-            rocm: ~osmesa
-            none: +osmesa
-        dependencies:
-          - netcdf-c+mpi
     # - py-horovod controllers=mpi frameworks=pytorch,tensorflow,keras:
     #     variants:
     #       gpu:
@@ -940,6 +909,14 @@ mpi_blas_parallel_python_packages_gcc_stable:
   pe: [gcc_stable]
   dependencies: [mpi, blas_parallel, python3]
   packages:
+    - paraview +shared +python3 +hdf5:
+        variants:
+          gpu:
+            nvidia: ~osmesa
+            rocm: ~osmesa
+            none: +osmesa
+        dependencies:
+          - netcdf-c+mpi
     - cp2k@9.1 +mpi ~plumed +openmp smm=blas:
         variants:
           gpu:
