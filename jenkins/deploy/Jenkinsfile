@@ -1,13 +1,13 @@
 pipeline {
     agent {
-        label 'jed-login'
+        label 'helvetios-login'
     }
 
     // Adds timestamps to console logs
     options {
         timestamps()
         ansiColor('xterm')
-	buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
+        buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
     }
 
     // A variable defined in environment block is available through all stages
