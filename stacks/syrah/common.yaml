@@ -36,3 +36,4 @@ concretizer:
   targets:
     granularity: microarchitectures
     host_compatible: True
+  reuse: True
