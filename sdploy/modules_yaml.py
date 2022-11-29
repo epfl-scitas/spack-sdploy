@@ -15,24 +15,20 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 import os
-import shutil
 import inspect
+import copy
 
 import spack
 import spack.cmd
 import spack.config
 import spack.environment as ev
 import spack.schema.env
-import spack.util.spack_yaml as syaml
-import llnl.util.filesystem as fs
 import llnl.util.tty as tty
 
-from llnl.util.filesystem import mkdirp, working_dir
-from spack.util.executable import ProcessError, which
-from jinja2 import Environment, FileSystemLoader
 
 from .stack_file import StackFile
-from .util import *
+from .util import ReadYaml
+
 
 class ModulesYaml(StackFile):
     """Provides methods to write the modules.yaml configuration"""
@@ -52,6 +48,9 @@ class ModulesYaml(StackFile):
         self.template_file = self.config.modules_yaml_template
         self.yaml_path = self.config.spack_config_path
         self.yaml_file = self.config.modules_yaml
+
+        self.commons = ReadYaml()
+        self.commons.read(os.path.join(self.config.commons_yaml))
 
         self.modules = {}
         self._create_dictionary()
@@ -81,23 +80,36 @@ class ModulesYaml(StackFile):
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
-        commons = ReadYaml()
-        commons.read(os.path.join(self.config.commons_yaml))
-        self.modules['lmod_roots'] = (commons.data['work_directory'] + os.path.sep
-                                      + commons.data['stack_release'] + os.path.sep
-                                      + commons.data['stack_version'] + os.path.sep
-                                      + commons.data['lmod_roots'])
-        self.modules['tcl_roots'] = (commons.data['work_directory'] + os.path.sep
-                                      + commons.data['stack_release'] + os.path.sep
-                                      + commons.data['stack_version'] + os.path.sep
-                                      + commons.data['tcl_roots'])
+        env = ev.active_environment()
+        if env:
+            env_path = env.name
+        else:
+            env_path = None
+
+        if ('modules' not in self.commons.data or
+            'roots' not in self.commons.data['modules']):
+            return
+
+        for module_type in ['lmod', 'tcl']:
+            root = os.path.join(
+                self.commons.data['work_directory'],
+                self.commons.data['stack_release'],
+                self.commons.data['stack_version'],
+                self.commons.data['modules']['roots'][module_type])
+            if env_path:
+                root = os.path.join(
+                    root,
+                    env_path
+                )
+            self.modules[f'{module_type}_roots'] = root
 
     def _add_suffixes(self):
         """Add modules suffixes from stack.yaml"""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-        self.modules['suffixes'] = {'+mpi': 'mpi',
-                                    '+openmp': 'openmp',
-                                    'threads=openmp': 'openmp',
-                                    '+libx264': 'h264',
-                                    '+debug': 'dbg'}
+        if ('modules' not in self.commons.data or
+            'suffixes' not in self.commons.data['modules']):
+            return
+
+        self.modules['suffixes'] = copy.copy(
+            self.commons.data['modules']['suffixes'])

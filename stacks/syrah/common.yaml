@@ -10,8 +10,6 @@ extensions: spack-config
 spack: spack
 spack_sdploy: spack-sdploy
 stack_version: v1
-lmod_roots: share/spack/lmod
-tcl_roots: share/spack/modules
 
 environments: # platforms
   - jed
@@ -31,6 +29,17 @@ extra_repos:
     repo: http://github.com/epfl-scitas/scitas-spack-packages.git
     path: scitas-spack-packages/
     tag: releases/syrah
+
+modules:
+  roots:
+    lmod: share/spack/lmod
+    tcl: share/spack/modules
+  suffixes:
+    '+mpi': 'mpi'
+    '+openmp': 'openmp'
+    'threads=openmp': 'openmp'
+    '+libx264': 'h264'
+    '+debug': 'dbg'
 
 concretizer:
   targets:

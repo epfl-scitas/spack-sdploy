@@ -69,7 +69,6 @@ class ConfigYaml(StackFile):
 
         self._add_license_dir()
         self._add_build_stage()
-        self._add_module_roots()
         self._add_extensions()
         self._add_install_paths()
         self._add_template_dirs()
@@ -102,23 +101,6 @@ class ConfigYaml(StackFile):
                          self.commons.data['stack_release'],
                          self.commons.data['spack_sdploy'])
         ]
-
-    def _add_module_roots(self):
-        """Add modules installation paths"""
-
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-
-        self.conf['module_roots'] = {}
-        self.conf['module_roots']['lmod'] = os.path.join(
-            self.commons.data['work_directory'], 
-            self.commons.data['stack_release'],
-            self.commons.data['stack_version'],
-            self.commons.data['lmod_roots'])
-        self.conf['module_roots']['tcl'] = os.path.join(
-            self.commons.data['work_directory'],
-            self.commons.data['stack_release'],
-            self.commons.data['stack_version'],
-            self.commons.data['tcl_roots'])
 
     def _add_install_paths(self):
         """Add installation paths"""
