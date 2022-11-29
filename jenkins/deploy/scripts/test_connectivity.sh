@@ -6,6 +6,6 @@ if [ $? -eq 0 ]; then
     rm /tmp/index.html
     exit 0
 else
-    env | grep -i proxy
+    env
     exit -1
 fi
