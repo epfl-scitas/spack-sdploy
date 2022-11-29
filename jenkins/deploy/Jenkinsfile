@@ -76,47 +76,47 @@ pipeline {
             }
         }
 
-       //  stage('Install Spack') {
-       //      steps {
-       //          sh '${JENKINS}/install_spack.sh'
-       //      }
-       //  }
+        stage('Install Spack') {
+            steps {
+                sh '${JENKINS}/install_spack.sh'
+            }
+        }
 
-       //  stage('Install Spack extensions') {
-       //      steps {
-       //          sh '${JENKINS}/install_spack_sdploy.sh'
-       //      }
-       //  }
+        stage('Install Spack extensions') {
+            steps {
+                sh '${JENKINS}/install_spack_sdploy.sh'
+            }
+        }
 
-       //  stage('Install External Repos') {
-       //      steps {
-       //          sh '${JENKINS}/clone_external_repos.sh'
-       //      }
-       //  }
+        stage('Install External Repos') {
+            steps {
+                sh '${JENKINS}/clone_external_repos.sh'
+            }
+        }
 
-       //  stage('Initialize Spack environments') {
-       //      steps {
-       //          script {
-       //              parallel(do_init_environments())
-       //          }
-       //      }
-       //  }
+        stage('Initialize Spack environments') {
+            steps {
+                script {
+                    parallel(do_init_environments())
+                }
+            }
+        }
 
-       //  stage('Install compilers') {
-       //      steps {
-       //          script {
-       //              parallel(do_install_compilers())
-       //          }
-       //      }
-       //  }
+        stage('Install compilers') {
+            steps {
+                script {
+                    parallel(do_install_compilers())
+                }
+            }
+        }
 
-       // stage('Concretize') {
-       //     steps {
-       //         script {
-       //             parallel(do_concretize())
-       //         }
-       //     }
-       // }
+        stage('Concretize') {
+            steps {
+                script {
+                    parallel(do_concretize())
+                }
+            }
+        }
 
        // stage('Populate mirror') {
        //     steps {
