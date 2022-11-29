@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'helvetios-login'
+        label 'jed-login'
     }
 
     // Adds timestamps to console logs
@@ -42,6 +42,10 @@ pipeline {
         SPACK_INSTALL_PATH     = "${STACK_PREFIX}/${SPACK_PATH}.${STACK_RELEASE_VER}"
         SPACK_SDPLOY_INSTALL_PATH = "${STACK_PREFIX}/${SPACK_SDPLOY}"
         SYSTEM_CONFIG_PREFIX      = "${STACK_PREFIX}/${STACK_RELEASE_VER}/config"
+
+        // Proxy web
+        https_proxy="http://scitassrv9.epfl.ch:80"
+        http_proxy="http://scitassrv9.epfl.ch:80"
     }
 
     // A variable defined in a stage is bound to that stage.
