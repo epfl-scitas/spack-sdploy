@@ -2,7 +2,7 @@
 
 wget --timeout=3 -v www.google.ch -O /tmp/index.html
 
-if [ -e /tmp/index.html ]; then
+if [ $? -eq 0 ]; then
     rm /tmp/index.html
     exit 0
 else
