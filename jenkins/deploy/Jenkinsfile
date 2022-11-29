@@ -129,27 +129,27 @@ pipeline {
             }
         }
 
-       // stage('Populate mirror') {
-       //     steps {
-       //         sh '${JENKINS}/add_mirror.sh'
-       //     }
-       // }
+       stage('Populate mirror') {
+           steps {
+               sh '${JENKINS}/add_mirror.sh'
+           }
+       }
 
-       // stage('Deploy software') {
-       //     steps {
-       //         script {
-       //            parallel(do_deploy())
-       //         }
-       //     }
-       // }
+       stage('Deploy software') {
+           steps {
+               script {
+                  parallel(do_deploy())
+               }
+           }
+       }
 
-//      stage('Activate packages') {
-//           steps {
-//              script {
-//                  parallel(do_activate_packages())
-//              }
-//          }
-//      }
+        stage('Activate packages') {
+            steps {
+                script {
+                    parallel(do_activate_packages())
+                }
+            }
+        }
     }
 }
 
