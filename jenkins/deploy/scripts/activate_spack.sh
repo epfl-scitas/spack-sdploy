@@ -14,7 +14,12 @@ echo "ENVIRONMENT ${environment}"
 
 _env_path=$(spack location --env ${environment} || true)
 
+export SPACK_USER_CACHE_PATH=$HOME/.spack-${STACK}
+export SPACK_USER_CONFIG_PATH=$HOME/.spack-${STACK}
+
 if [ ! -z ${_env_path} ]; then
     export SPACK_SYSTEM_CONFIG_PATH=${_env_path}
     echo "Setting SPACK_SYSTEM_CONFIG_PATH to: ${SPACK_SYSTEM_CONFIG_PATH}"
 fi
+
+source $HOME/.profile
