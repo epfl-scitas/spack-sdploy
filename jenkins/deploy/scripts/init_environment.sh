@@ -48,5 +48,10 @@ echo "Installing concretizer configuration for ${environment}"
 spack --env ${environment} write-concretizer-yaml -s ${STACK_RELEASE}
 spack --env ${environment} config blame concretizer
 
+if [ -d ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK}/data/templates ]; then
+    echo "Installing templates files"
+    cp -r ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK}/data/templates ${SPACK_SYSTEM_CONFIG_PATH}
+fi
+
 echo "List environment directory contents"
 ls -l ${SPACK_SYSTEM_CONFIG_PATH}
