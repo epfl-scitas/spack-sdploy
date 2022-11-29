@@ -14,10 +14,12 @@
 #                                                                       #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 import os
+import copy
 import spack
 import spack.util
 import spack.util.spack_yaml as spyaml
 import collections.abc
+import llnl.util.tty as tty
 from pdb import set_trace as st
 
 class ReadYaml(object):
@@ -154,7 +156,7 @@ class ReadYaml(object):
 
         return common.data['platform']['filters']
 
-    def group_sections(self, dic, section):
+    def group_sections(self, dict_, section):
         """Returns dictionary composed of common sections
 
         In the stack.yaml file there can be to different key that both are
@@ -162,9 +164,11 @@ class ReadYaml(object):
         which has section value in section key"""
 
         tmp = {}
-        for key in dic:
-            if dic[key]['metadata']['section'] == section:
-                tmp[key] = dic[key]
+        for key, value in dict_.items():
+            if 'metadata' not in value:
+                tty.debug(f'Error in dict entry {key}: {value}')
+            if value['metadata']['section'] == section:
+                tmp[key] = copy.copy(value)
                 tmp[key].pop('metadata')
         return tmp
     #

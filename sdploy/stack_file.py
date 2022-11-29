@@ -105,8 +105,9 @@ class StackFile(ReadYaml):
 
         env = ev.active_environment()
         if env:
-            filename = os.path.join(os.path.dirname(os.path.realpath(env.manifest_path)),
-                                    self.yaml_file)
+            filename = os.path.join(
+                os.path.dirname(os.path.realpath(env.manifest_path)),
+                self.yaml_file)
             self._write_yaml(output, filename)
         else:
             filename = os.path.join(self.yaml_path, self.yaml_file)
@@ -116,12 +117,17 @@ class StackFile(ReadYaml):
     def _define_PEs(self):
         pes = self.group_sections(self.data, 'pe')
         pe_defs = {}
-        for pe_name, pe in pes:
-            for stack_name, stack in pe:
-                res = {}
-                for def_name, definition in stack:
-                    res[def_name] = self._handle_filter(definition)
-                pe_defs[f'{pe_name}_{definition}'] = res
+
+        tty.debug(f'List of PEs: {pes}')
+
+        for pe_name, pe in pes.items():
+            for stack_name, stack in pe.items():
+                tty.debug(f'{pe_name}_{stack_name}')
+                pe_defs[f'{pe_name}_{stack_name}'] = {}
+                res = pe_defs[f'{pe_name}_{stack_name}']
+                for def_name, definition in stack.items():
+                    res[def_name] = ' '.join(self._handle_filter(definition))
+
         return pe_defs
 
     def _handle_package_dictionary(self, pkg_list):
@@ -145,7 +151,7 @@ class StackFile(ReadYaml):
 
             for attr in ['version', 'variants', 'dependencies']:
                 if attr in pkg_attributes:
-                    _spack_pkg = getattr(SpackYaml, '_spack_pkg_' + attr)
+                    _spack_pkg = getattr(StackFile, '_spack_pkg_' + attr)
 
                     #calling self._spack_yaml_pkg_<attr>
                     package.append(_spack_pkg(self, pkg_attributes[attr]))

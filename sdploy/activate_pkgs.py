@@ -49,24 +49,33 @@ class ActivatePkgs(StackFile):
         self.pkglist = set(self.pkglist)
 
     def _get_pe_spec(self, definition):
-        pe = self._pe_definitions[definition['pe']]
-        spec = f'''%{pe['compiler']}'''
-        if 'dependencies' in definition:
-            for dep in definition['dependencies']:
-                spec = f'^{dep} {spec}'
+        def_ = dict(definition)
+        pe_name = def_['pe'][0]
+        if pe_name not in self._pe_definitions:
+            return ''
+
+        pe = self._pe_definitions[pe_name]
+        spec = f'''%{pe['compiler']} arch=linux-{self.tokens['os']}-{self.tokens['target']}'''
+        if 'dependencies' in def_:
+            for dep in def_['dependencies']:
+                spec = f'''^{pe[dep]} {spec}'''
         return spec
 
 
     def _add_activated_lists(self):
         """Add packages from lists having 'activate: true' attribute"""
-
         for _, v in self.data.items():
             # if activated in metadata then it is a packages list
+            if not v['metadata']['section'] == 'packages':
+                continue
+
             if 'activated' not in v['metadata']:
                 continue
+
             if not v['metadata']['activated']:
                 continue
 
+            tty.debug(f'{v}')
             spec = self._get_pe_spec(v)
             for pkg in v['packages']:
                 if isinstance(pkg, dict):
