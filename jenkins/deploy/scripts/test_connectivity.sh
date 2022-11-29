@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source ~/.profile
+
 wget --timeout=3 -v www.google.ch -O /tmp/index.html
 
 if [ $? -eq 0 ]; then
