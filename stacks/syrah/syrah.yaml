@@ -89,6 +89,8 @@ core_packages:
         variants: +ncurses +ownlibs
         default:
           variants: +ownlibs ~ncurses ~qt
+        dependencies:
+          - openssl@1.1.1k
     - emacs +tls
     - fastqc
     - fio
@@ -129,7 +131,9 @@ serial_packages:
   packages:
     - bwa
     - bzip2
-    - cmake
+    - cmake ~ncurses:
+        dependencies:
+          - openssl@1.1.1k
     - eigen:
         default: { variants: +ipo }
     - fastqc
@@ -190,13 +194,13 @@ serial_packages:
     - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - nfft ^fftw~mpi+openmp
-    # - openssl:
-    #     default:
-    #       version: develop
-    #       buildable: true
-    #     externals:
-    #       - spec: openssl@develop
-    #         prefix: /usr
+    - openssl:
+        default:
+          version: 1.1.1k
+          buildable: false
+        externals:
+          - spec: openssl@1.1.1k
+            prefix: /usr
     - rdma-core:
         default:
           buildable: False
