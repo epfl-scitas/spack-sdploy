@@ -1,0 +1,34 @@
+packages:
+#                                                          #
+#                                          ALL PREFERENCES #
+#                                                          #
+  all:
+{% if 'target' in tokens %}
+    target: [{{tokens['target']}}]
+{% endif %}
+#                                                          #
+#                                         DEFAULT PACKAGES #
+#                                                          #
+{% for pkg, definition in data['defaults'] | dictsort %}
+{% if pkg not in data['externals'] %}
+  {{ pkg }}:
+{% for key, value in definition.items() %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+#                                                          #
+#                                        EXTERNAL PACKAGES #
+#                                                          #
+{% for pkg, definition in data['externals'] | dictsort %}
+  {{ pkg }}:
+{% if pkg in data['defaults'] %}
+{% for key, value in data['defaults'][pkg].items() %}
+    {{ key }}: {{ value }}
+{% endfor %}
+{% endif %}
+    externals:
+{% for spec in definition %}
+    - {{ spec }}
+{% endfor %}
+{% endfor %}
