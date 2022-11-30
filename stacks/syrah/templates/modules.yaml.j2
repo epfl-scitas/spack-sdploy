@@ -152,5 +152,9 @@ modules:
         environment:
           prepend_path:
             PATH: /ssoft/spack/scripts/all/spark
+      ucx:
+        environment:
+          unset:
+            - UCX_ROOT
       vasp:
         template: modules/group_restricted.lua
