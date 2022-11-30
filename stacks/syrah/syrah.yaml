@@ -817,20 +817,20 @@ mpi_lapack_python_packages:
 #
 #
 # ------------------------------------------------------------------------------
-mpi_packages_gcc_stable:
-  metadata: { section: packages }
-  pe: [gcc_stable]
-  dependencies: [mpi]
-  packages:
+# mpi_packages_gcc_stable:
+#   metadata: { section: packages }
+#   pe: [gcc_stable]
+#   dependencies: [mpi]
+#   packages:
     # cpmd fails to fetch
     # - cpmd~openmp ^fftw+mpi~openmp
-    - relion ~mklfft:
-        variants:
-          gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch> +double-gpu
-            none: ~cuda
-        dependencies:
-          - fftw+mpi+openmp
+    # - relion ~mklfft:
+    #     variants:
+    #       gpu:
+    #         nvidia: +cuda cuda_arch=<cuda_arch> +double-gpu
+    #         none: ~cuda
+    #     dependencies:
+    #       - fftw+mpi+openmp
 
 # MPI BLAS PYTHON (GCC ONLY) ---------------------------------------------------
 #
