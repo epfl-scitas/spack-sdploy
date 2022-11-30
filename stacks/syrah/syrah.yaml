@@ -461,8 +461,10 @@ serial_packages_python2_deprecated:
   packages:
     - jellyfish
     - scons
-    - py-pip
-    - py-virtualenv
+    - py-pip:
+        activated: True
+    - py-virtualenv:
+        activated: True
 
 # PYTHON - GCC ONLY ------------------------------------------------------------
 #

@@ -171,11 +171,7 @@ class ReadYaml(object):
                 tmp[key] = copy.copy(value)
                 tmp[key].pop('metadata')
         return tmp
-    #
-    #
-    # END
-    #
-    #
+
     def do_choose(self, stack, dic, token):
         """Replace token keys in dictionary
 

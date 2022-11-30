@@ -55,12 +55,11 @@ class ActivatePkgs(StackFile):
             return ''
 
         pe = self._pe_definitions[pe_name]
-        spec = f'''%{pe['compiler']} arch=linux-{self.tokens['os']}-{self.tokens['target']}'''
+        spec = f''' %{pe['compiler']} arch=linux-{self.tokens['os']}-{self.tokens['target']}'''
         if 'dependencies' in def_:
             for dep in def_['dependencies']:
                 spec = f'''^{pe[dep]} {spec}'''
         return spec
-
 
     def _add_activated_lists(self):
         """Add packages from lists having 'activate: true' attribute"""
@@ -83,7 +82,6 @@ class ActivatePkgs(StackFile):
 
                 self.pkglist.append(f'{pkg} {spec}')
 
-
     def _add_activated_pkgs(self):
         """Add packages from lists NOT having 'activate: true' attribute.
         This packages are activated using its own attribute."""
@@ -95,7 +93,10 @@ class ActivatePkgs(StackFile):
                 if not isinstance(pkg, dict):
                     continue
 
-                if 'activated' in pkg and pkg['activated']:
+                pkg_name = list(pkg.keys())[0]
+                pkg_attributes = pkg[pkg_name]
+
+                if 'activated' in pkg_attributes and pkg_attributes['activated']:
                     pkg_spec = ' '.join(self._handle_package_dictionary(pkg))
                     self.pkglist.append(f'{pkg_spec} {spec}')
 

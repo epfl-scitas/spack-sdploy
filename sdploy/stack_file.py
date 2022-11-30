@@ -130,6 +130,16 @@ class StackFile(ReadYaml):
 
         return pe_defs
 
+    def _filters_in_package(self, dic):
+        """Return list of filters found in dictionary"""
+
+        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
+        result = []
+        for filter in self.filters.keys():
+            if filter in dic:
+                result.append(filter)
+        return(result)
+
     def _handle_package_dictionary(self, pkg_list):
         """missing docstring"""
 

@@ -142,16 +142,6 @@ class SpackYaml(StackFile):
                 if len(self.pkgs_specs[pkg_list_name]['dependencies']) == 0:
                     self.pkgs_specs[pkg_list_name].pop('dependencies')
 
-    def _filters_in_package(self, dic):
-        """Return list of filters found in dictionary"""
-
-        tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-        result = []
-        for filter in self.filters.keys():
-            if filter in dic:
-                result.append(filter)
-        return(result)
-
     def _flatten_dict(self, d: MutableMapping, parent_key: str = '', sep: str = '_'):
         """Returns a flat dict
 
