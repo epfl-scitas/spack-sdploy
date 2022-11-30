@@ -965,3 +965,4 @@ mpi_blas_benchmarks:
   dependencies: [mpi, blas]
   packages:
     - hpl~openmp
+    - hpl+openmp
