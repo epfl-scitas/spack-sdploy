@@ -127,7 +127,7 @@ serial_packages:
   metadata: { section: packages }
   pe: [intel_stable]
   packages:
-    - angsd
+    - angsd ~r
     - bwa
     - bzip2
     - cmake
@@ -141,7 +141,7 @@ serial_packages:
     - hdf5:
         default:
           version: 1.12.2
-          variants: ~mpi +cxx +fortran +hl +ipo +shared +szip +tools
+          variants: ~mpi +cxx +fortran +hl ~ipo +shared +szip +tools
     - hisat2
     - htslib
     - hwloc:
@@ -152,7 +152,7 @@ serial_packages:
               nvidia: +cuda +nvml ~rocm
               none: ~cuda ~rocm ~nvml
               amd: +rocm ~cuda
-    - intel-tbb
+    - intel-oneapi-tbb
     - jasper
     - libfabric:
         default:
@@ -175,10 +175,10 @@ serial_packages:
         default: { version: 5.32.0 }
     - ncview:
         dependencies:
-          - hdf5 ~mpi+szip+hl+fortran+cxx
+          - hdf5 ~mpi+szip+hl+fortran+cxx~ipo
           - netcdf-c ~mpi~parallel-netcdf
-    - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
-    - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
+    - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx~ipo
+    - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx~ipo
     - nfft ^fftw~mpi+openmp
     # - openssl:
     #     default:
@@ -187,6 +187,13 @@ serial_packages:
     #     externals:
     #       - spec: openssl@develop
     #         prefix: /usr
+    - openssl:
+        default:
+          version: 1.1.1k
+          buildable: false
+        externals:
+          - spec: openssl@1.1.1k
+            prefix: /usr
     - rdma-core:
         default:
           buildable: False
@@ -223,7 +230,7 @@ serial_packages_gpu:
         default:
           version: 14.0.6
           variants:
-            common: +ipo
+            common: ~internal_unwind
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
@@ -249,7 +256,7 @@ serial_packages_blas:
     - blas
   packages:
     - arpack-ng ~mpi
-    # +med ^hdf5@1.10.7
+    # +med ^hdf5@1.10.7 ~ipo
     - boost:
         default:
           variants: cxxstd=14 +icu ~mpi +python +numpy +atomic +chrono +container +date_time +filesystem +graph +iostreams ~json +locale +log +math ~pic +program_options +random +regex +serialization +shared +signals ~singlethreaded ~stacktrace +system ~taggedlayout +test +thread +timer ~type_erasure ~versionedlayout +wave +exception
@@ -261,7 +268,7 @@ serial_packages_blas:
         dependencies:
           - scotch ~mpi
           - cgns ~mpi
-          - hdf5 ~mpi
+          - hdf5 ~mpi~ipo
           - mmg +ipo ~vtk
     - superlu
 
@@ -302,7 +309,7 @@ serial_packages_python_activated:
     - py-cython
     - py-gast
     - py-google-pasta
-    - py-grpcio
+#    - py-grpcio
     - py-pip
     - py-ply
     - py-protobuf
@@ -327,12 +334,15 @@ serial_packages_python_blas_activated:
   pe: [intel_stable]
   dependencies: [python3, blas_parallel]
   packages:
+    - py-h5py ^hdf5~mpi~ipo:
+        modules:
+          autoload: direct
     - py-keras-preprocessing
     - py-matplotlib
     - py-numpy
     - py-opt-einsum
     - py-pandas
-    - py-scipy
+    #- py-scipy
     - py-xarray
 
 # PYTHON -----------------------------------------------------------------------
@@ -352,9 +362,6 @@ serial_packages_python:
     - mercurial
     - ninja
     - prinseq-lite
-    - py-h5py ^hdf5~mpi:
-        modules:
-          autoload: direct
     - py-pybind11
     - samtools
     - scons
@@ -373,11 +380,11 @@ serial_packages_python_blas:
     - iq-tree +ipo@1.6.12
     - iq-tree +ipo@2.0.6
     - py-biopython
-    - py-deeptools
+    #- py-deeptools
     #- py-keras ^py-h5py ^hdf5 ~mpi
     - py-macs2
     - py-pybigwig
-    - py-scikit-learn
+    #- py-scikit-learn
     - py-statsmodels
 
 # PYTHON BLAS GPU --------------------------------------------------------------
@@ -483,7 +490,6 @@ external_packages:
             prefix: <external_prefix>/fdtd/2021-R2.2-2806
           - spec: fdtd@2022-R1.1-2963 %<core_compiler>
             prefix: <external_prefix>/fdtd/2022-R1.1-2963
-
     - gurobi:
         default:
           buildable: false
@@ -492,7 +498,6 @@ external_packages:
             prefix: <external_prefix>/gurobi/8.1.1
           - spec: gurobi@9.5.2 %<core_compiler>
             prefix: <external_prefix>/gurobi/9.5.2
-
     - gaussian:
         default:
           buildable: false
@@ -557,12 +562,14 @@ mpi_packages:
   packages:
     - arpack-ng:
         default: { variants: +mpi }
+	dependencies:
+	  - intel-oneapi-mkl
     - fftw:
         variants: +mpi +openmp
         default: { variants: +mpi ~openmp }
-    - hdf5 +mpi +szip +hl +fortran +cxx
-    - netcdf-c +mpi ^hdf5 +mpi +szip +hl +fortran +cxx
-    - netcdf-fortran ^hdf5 +mpi +szip +hl +fortran +cxx
+    - hdf5 +mpi +szip +hl +fortran +cxx ~ipo
+    - netcdf-c +mpi ^hdf5 +mpi +szip +hl +fortran +cxx ~ipo
+    - netcdf-fortran ^hdf5 +mpi +szip +hl +fortran +cxx ~ipo
     - openfoam-org +metis ^scotch+mpi
     - parmetis:
         default: { variants: +ipo }
@@ -574,7 +581,9 @@ mpi_packages:
           permissions:
             read: group
             group: vasp-soft
-
+	dependencies:
+	  - intel-oneapi-mkl
+	
 # MPI + BLAS ------------------------------------------------------------------
 #
 #
@@ -586,10 +595,10 @@ mpi_lapack_packages:
   packages:
     - gmsh +eigen +openmp +hdf5 ~fltk ~opencascade ~med:
         dependencies:
-          - hdf5 +mpi
+          - hdf5 +mpi ~ipo
           - mmg +ipo ~vtk
-    - quantum-espresso+mpi+scalapack ^fftw+mpi+openmp
-    - quantum-espresso+mpi+scalapack hdf5=parallel ^fftw+mpi+openmp
+#    - quantum-espresso+mpi+scalapack ^fftw+mpi+openmp
+#    - quantum-espresso+mpi+scalapack hdf5=parallel ^fftw+mpi+openmp
 
 # MPI + BLAS + GPU -------------------------------------------------------------
 #
@@ -609,7 +618,7 @@ mpi_lapack_gpu_packages:
     - superlu-dist:
         default:
           variants:
-            common: +ipo
+            common: ~ipo
             gpu:
               nvidia: +cuda
               none: ~cuda
@@ -624,7 +633,7 @@ mpi_python_packages:
   pe: [intel_stable]
   dependencies: [mpi, python3]
   packages:
-    - py-h5py ^hdf5 +mpi
+    - py-h5py ^hdf5 +mpi ~ipo
     - py-mpi4py
 
 # MPI + BLAS + PYTHON ----------------------------------------------------------
@@ -656,7 +665,7 @@ mpi_lapack_python_packages:
               nvidia: +cuda
               none: ~cuda
         dependencies:
-          - hdf5 +mpi +szip +hl +fortran +cxx
+          - hdf5 +mpi +szip +hl +fortran +cxx ~ipo
     - slepc:
         default: { variants: +arpack }
     - py-petsc4py
