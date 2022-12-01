@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-. activate_spack.sh
+. ${JENKINS}/activate_spack.sh
 
 set +e # if grep fails it is normal
 grep -q ${STACK_RELEASE}_cache $(spack gpg list)
