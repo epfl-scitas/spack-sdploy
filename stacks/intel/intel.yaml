@@ -264,7 +264,7 @@ serial_packages_blas:
           - cgns ~mpi
           - hdf5 ~mpi ~ipo
           - mmg ~ipo ~vtk
-	  - python@<python3> +tkinter +optimizations ~debug +ssl
+          - python@<python3> +tkinter +optimizations ~debug +ssl
     - superlu
 
 # BLAS + GPU -------------------------------------------------------------------
@@ -362,8 +362,8 @@ serial_packages_python:
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
-	  dependencies:
-	    - cmake %<core_compiler> ~ncurses +ownlibs
+          dependencies:
+            - cmake %<core_compiler> ~ncurses +ownlibs
     - mercurial
     - ninja
     - prinseq-lite
@@ -567,8 +567,8 @@ mpi_packages:
   packages:
     - arpack-ng:
         default: { variants: +mpi }
-	dependencies:
-	  - intel-oneapi-mkl
+        dependencies:
+          - intel-oneapi-mkl
     - fftw:
         variants: +mpi +openmp
         default: { variants: +mpi ~openmp }
@@ -586,9 +586,9 @@ mpi_packages:
 #          permissions:
 #            read: group
 #            group: vasp-soft
-#	dependencies:
-#	  - intel-oneapi-mkl
-	
+#       dependencies:
+#         - intel-oneapi-mkl
+        
 # MPI + BLAS ------------------------------------------------------------------
 #
 #
