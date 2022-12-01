@@ -15,6 +15,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # 'Activating Python virtual environment'
-. ${PYTHON_VIRTUALENV_PATH}/bin/activate
+. ${JENKINS}/activate_spack.sh
 
 $@
