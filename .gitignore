@@ -8,3 +8,4 @@ compilers.list
 mirrors.list
 install_compilers.xml
 install_stack.xml
+packages_to_activate
