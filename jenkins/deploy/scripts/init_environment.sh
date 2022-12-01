@@ -53,5 +53,10 @@ if [ -d ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK}/data/templates ]; then
     cp -r ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK}/data/templates ${SPACK_SYSTEM_CONFIG_PATH}
 fi
 
+echo "Creating symlink for users to be able to do an upstream"
+mkdir -p ${STACK_PREFIX}/${STACK_RELEASE_VER}/var/spack/environments
+cd ${STACK_PREFIX}/${STACK_RELEASE_VER}/var/spack/environments
+ln -sf ${SPACK_SYSTEM_CONFIG_PATH} ${environment}
+
 echo "List environment directory contents"
 ls -l ${SPACK_SYSTEM_CONFIG_PATH}
