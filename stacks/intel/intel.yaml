@@ -89,6 +89,8 @@ core_packages:
         variants: +ncurses +ownlibs
         default:
           variants: +ownlibs ~ncurses ~qt
+        dependencies:
+          - openssl@1.1.1k
     - emacs +tls
     - fastqc
     - fio
@@ -118,7 +120,7 @@ core_packages_stable:
   packages:
     - flex:
         default: { version: 2.6.4 }
-
+    - cmake +ncurses +ownlibs
 # ------------------------------------------------------------------------------
 #
 #
@@ -226,14 +228,6 @@ serial_packages_gpu:
   pe: [intel_stable]
   dependencies: [gpu]
   packages:
-    - llvm@14.0.6:
-        default:
-          version: 14.0.6
-          variants:
-            common: ~internal_unwind
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch>
-              none: ~cuda
     - ucx:
         default:
           variants:
@@ -268,8 +262,9 @@ serial_packages_blas:
         dependencies:
           - scotch ~mpi
           - cgns ~mpi
-          - hdf5 ~mpi~ipo
-          - mmg +ipo ~vtk
+          - hdf5 ~mpi ~ipo
+          - mmg ~ipo ~vtk
+	  - python@<python3> +tkinter +optimizations ~debug +ssl
     - superlu
 
 # BLAS + GPU -------------------------------------------------------------------
@@ -359,6 +354,16 @@ serial_packages_python:
     - bowtie2
     - cairo:
         default: { variants: +png +pdf +fc +ft }
+    - llvm@14.0.6:
+        default:
+          version: 14.0.6
+          variants:
+            common: ~ipo ~internal_unwind
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch>
+              none: ~cuda
+	  dependencies:
+	    - cmake %<core_compiler> ~ncurses +ownlibs
     - mercurial
     - ninja
     - prinseq-lite
@@ -385,7 +390,7 @@ serial_packages_python_blas:
     - py-macs2
     - py-pybigwig
     #- py-scikit-learn
-    - py-statsmodels
+    #- py-statsmodels
 
 # PYTHON BLAS GPU --------------------------------------------------------------
 #
@@ -575,14 +580,14 @@ mpi_packages:
         default: { variants: +ipo }
     - phylobayesmpi
     - scotch +mpi
-    - vasp@5.4.4:
-        default:
-          buildable: true
-          permissions:
-            read: group
-            group: vasp-soft
-	dependencies:
-	  - intel-oneapi-mkl
+#    - vasp@5.4.4:
+#        default:
+#          buildable: true
+#          permissions:
+#            read: group
+#            group: vasp-soft
+#	dependencies:
+#	  - intel-oneapi-mkl
 	
 # MPI + BLAS ------------------------------------------------------------------
 #
@@ -669,21 +674,21 @@ mpi_lapack_python_packages:
     - slepc:
         default: { variants: +arpack }
     - py-petsc4py
-    - py-torch:
-        variants: +mpi
-        default:
-          variants:
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch> +magma
-              none: ~cuda ~cudnn ~nccl
-              rocm: +magma +rocm
-        dependencies:
-          gpu:
-            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
-            rocm: [magma +rocm amdgpuarch=<amd_arch>]
-    - py-torchvision:
-        dependencies:
-          - py-torch+mpi~cuda
+#    - py-torch:
+#        variants: +mpi
+#        default:
+#          variants:
+#            gpu:
+#              nvidia: +cuda cuda_arch=<cuda_arch> +magma
+#              none: ~cuda ~cudnn ~nccl
+#              rocm: +magma +rocm
+#        dependencies:
+#          gpu:
+#            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
+#            rocm: [magma +rocm amdgpuarch=<amd_arch>]
+#    - py-torchvision:
+#        dependencies:
+#          - py-torch+mpi~cuda
 
 # BENCHMARKS -------------------------------------------------------------------
 #
