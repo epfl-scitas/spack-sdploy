@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export WORK_DIR_INTERNAL=`cat stacks/${STACK}/common.yaml |grep work_directory: | cut -n -d " " -f 2`
+
 export STACK_RELEASE=`cat stacks/${STACK}/common.yaml |grep stack_release: | cut -n -d " " -f 2`
 export STACK_RELEASE_VER=`cat stacks/${STACK}/common.yaml |grep stack_version: | cut -n -d " " -f 2`
 
@@ -17,3 +19,4 @@ export PYTHON_VIRTUALENV_PATH="${STACK_PREFIX}/${PYTHON_VENV_SUFFIX}"
 
 export SPACK_INSTALL_PATH="${STACK_PREFIX}/${SPACK_PATH}.${STACK_RELEASE_VER}"
 export SPACK_SDPLOY_INSTALL_PATH="${STACK_PREFIX}/${SPACK_SDPLOY}"
+export SPACK_BUILDCACHE_PATH="${STACK_PREFIX}/buildcache"
