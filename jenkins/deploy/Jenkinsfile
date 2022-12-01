@@ -109,6 +109,19 @@ pipeline {
                 }
             }
         }
+        stage('Prepare build cache') {
+            steps {
+                sh '${JENKINS}/create_buildcache.sh'
+            }
+        }
+        stage('Push to buildcache') {
+            steps {
+                script {
+                    parallel(do_push_buildcache())
+                }
+            }
+        }
+
     }
 }
 
@@ -208,5 +221,11 @@ def do_deploy() {
 def do_activate_packages() {
     return _define_stages("Activate packages",
                           "${env.JENKINS}/activate_packages.sh",
+                          "Activation of packages")
+}
+
+def do_push_buildcache() {
+    return _define_stages("Push to buildcache",
+                          "${env.JENKINS}/push_buildcache.sh",
                           "Activation of packages")
 }
