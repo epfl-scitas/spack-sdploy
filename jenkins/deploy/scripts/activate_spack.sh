@@ -23,7 +23,7 @@ if [ -e $SPACK_INSTALL_PATH/share/spack/setup-env.sh ]; then
     echo $NODE_LABELS | grep -q login
     res=$?
     set -e
-    if [ res -eq 0 ]; then
+    if [ $res -eq 0 ]; then
         echo "Running on a login node" 1>&2
         break
     fi
