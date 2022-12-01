@@ -15,6 +15,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # 'Activating Python virtual environment'
-. ${JENKINS}/activate_spack.sh
+. ${JENKINS}/activate_spack.sh 1>&2
 
 $@

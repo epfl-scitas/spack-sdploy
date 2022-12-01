@@ -25,7 +25,7 @@ if [ -e $SPACK_INSTALL_PATH/share/spack/setup-env.sh ]; then
     set -e
     if [ $res -eq 0 ]; then
         echo "Running on a login node" 1>&2
-        break
+        return
     fi
 
     echo "ENVIRONMENT ${environment}" 1>&2
