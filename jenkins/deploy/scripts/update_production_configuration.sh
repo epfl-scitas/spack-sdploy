@@ -1,7 +1,9 @@
 #!/bin/bash -l
 set -euo pipefail
 
-echo 'Installing Python virtual environment'
+. ${JENKINS}/setenv.sh
+
+echo "Installing Python virtual environment ${PYTHON_VIRTUALENV_PATH}"
 mkdir -p ${PYTHON_VIRTUALENV_PATH}
 python3 -m venv ${PYTHON_VIRTUALENV_PATH}
 
