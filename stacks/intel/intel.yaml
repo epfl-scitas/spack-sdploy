@@ -329,9 +329,9 @@ serial_packages_python_blas_activated:
   pe: [intel_stable]
   dependencies: [python3, blas_parallel]
   packages:
-    - py-h5py ^hdf5~mpi~ipo:
-        modules:
-          autoload: direct
+#    - py-h5py ^hdf5~mpi~ipo:
+#        modules:
+#          autoload: direct
     - py-keras-preprocessing
     - py-matplotlib
     - py-numpy
@@ -351,7 +351,7 @@ serial_packages_python:
   dependencies: [python3]
   packages:
     - bedtools2
-    - bowtie2
+#    - bowtie2
     - cairo:
         default: { variants: +png +pdf +fc +ft }
 #    - llvm@14.0.6:
