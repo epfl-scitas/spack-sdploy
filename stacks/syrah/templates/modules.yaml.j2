@@ -36,7 +36,13 @@ modules:
           +unwind: unwind
           +debug: dbg
           +ilp64: f64
+      whitelist:
+        - cmake@{{token['core_compiler']}}
       blacklist:
+        - openssl
+        - rdma-core
+        - ucx
+        - pmix
         - cmake
         # === activated python packages
         - py-cython
@@ -75,11 +81,11 @@ modules:
       gcc@11.3.0:
         environment:
           set:
-            CC: gcc
-            CXX: g++
-            F77: gfortran
-            FC: gfortran
-            F90: gfortran
+            CC: ${PREFIX}/bin/gcc
+            CXX: ${PREFIX}/bin/g++
+            F77: ${PREFIX}/bin/gfortran
+            FC: ${PREFIX}/bin/gfortran
+            F90: ${PREFIX}/bin/gfortran
       openmpi:
         environment:
           set:
@@ -115,6 +121,12 @@ modules:
           set:
             HDF5_CC: h5pcc
             HDF5_FC: h5pfc
+      intel-mpi:
+        environment:
+          set:
+            I_MPI_PMI_LIBRARY: /usr/lib64/libpmi2.so
+            I_MPI_EXTRA_FILESYSTEM: '0'
+            SLURM_MPI_TYPE=pmi2
       metis:
         suffixes:
           ~real64: sp
