@@ -2,7 +2,7 @@ spack_release: v0.18.1
 stack_release: intel
 
 # Path definitions
-work_directory: /scratch/syrah/run/s4
+work_directory: /scratch/syrah/run/s7
 python_venv: py3-venv
 spack_external: external
 jenkins: jenkins/deploy/scripts

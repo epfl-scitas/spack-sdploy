@@ -63,7 +63,8 @@ intel:
   metadata:
     section: pe
   stable:
-    compiler: intel-oneapi-compilers-classic
+    compiler: intel@2021.6.0
+    compiler_spec: intel-oneapi-compilers-classic@2021.6.0
     mpi:
       infiniband: intel-oneapi-mpi
       ethernet: intel-oneapi-mpi
