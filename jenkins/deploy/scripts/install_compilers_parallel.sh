@@ -25,7 +25,7 @@ do
     spec_path=$(spack location -i ${spec})
     echo "spack compiler find --scope system ${spec_path} || true"
 
-    if [[ "$spec" =~ "intel" ]]; then
+    if [[ "$spec" =~ "intel@" ]]; then
     compiler_add=1
         if [ -e ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml ]; then
             grep -q ${spec_path} ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
