@@ -638,7 +638,7 @@ mpi_python_packages:
   pe: [intel_stable]
   dependencies: [mpi, python3]
   packages:
-    - py-h5py ^hdf5 +mpi ~ipo
+#    - py-h5py ^hdf5 +mpi ~ipo
     - py-mpi4py
 
 # MPI + BLAS + PYTHON ----------------------------------------------------------
