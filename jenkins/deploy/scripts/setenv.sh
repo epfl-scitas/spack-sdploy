@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
 export WORK_DIR_INTERNAL=`cat stacks/${STACK}/common.yaml |grep work_directory: | cut -n -d " " -f 2`
+IN_PR=0
+if [ WORK_DIR_INTERNAL != WORK_DIR ]; then
+    IN_PR=1
+fi
+export IN_PR
 
 export STACK_RELEASE=`cat stacks/${STACK}/common.yaml |grep stack_release: | cut -n -d " " -f 2`
 export STACK_RELEASE_VER=`cat stacks/${STACK}/common.yaml |grep stack_version: | cut -n -d " " -f 2`

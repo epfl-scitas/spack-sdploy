@@ -4,7 +4,7 @@ set -euo pipefail
 . ${JENKINS}/activate_spack.sh
 
 set +e # if grep fails it is normal
-grep -q ${STACK_RELEASE}_cache $(spack gpg list)
+spack gpg list | grep -q ${STACK_RELEASE}_cache
 res=$?
 set -e
 if [ $res -ne 0 ]; then
