@@ -37,7 +37,7 @@ modules:
           +debug: dbg
           +ilp64: f64
       whitelist:
-        - cmake +ncurses@{{tokens['core_compiler']}}
+        - cmake +ncurses%{{tokens['core_compiler']}}
       blacklist:
         - openssl
         - rdma-core
