@@ -117,7 +117,7 @@ core_packages:
 # ------------------------------------------------------------------------------
 core_packages_stable:
   metadata: {section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   packages:
     - flex:
         default: { version: 2.6.4 }
@@ -128,7 +128,7 @@ core_packages_stable:
 # ------------------------------------------------------------------------------
 serial_packages:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   packages:
     - bwa
     - bzip2
@@ -280,6 +280,7 @@ serial_packages_blas:
     section: packages
   pe:
     - gcc_stable
+    - intel_stable
   dependencies:
     - blas
   packages:
@@ -293,7 +294,7 @@ serial_packages_blas:
 # ------------------------------------------------------------------------------
 serial_packages_blas_gpu:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [blas, gpu]
   packages:
     - suite-sparse:
@@ -328,7 +329,7 @@ serial_packages_python_activated:
     modules:
       blacklist: True
     activated: True
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [python3]
   packages:
     - py-absl-py
@@ -358,7 +359,7 @@ serial_packages_python_blas_activated:
     section: packages
     modules: { blacklist: True }
     activated: True
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [python3, blas_parallel]
   packages:
     - py-keras-preprocessing
@@ -376,7 +377,7 @@ serial_packages_python_blas_activated:
 serial_packages_python:
   metadata:
     section: packages
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [python3]
   packages:
     - angsd
@@ -409,7 +410,7 @@ serial_packages_python:
 # ------------------------------------------------------------------------------
 serial_packages_python_blas:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [python3, blas_parallel]
   packages:
     - boost:
@@ -442,7 +443,7 @@ serial_packages_python_blas:
 # ------------------------------------------------------------------------------
 serial_packages_python_blas_gpu:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [blas_parallel, python3, gpu]
   packages:
     - py-theano:
@@ -457,7 +458,7 @@ serial_packages_python_blas_gpu:
 # ------------------------------------------------------------------------------
 serial_packages_python2_deprecated:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [python2]
   packages:
     - jellyfish
@@ -657,6 +658,7 @@ mpi_packages:
     section: packages
   pe:
     - gcc_stable
+    - intel_stable
   dependencies:
     - mpi
   packages:
@@ -715,7 +717,7 @@ mpi_blas_packages_gcc_stable:
 # ------------------------------------------------------------------------------
 mpi_lapack_packages:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [mpi, blas]
   packages:
     - gmsh +eigen +openmp +hdf5 ~fltk ~opencascade ~med:
@@ -737,7 +739,7 @@ mpi_lapack_packages:
 # ------------------------------------------------------------------------------
 mpi_lapack_gpu_packages:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [gpu, mpi, blas]
   packages:
     - hypre:
@@ -761,7 +763,7 @@ mpi_lapack_gpu_packages:
 mpi_python_packages:
   metadata:
     section: packages
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [mpi, python3]
   packages:
     - py-h5py ^hdf5 +mpi
@@ -776,6 +778,7 @@ mpi_lapack_python_packages:
     section: packages
   pe:
     - gcc_stable
+    - intel_stable
   dependencies:
     - mpi
     - blas
@@ -947,14 +950,14 @@ mpi_blas_parallel_python_packages_gcc_stable:
 # ------------------------------------------------------------------------------
 benchmarks:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   packages:
     - stream
     - stream+openmp
 
 mpi_benchmarks:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [mpi]
   packages:
     - osu-micro-benchmarks
@@ -962,7 +965,7 @@ mpi_benchmarks:
 
 mpi_blas_benchmarks:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [mpi, blas]
   packages:
     - hpl~openmp
