@@ -59,21 +59,22 @@ gcc:
       nvidia: cuda@11.7.0
       none: ""
 
-# intel:
-#   metadata:
-#     section: pe
-#   stable:
-#     compiler:
-#     mpi:
-#       infiniband: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh
-#       ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh
-#     blas: openblas@0.3.20 threads=none +locking
-#     blas_parallel: openblas@0.3.20 threads=openmp +locking
-#     python3: python@<python3> +tkinter +optimizations ~debug +ssl
-#     python2: python@2.7.18 +tkinter ~debug
-#     gpu:
-#       nvidia: cuda@11.7.0
-#       none: ""
+intel:
+  metadata:
+    section: pe
+  stable:
+    compiler: intel@2021.6.0
+    compiler_spec: intel-oneapi-compilers-classic
+    mpi:
+      infiniband: intel-oneapi-mpi
+      ethernet: intel-oneapi-mpi
+    blas: intel-oneapi-mkl
+    blas_parallel: intel-oneapi-mkl
+    python3: python@<python3> +tkinter +optimizations ~debug +ssl
+    python2: python@2.7.18 +tkinter ~debug
+    gpu:
+      nvidia: cuda@11.7.0
+      none: ""
 
 # CORE -------------------------------------------------------------------------
 #
