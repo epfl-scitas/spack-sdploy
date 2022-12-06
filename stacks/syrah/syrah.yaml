@@ -201,21 +201,9 @@ serial_packages:
         externals:
           - spec: openssl@1.1.1k
             prefix: /usr
-    - rdma-core:
-        default:
-          buildable: False
-        externals:
-          - spec: rdma-core@40.1
-            prefix: /usr
     - scotch:
         variants: ~mpi
         default: { variants: +esmumps ~metis }
-    - slurm:
-        default:
-          buildable: false
-        externals:
-          - spec: slurm@<slurm_version> ~mariadb
-            prefix: /usr
     - stacks
     - star
     - subread
@@ -247,8 +235,22 @@ serial_packages_gcc_stable:
           blacklist: true
     - pmix:
         default:
-          version: 4.1.2
-          variants: ~docs
+          buildable: False
+        externals:
+          - spec: pmix@4.2.2
+            prefix: /usr
+    - rdma-core:
+        default:
+          buildable: False
+        externals:
+          - spec: rdma-core@40.1
+            prefix: /usr
+    - slurm:
+        default:
+          buildable: false
+        externals:
+          - spec: slurm@<slurm_version> ~mariadb
+            prefix: /usr
     - sox
     - ucx:
         default:
