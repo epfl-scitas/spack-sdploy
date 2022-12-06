@@ -16,6 +16,8 @@ compilers=$(cat compilers.list)
 # We can remove --debug from the spack install
 # command if the compilers are already installed.
 echo "Installing compilers"
+spack spec -Ilt ${compilers}
+
 echo "spack install --log-format junit --log-file install_compilers.xml ${compilers}"
 spack install --log-format junit --log-file install_compilers.xml ${compilers}
 
