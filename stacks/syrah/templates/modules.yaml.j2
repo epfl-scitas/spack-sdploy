@@ -38,12 +38,16 @@ modules:
           +ilp64: f64
       whitelist:
         - cmake +ncurses%{{tokens['core_compiler']}}
+        - llvm%{{tokens['core_compiler']}}
       blacklist:
+        - cmake
+        - libevent
+        - llvm
+        - openjdk
         - openssl
+        - pmix
         - rdma-core
         - ucx
-        - pmix
-        - cmake
         # === activated python packages
         - py-cython
         - py-matplotlib
@@ -74,8 +78,6 @@ modules:
         - py-joblib
         - py-threadpoolctl
         # ------------------------------
-        - libevent
-        - openjdk
 
       blacklist_implicits: true
       gcc@11.3.0:
