@@ -137,7 +137,6 @@ serial_packages:
     - eigen:
         default: { variants: +ipo }
     - fastqc
-    - ffmpeg
     - fftw +openmp ~mpi
     - gsl
     - gzip

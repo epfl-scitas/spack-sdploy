@@ -40,13 +40,21 @@ modules:
         - cmake +ncurses%{{tokens['core_compiler']}}
         - llvm%{{tokens['core_compiler']}}
       blacklist:
+        - autoconf
+        - automake
         - cmake
         - libevent
+        - libfabric
+        - libtool
         - llvm
+        - lmod
+        - m4
         - openjdk
         - openssl
+        - perl
         - pmix
         - rdma-core
+        - slurm
         - ucx
         # === activated python packages
         - py-cython
