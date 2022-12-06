@@ -419,7 +419,7 @@ serial_packages_python_blas:
         default:
           variants: cxxstd=14 +icu ~mpi +python +numpy +atomic +chrono +container +date_time +filesystem +graph +iostreams ~json +locale +log +math ~pic +program_options +random +regex +serialization +shared +signals ~singlethreaded ~stacktrace +system ~taggedlayout +test +thread +timer ~type_erasure ~versionedlayout +wave +exception
     #- bcl2fastq2
-    - gmsh ~mpi:
+    - gmsh:
         variants: |
           ~mpi +hdf5 +cgns +eigen ~opencascade +openmp ~fltk ~med
         dependencies:
