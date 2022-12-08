@@ -97,6 +97,9 @@ core_packages:
     - git
     - git-lfs
     - i7z
+    - intel-oneapi-advisor
+    - intel-oneapi-inspector
+    - intel-oneapi-vtune
     - libtool
     - lmod
     - m4
@@ -700,6 +703,7 @@ mpi_blas_packages_gcc_stable:
     #     dependencies:
     #       - hdf5 +mpi
     #       - netcdf-c +mpi
+    - cpmd~openmp ^fftw+mpi~openmp
     - elmerfem +mumps +openmp +hypre:
         dependencies:
           - hdf5 +mpi
@@ -828,8 +832,6 @@ mpi_lapack_python_packages:
 #   pe: [gcc_stable]
 #   dependencies: [mpi]
 #   packages:
-    # cpmd fails to fetch
-    # - cpmd~openmp ^fftw+mpi~openmp
     # - relion ~mklfft:
     #     variants:
     #       gpu:
