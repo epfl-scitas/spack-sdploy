@@ -704,7 +704,7 @@ mpi_blas_packages_gcc_stable:
     #     dependencies:
     #       - hdf5 +mpi
     #       - netcdf-c +mpi
-    - cpmd~openmp ^fftw+mpi~openmp
+    - cpmd@4.3 ~openmp
     - elmerfem +mumps +openmp +hypre:
         dependencies:
           - hdf5 +mpi
