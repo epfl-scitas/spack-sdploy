@@ -141,6 +141,7 @@ serial_packages:
         default: { variants: +ipo }
     - fastqc
     - fftw +openmp ~mpi
+    - fftw ~openmp ~mpi
     - gsl
     - gzip
     - hdf5:
