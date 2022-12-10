@@ -36,7 +36,13 @@ class Compilers(StackFile):
         compilers = []
         for pe, stack in compilers_data.items():
             for stack_name, stack in stack.items():
-                if 'compiler' in stack:
+                # The order is important:
+                # - compiler_spec has priority over compiler
+                if 'compiler_spec' in stack:
+                    compilers.append('{} %{}'.format(stack['compiler_spec'], core_compiler))
+                elif 'compiler' in stack:
                     compilers.append('{} %{}'.format(stack['compiler'], core_compiler))
+                else:
+                    print(f'No compiler found for PE {pe} {stack_name}')
 
         return compilers

@@ -63,8 +63,11 @@ class SpackYaml(StackFile):
         for pe, stack in data.items():
             for stack_name in stack.keys():
                 self.pe_specs[pe + '_' + stack_name] = list(stack[stack_name].keys())
-                # compiler is defined by default
-                self.pe_specs[pe + '_' + stack_name].pop(0)
+                # Remove compilers
+                if 'compiler' in self.pe_specs[pe + '_' + stack_name]:
+                    self.pe_specs[pe + '_' + stack_name].remove('compiler')
+                if 'compiler_spec' in self.pe_specs[pe + '_' + stack_name]:
+                    self.pe_specs[pe + '_' + stack_name].remove('compiler_spec')
 
     def create_pe_definitions_dict(self, filter = 1, core = True):
         """Regroup PE definitions in a single dictionary"""

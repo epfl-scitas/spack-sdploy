@@ -38,9 +38,6 @@ spack:
 {#                                                          #}
 {#                                                          #}
 {% for pe, stack in data['pe_specs'].items() %}
-  - matrix:
-    - [ ${{ pe }}_compiler]
-    - [ $%core_compiler ]
 {% for library in stack %}
   - matrix:
     - [ ${{ pe }}_{{ library }} ]
