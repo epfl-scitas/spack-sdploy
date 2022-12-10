@@ -67,7 +67,7 @@ intel:
     compiler_spec: intel-oneapi-compilers-classic@2021.6.0
     mpi: intel-oneapi-mpi
     blas: intel-oneapi-mkl
-    blas_parallel: intel-mkl
+    blas_parallel: intel-oneapi-mkl
     python3: python@<python3> +tkinter +optimizations ~debug +ssl
     python2: python@2.7.18 +tkinter ~debug
     gpu:
