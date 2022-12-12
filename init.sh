@@ -14,6 +14,7 @@ set -u
 # Variables needed to run this script
 export STACK=syrah
 export ENVIRONMENT=jed
+export IN_PR=1
 
 # Variables read from commons.yaml using cat, grep and cut.
 #export WORK_DIR=`cat ${BASE_DIR}/stacks/${STACK}/common.yaml |grep work_directory: | cut -n -d " " -f 2`
@@ -165,3 +166,6 @@ echo '> activate_packages.sh'
 echo
 ${JENKINS}/activate_packages.sh 2>&1 | tee ${LOGS}/11_activate_packages.${execution_timestamp}.log
 
+${JENKINS}/create_buildcache.sh 2>&1 | tee ${LOGS}/11_create_buildcache.${execution_timestamp}.log
+
+${JENKINS}/push_buildcache.sh 2>&1 | tee ${LOGS}/12_push_buildcache.${execution_timestamp}.log

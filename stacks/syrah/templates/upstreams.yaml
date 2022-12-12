@@ -1,0 +1,3 @@
+upstreams:
+  syrah:
+    install_tree: /ssoft/spack/syrah/v1/opt/spack

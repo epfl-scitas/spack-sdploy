@@ -4,6 +4,10 @@ set -euo pipefail
 . ${JENKINS}/configure_proxies.sh
 . ${JENKINS}/setenv.sh
 
+if [ "x${IN_PR}" != "x" -a ${IN_PR} -eq 1 ]; then
+    echo "[--] Running in PR [--]"
+fi
+
 
 echo 'Activating Python virtual environment' 1>&2
 if [ -e ${PYTHON_VIRTUALENV_PATH}/bin/activate ]; then
@@ -37,4 +41,6 @@ if [ -e $SPACK_INSTALL_PATH/share/spack/setup-env.sh ]; then
         export SPACK_SYSTEM_CONFIG_PATH=${_env_path}
         echo "Setting SPACK_SYSTEM_CONFIG_PATH to: ${SPACK_SYSTEM_CONFIG_PATH}" 1>&2
     fi
+else
+    unset SPACK_SYSTEM_CONFIG_PATH
 fi
