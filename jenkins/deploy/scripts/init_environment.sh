@@ -60,8 +60,8 @@ ln -sf ${SPACK_SYSTEM_CONFIG_PATH} ${environment}
 
 echo "------------------------------------------------------------------- ${IN_PR}"
 if [ "x${IN_PR}" != "x" -a ${IN_PR} -eq 1 ]; then
-    cp ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK}/templates/upstreams.yaml ${SPACK_SYSTEM_CONFIG_PATH}
     cp /ssoft/spack/syrah/v1/var/spack/environments/jed/spack.lock ${SPACK_SYSTEM_CONFIG_PATH}
+    cp ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK}/templates/upstreams.yaml ${SPACK_SYSTEM_CONFIG_PATH}
 fi
 
 echo "List environment directory contents"

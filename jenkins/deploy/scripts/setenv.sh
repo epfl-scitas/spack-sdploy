@@ -8,9 +8,9 @@ if [ "x${IN_PR}" == "x" ]; then
 fi
 set -u
 
-if [ WORK_DIR_INTERNAL != WORK_DIR ]; then
-    IN_PR=1
-fi
+#if [ WORK_DIR_INTERNAL != WORK_DIR ]; then
+#    IN_PR=1
+#fi
 export IN_PR
 
 export STACK_RELEASE=`cat stacks/${STACK}/common.yaml |grep stack_release: | cut -n -d " " -f 2`
