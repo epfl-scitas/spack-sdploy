@@ -27,19 +27,20 @@ do
     echo "spack compiler find --scope system ${spec_path} || true"
 
     if [[ "$spec" =~ "intel@" ]]; then
-    compiler_add=1
-        if [ -e ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml ]; then
-            grep -q ${spec_path} ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
-            if [ $? -eq 0 ]; then
-                compiler_add=0
-            fi
-        fi
-        if [ ${compiler_add} -eq 1 ]; then
-            spack compiler find --scope system ${spec_path} || true
-        fi
-        version=$(${spec_path}/bin/icc --version | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
-        spec_version=$(echo $spec |  sed 's/intel@\([0-9.]*\).*/\1/')
-        sed -i -e "s/intel@${version}/intel@${spec_version}/" ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+	compiler_add=1
+	if [ -e ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml ]; then
+	    grep -q ${spec_path} ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+	    if [ $? -eq 0 ]; then
+		compiler_add=0
+	    fi
+	fi
+	if [ ${compiler_add} -eq 1 ]; then
+	    spack compiler find --scope system ${spec_path} || true
+	fi
+	version=$(${spec_path}/bin/icc --version | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
+	spec_version=$(echo $spec |  sed 's/intel@\([0-9.]*\).*/\1/')
+	sed -i -e "s/intel@${version}/intel@${spec_version}/" ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+
     else
         spack compiler find --scope system ${spec_path} || true
     fi

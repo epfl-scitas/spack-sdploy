@@ -14,10 +14,11 @@ set -u
 # Variables needed to run this script
 export STACK=syrah
 export ENVIRONMENT=jed
+export IN_PR=1
 
 # Variables read from commons.yaml using cat, grep and cut.
 #export WORK_DIR=`cat ${BASE_DIR}/stacks/${STACK}/common.yaml |grep work_directory: | cut -n -d " " -f 2`
-export WORK_DIR=/scratch/richart/spack
+export WORK_DIR=/scratch/syrah/run/pr
 
 # Because this script is adapted from the Jenkins Pipeline, the environment
 # names must be pulled from a variable called NODE_LABELS. This variable only
@@ -29,7 +30,7 @@ export JENKINS=jenkins/deploy/scripts
 
 if [[ $option = "setupenv" ]]; then
     echo "program stopped after exporting all variables to environment"
-    return
+    exit
 fi
 
 LOGS=${WORK_DIR}/logs
@@ -118,7 +119,7 @@ ${JENKINS}/concretize.sh 2>&1 | tee ${LOGS}/07_concretize.${execution_timestamp}
 
 if [[ $option = "concretize" ]]; then
     echo "program stopped at concretization step"
-    return
+    exit
 fi
 
 echo '  _________________________________________    ______  '
@@ -150,6 +151,21 @@ echo ' /        \  |    |    |        \ |    |      |   \  \_/   \'
 echo '/_______  /  |____|   /_______  / |____|      |___|\_____  /'
 echo '        \/                    \/                         \/ '
 echo
+echo '> create_modules.sh'
+echo
+${JENKINS}/create_modules.sh 2>&1 | tee ${LOGS}/10_create_modules.${execution_timestamp}.log
+
+echo '  _________________________________________   ____ ____ '
+echo ' /   _____/\__    ___/\_   _____/\______   \ /_   /_   |'
+echo ' \_____  \   |    |    |    __)_  |     ___/  |   ||   |'
+echo ' /        \  |    |    |        \ |    |      |   ||   |'
+echo '/_______  /  |____|   /_______  / |____|      |___||___|'
+echo '        \/                    \/                        '
+echo
 echo '> activate_packages.sh'
 echo
-${JENKINS}/activate_packages.sh 2>&1 | tee ${LOGS}/10_activate_packages.${execution_timestamp}.log
+${JENKINS}/activate_packages.sh 2>&1 | tee ${LOGS}/11_activate_packages.${execution_timestamp}.log
+
+${JENKINS}/create_buildcache.sh 2>&1 | tee ${LOGS}/11_create_buildcache.${execution_timestamp}.log
+
+${JENKINS}/push_buildcache.sh 2>&1 | tee ${LOGS}/12_push_buildcache.${execution_timestamp}.log

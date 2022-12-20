@@ -7,5 +7,6 @@ set -euo pipefail
 echo "Installing packages for environment ${environment}"
 spack --env ${environment} install --log-format junit --log-file install_stack.xml
 
-echo "Creating modules for environment ${environment}"
-spack --env ${environment} module lmod refresh -y
+# Modules are now created in next step 
+#echo "Creating modules for environment ${environment}"
+#spack --env ${environment} module lmod refresh -y

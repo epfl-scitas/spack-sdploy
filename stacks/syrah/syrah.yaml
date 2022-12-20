@@ -65,9 +65,7 @@ intel:
   stable:
     compiler: intel@2021.6.0
     compiler_spec: intel-oneapi-compilers-classic@2021.6.0
-    mpi:
-      infiniband: intel-oneapi-mpi
-      ethernet: intel-oneapi-mpi
+    mpi: intel-oneapi-mpi
     blas: intel-oneapi-mkl
     blas_parallel: intel-oneapi-mkl
     python3: python@<python3> +tkinter +optimizations ~debug +ssl
@@ -131,24 +129,18 @@ core_packages_stable:
 # ------------------------------------------------------------------------------
 serial_packages:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   packages:
     - bwa
     - bzip2
     - cmake ~ncurses:
         dependencies:
           - openssl@1.1.1k
-    - eigen:
-        default: { variants: +ipo }
     - fastqc
     - fftw +openmp ~mpi
     - fftw ~openmp ~mpi
     - gsl
     - gzip
-    - hdf5:
-        default:
-          version: 1.12.2
-          variants: ~mpi +cxx +fortran +hl +ipo +shared +szip +tools
     - hisat2
     - htslib
     - hwloc:
@@ -159,7 +151,7 @@ serial_packages:
               nvidia: +cuda +nvml ~rocm
               none: ~cuda ~rocm ~nvml
               amd: +rocm ~cuda
-    - intel-tbb
+    - intel-oneapi-tbb
     - jasper
     - libfabric:
         default:
@@ -180,10 +172,6 @@ serial_packages:
     #          - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
     - perl:
         default: { version: 5.32.0 }
-    # TODO: check if the reuse: True makes it use the proper node-js
-    # node-js@18.9.1 includes npm@8.19.1
-    # idea: make a new spack package with this version of npm
-    # - npm
     # This is already specified in the PE section
     # Here we are just making sure it will go into packages.yaml
     - python:
@@ -191,12 +179,6 @@ serial_packages:
         default:
           version: <python3>
           variants: +tkinter +optimizations ~debug +ssl ~libxml2
-    - ncview:
-        dependencies:
-          - hdf5 ~mpi+szip+hl+fortran+cxx
-          - netcdf-c ~mpi~parallel-netcdf
-    - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
-    - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - nfft ^fftw~mpi+openmp
     - openssl:
         default:
@@ -224,14 +206,15 @@ serial_packages_gcc_stable:
   metadata: { section: packages }
   pe: [gcc_stable]
   packages:
-    # The installation of intel-mkl create an empty directory in the not haswell
-    # environment, but one question remains : does loading the package from the
-    # ivybridge environment will invoke the module from haswell ?
-    - intel-mkl
+    - eigen:
+        default: { variants: +ipo }
     - ffmpeg +libx264
     - glpk+gmp
-    # julia >= 0.5 conflicts with intel compilers
-    # it is not in the serial_packages_python_gcc_stable due to the dependecy to mkl
+    - hdf5:
+        default:
+          version: 1.12.2
+          variants: ~mpi +cxx +fortran +hl +ipo +shared +szip +tools
+    - intel-mkl
     - libevent:
         default:
           buildable: false
@@ -240,6 +223,12 @@ serial_packages_gcc_stable:
             prefix: /usr
         module:
           blacklist: true
+    - ncview:
+        dependencies:
+          - hdf5 ~mpi+szip+hl+fortran+cxx
+          - netcdf-c ~mpi~parallel-netcdf
+    - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
+    - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - pmix:
         default:
           buildable: False
@@ -252,6 +241,7 @@ serial_packages_gcc_stable:
         externals:
           - spec: rdma-core@40.1
             prefix: /usr
+#    - rust
     - slurm:
         default:
           buildable: false
@@ -264,6 +254,19 @@ serial_packages_gcc_stable:
           variants:
             common: +rdmacm +rc +dc +ud +cm +cma +verbs +mlx5_dv +parameter_checking +thread_multiple
 
+
+# INTEL ONLY ---------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_intel_stable:
+  metadata: { section: packages }
+  pe: [intel_stable]
+  packages:
+    - eigen ~ipo
+    - hdf5~ipo
+    - netcdf-c~mpi ^hdf5~ipo~mpi+szip+hl+fortran+cxx
+    - netcdf-fortran ^netcdf-c~mpi ^hdf5~ipo~mpi+szip+hl+fortran+cxx
 
 # GPU --------------------------------------------------------------------------
 #
@@ -286,8 +289,7 @@ serial_packages_gcc_stable:
 serial_packages_blas:
   metadata:
     section: packages
-  pe:
-    - gcc_stable
+  pe: [gcc_stable, intel_stable]
   dependencies:
     - blas
   packages:
@@ -301,7 +303,7 @@ serial_packages_blas:
 # ------------------------------------------------------------------------------
 serial_packages_blas_gpu:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [blas, gpu]
   packages:
     - suite-sparse:
@@ -336,7 +338,7 @@ serial_packages_python_activated:
     modules:
       blacklist: True
     activated: True
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [python3]
   packages:
     - py-absl-py
@@ -344,7 +346,6 @@ serial_packages_python_activated:
     - py-cython
     - py-gast
     - py-google-pasta
-    - py-grpcio
     - py-pip
     - py-ply
     - py-protobuf
@@ -366,7 +367,7 @@ serial_packages_python_blas_activated:
     section: packages
     modules: { blacklist: True }
     activated: True
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [python3, blas_parallel]
   packages:
     - py-keras-preprocessing
@@ -374,7 +375,6 @@ serial_packages_python_blas_activated:
     - py-numpy
     - py-opt-einsum
     - py-pandas
-    - py-scipy
     - py-xarray
 
 # PYTHON -----------------------------------------------------------------------
@@ -384,14 +384,28 @@ serial_packages_python_blas_activated:
 serial_packages_python:
   metadata:
     section: packages
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [python3]
   packages:
-    - angsd
     - bedtools2
     - bowtie2
     - cairo:
         default: { variants: +png +pdf +fc +ft }
+    - mercurial
+    - ninja
+    - prinseq-lite
+    - py-pybind11
+    - samtools
+    - scons
+    - snakemake
+
+serial_packages_python_gcc_stable:
+  metadata:
+    section: packages
+  pe: [gcc_stable]
+  dependencies: [python3]
+  packages:
+    - angsd
     - llvm@14.0.6:
         default:
           version: 14.0.6
@@ -400,16 +414,29 @@ serial_packages_python:
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
-    - mercurial
-    - ninja
-    - prinseq-lite
+    - py-grpcio:
+       activated: True
     - py-h5py ^hdf5~mpi:
         modules:
           autoload: direct
-    - py-pybind11
-    - samtools
-    - scons
-    - snakemake
+
+serial_packages_python_intel_stable:
+  metadata:
+    section: packages
+  pe: [intel_stable]
+  dependencies: [python3]
+  packages:
+    - py-h5py ^hdf5~mpi~ipo:
+        modules:
+          autoload: direct
+    # - llvm@14.0.6:
+    #     default:
+    #       version: 14.0.6
+    #       variants:
+    #         common: ~ipo ~internal_unwind
+    #         gpu:
+    #           nvidia: +cuda cuda_arch=<cuda_arch>
+    #           none: ~cuda
 
 # PYTHON BLAS ------------------------------------------------------------------
 #
@@ -417,13 +444,23 @@ serial_packages_python:
 # ------------------------------------------------------------------------------
 serial_packages_python_blas:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [python3, blas_parallel]
   packages:
     - boost:
         default:
           variants: cxxstd=14 +icu ~mpi +python +numpy +atomic +chrono +container +date_time +filesystem +graph +iostreams ~json +locale +log +math ~pic +program_options +random +regex +serialization +shared +signals ~singlethreaded ~stacktrace +system ~taggedlayout +test +thread +timer ~type_erasure ~versionedlayout +wave +exception
     #- bcl2fastq2
+    - py-biopython
+    #- py-keras ^py-h5py ^hdf5 ~mpi
+    - py-macs2
+    - py-pybigwig
+
+serial_packages_python_blas_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  dependencies: [python3, blas_parallel]
+  packages:
     - gmsh:
         variants: |
           ~mpi +hdf5 +cgns +eigen ~opencascade +openmp ~fltk ~med
@@ -435,29 +472,32 @@ serial_packages_python_blas:
     - iq-tree +ipo@1.6.12
     - iq-tree +ipo@2.0.6
     - polymake
-    - py-biopython
     - py-deeptools
-    #- py-keras ^py-h5py ^hdf5 ~mpi
-    - py-macs2
-    - py-pybigwig
     - py-scikit-learn
+    - py-scipy
     - py-statsmodels
-
-
-# PYTHON BLAS GPU --------------------------------------------------------------
-#
-#
-# ------------------------------------------------------------------------------
-serial_packages_python_blas_gpu:
-  metadata: { section: packages }
-  pe: [gcc_stable]
-  dependencies: [blas_parallel, python3, gpu]
-  packages:
     - py-theano:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
+
+serial_packages_python_blas_intel_stable:
+  metadata: { section: packages }
+  pe: [intel_stable]
+  dependencies: [python3, blas_parallel]
+  packages:
+    - gmsh:
+        variants: |
+          ~mpi +hdf5 +cgns +eigen ~opencascade +openmp ~fltk ~med
+        dependencies:
+          - scotch ~mpi
+          - cgns ~mpi
+          - hdf5 ~mpi ~ipo
+          - mmg ~ipo ~vtk
+    - iq-tree ~ipo@1.6.12
+    - iq-tree ~ipo@2.0.6
+
 
 # PYTHON 2 ---------------------------------------------------------------------
 #
@@ -465,7 +505,7 @@ serial_packages_python_blas_gpu:
 # ------------------------------------------------------------------------------
 serial_packages_python2_deprecated:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [gcc_stable, intel_stable]
   dependencies: [python2]
   packages:
     - jellyfish
@@ -663,8 +703,7 @@ external_packages:
 mpi_packages:
   metadata:
     section: packages
-  pe:
-    - gcc_stable
+  pe: [gcc_stable, intel_stable]
   dependencies:
     - mpi
   packages:
@@ -673,12 +712,7 @@ mpi_packages:
     - fftw:
         variants: +mpi +openmp
         default: { variants: +mpi ~openmp }
-    - hdf5 +mpi +szip +hl +fortran +cxx
-    - netcdf-c +mpi ^hdf5 +mpi +szip +hl +fortran +cxx
-    - netcdf-fortran ^hdf5 +mpi +szip +hl +fortran +cxx
     - openfoam-org +metis ^scotch+mpi
-    - parmetis:
-        default: { variants: +ipo }
     - phylobayesmpi
     - scotch +mpi
     #- vasp@5.4.4:
@@ -687,6 +721,40 @@ mpi_packages:
     #      permissions:
     #        read: group
     #        group: vasp-soft
+
+# MPI --------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_packages_gcc_stable:
+  metadata:
+    section: packages
+  pe: [gcc_stable]
+  dependencies:
+    - mpi
+  packages:
+    - hdf5 +mpi +szip +hl +fortran +cxx
+    - netcdf-c +mpi ^hdf5 +mpi +szip +hl +fortran +cxx
+    - netcdf-fortran ^hdf5 +mpi +szip +hl +fortran +cxx
+    - parmetis:
+        default: { variants: +ipo }
+
+# MPI --------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_packages_intel_stable:
+  metadata:
+    section: packages
+  pe: [intel_stable]
+  dependencies:
+    - mpi
+  packages:
+    - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+    - netcdf-c +mpi ^hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+    - netcdf-fortran ^hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+    - parmetis:
+        default: { variants: ~ipo }
 
 # MPI + BLAS -------------------------------------------------------------------
 #
@@ -705,7 +773,11 @@ mpi_blas_packages_gcc_stable:
     #     dependencies:
     #       - hdf5 +mpi
     #       - netcdf-c +mpi
-    - cpmd~openmp ^fftw+mpi~openmp
+    - gmsh +mpi +eigen +openmp +hdf5 ~fltk ~opencascade ~med:
+        dependencies:
+          - hdf5 +mpi
+          - mmg +ipo ~vtk
+    - cpmd@4.3 ~openmp
     - elmerfem +mumps +openmp +hypre:
         dependencies:
           - hdf5 +mpi
@@ -716,45 +788,8 @@ mpi_blas_packages_gcc_stable:
           - netlib-scalapack
     - netlib-scalapack:
         default: { variants: +ipo }
-    - yambo+mpi io=iotk,etsf-io ^fftw+mpi+openmp
-
-# MPI + BLAS ------------------------------------------------------------------
-#
-#
-# ------------------------------------------------------------------------------
-mpi_lapack_packages:
-  metadata: { section: packages }
-  pe: [gcc_stable]
-  dependencies: [mpi, blas]
-  packages:
-    - gmsh +mpi +eigen +openmp +hdf5 ~fltk ~opencascade ~med:
-        dependencies:
-          - hdf5 +mpi
-          - mmg +ipo ~vtk
     - quantum-espresso+mpi+scalapack ^fftw+mpi+openmp
     - quantum-espresso+mpi+scalapack hdf5=parallel ^fftw+mpi+openmp
-    # - molpro:
-    #     default:
-    #       buildable: true
-    #       permissions:
-    #         read: group
-    #         group: molpro-soft
-
-# MPI + BLAS + GPU -------------------------------------------------------------
-#
-#
-# ------------------------------------------------------------------------------
-mpi_lapack_gpu_packages:
-  metadata: { section: packages }
-  pe: [gcc_stable]
-  dependencies: [gpu, mpi, blas]
-  packages:
-    - hypre:
-        default:
-          variants:
-            gpu:
-              nvidia: +cuda
-              none: ~cuda
     - superlu-dist:
         default:
           variants:
@@ -762,6 +797,56 @@ mpi_lapack_gpu_packages:
             gpu:
               nvidia: +cuda
               none: ~cuda
+    - yambo+mpi io=iotk,etsf-io ^fftw+mpi+openmp
+
+# MPI + BLAS ------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_blas_packages_intel_stable:
+  metadata: { section: packages }
+  pe: [intel_stable]
+  dependencies: [mpi, blas]
+  packages:
+    - gmsh +mpi +eigen +openmp +hdf5 ~fltk ~opencascade ~med:
+        dependencies:
+          - hdf5 +mpi ~ipo
+          - mmg ~ipo ~vtk
+    - quantum-espresso+mpi+scalapack
+    # - quantum-espresso+mpi+scalapack hdf5=parallel ^hdf5 ~ipo+mpi
+    - mumps:
+        default: { variants: +mpi +parmetis +metis +scotch +ptscotch }
+        dependencies:
+          - scotch +mpi
+    - superlu-dist:
+        default:
+          variants:
+            common: ~ipo
+            gpu:
+              nvidia: +cuda
+              none: ~cuda
+
+# MPI + BLAS ------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+mpi_blas_packages:
+  metadata: { section: packages }
+  pe: [gcc_stable, intel_stable]
+  dependencies: [mpi, blas]
+  packages:
+    - hypre:
+        default:
+          variants:
+            gpu:
+              nvidia: +cuda
+              none: ~cuda
+    # - molpro:
+    #     default:
+    #       buildable: true
+    #       permissions:
+    #         read: group
+    #         group: molpro-soft
 
 # MPI PYTHON --------------------------------------------------------------------
 #
@@ -770,21 +855,35 @@ mpi_lapack_gpu_packages:
 mpi_python_packages:
   metadata:
     section: packages
+  pe: [gcc_stable, intel_stable]
+  dependencies: [mpi, python3]
+  packages:
+    - py-mpi4py
+
+mpi_python_packages_gcc_stable:
+  metadata:
+    section: packages
   pe: [gcc_stable]
   dependencies: [mpi, python3]
   packages:
     - py-h5py ^hdf5 +mpi
-    - py-mpi4py
+
+mpi_python_packages_intel_gcc:
+  metadata:
+    section: packages
+  pe: [intel_stable]
+  dependencies: [mpi, python3]
+  packages:
+    - py-h5py ^hdf5 ~ipo+mpi
 
 # MPI + BLAS + PYTHON ----------------------------------------------------------
 #
 #
 # ------------------------------------------------------------------------------
-mpi_lapack_python_packages:
+mpi_blas_python_packages:
   metadata:
     section: packages
-  pe:
-    - gcc_stable
+  pe: [gcc_stable, intel_stable]
   dependencies:
     - mpi
     - blas
@@ -797,33 +896,6 @@ mpi_lapack_python_packages:
     - neuron +mpi +python
     - plumed:
         default: { variants: +mpi +gsl }
-    - petsc:
-        default:
-          variants:
-            common:  ~int64 +double +hdf5 +metis +mpi +superlu-dist +hypre +suite-sparse
-            gpu:
-              nvidia: +cuda
-              none: ~cuda
-        dependencies:
-          - hdf5 +mpi +szip +hl +fortran +cxx
-    - slepc:
-        default: { variants: +arpack }
-    - py-petsc4py
-    - py-torch:
-        variants: +mpi
-        default:
-          variants:
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch> +magma
-              none: ~cuda ~cudnn ~nccl
-              rocm: +magma +rocm
-        dependencies:
-          gpu:
-            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
-            rocm: [magma +rocm amdgpuarch=<amd_arch>]
-    - py-torchvision:
-        dependencies:
-          - py-torch+mpi~cuda
 
 # MPI (GCC ONLY) ---------------------------------------------------------------
 #
@@ -899,6 +971,21 @@ mpi_blas_python_packages_gcc_stable:
     #           none: ~cuda ~nccl ~rocm amdgpu_target=none cuda_arch=none
     #     dependencies:
     #       - bazel
+    - py-torch:
+        variants: +mpi
+        default:
+          variants:
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch> +magma
+              none: ~cuda ~cudnn ~nccl
+              rocm: +magma +rocm
+        dependencies:
+          gpu:
+            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
+            rocm: [magma +rocm amdgpuarch=<amd_arch>]
+    - py-torchvision:
+        dependencies:
+          - py-torch+mpi~cuda
     - opencv +vtk +python3:
         variants:
           gpu:
@@ -916,7 +1003,6 @@ mpi_blas_python_packages_gcc_stable:
         dependencies:
           - netcdf-c +mpi
           - boost+mpi
-
 
 mpi_blas_parallel_python_packages_gcc_stable:
   metadata: { section: packages }
@@ -947,6 +1033,29 @@ mpi_blas_parallel_python_packages_gcc_stable:
         dependencies:
           - boost+mpi
           - fftw+mpi+openmp
+
+mpi_blas_python_packages_intel_stable:
+  metadata: { section: packages }
+  pe: [intel_stable]
+  dependencies: [mpi, blas, python3]
+  packages:
+    - petsc:
+        default:
+          variants:
+            common:  ~int64 +double +hdf5 +metis +mpi +superlu-dist +hypre +suite-sparse
+            gpu:
+              nvidia: +cuda
+              none: ~cuda
+        dependencies:
+          - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+    - slepc:
+        default: { variants: +arpack }
+        dependencies:
+          - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+    - py-petsc4py:
+        dependencies:
+          - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+
 
 # BENCHMARKS -------------------------------------------------------------------
 #
