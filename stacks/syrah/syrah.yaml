@@ -813,7 +813,7 @@ mpi_blas_packages_intel_stable:
           - hdf5 +mpi ~ipo
           - mmg ~ipo ~vtk
     - quantum-espresso+mpi+scalapack
-    - quantum-espresso+mpi+scalapack hdf5=parallel ^hdf5 ~ipo+mpi
+    # - quantum-espresso+mpi+scalapack hdf5=parallel ^hdf5 ~ipo+mpi
     - mumps:
         default: { variants: +mpi +parmetis +metis +scotch +ptscotch }
         dependencies:
