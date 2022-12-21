@@ -131,7 +131,11 @@ modules:
           set:
             HDF5_CC: h5pcc
             HDF5_FC: h5pfc
-      intel-mpi:
+      intel-oneapi-compilers-classic:
+        environment:
+          set:
+            INTEL_ROOT: ${PREFIX}
+      intel-oneapi-mpi:
         environment:
           set:
             I_MPI_PMI_LIBRARY: /usr/lib64/libpmi2.so

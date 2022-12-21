@@ -31,12 +31,16 @@ spack module lmod refresh -y
 
 # What's happening ?
 # ----------------
-# step 1: create the new module
+# step 0: make sure the directory `intel` exists (or create it)
+# step 1: copy the module created for `intel-oneapi-compiler-classic` into `intel` directory
 # step 2: add the missing directives to the new module
 # step 3: backup the old module
 
+# step 0
+mkdir -p ${LMOD_CORE}/intel
+
 # step 1
-cp -r ${LMOD_CORE}/${COMPILER_SPEC} ${LMOD_CORE}/intel
+cp -f ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua ${LMOD_CORE}/${COMPILER}/${COMPILER_VER}.lua
 
 # step 2
 cat >> ${LMOD_CORE}/${COMPILER}/${COMPILER_VER}.lua<<EOL
