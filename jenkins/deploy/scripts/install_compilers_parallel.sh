@@ -49,13 +49,9 @@ done <<< $(cat compilers.list)
 # Hack for intel compiler.
 # We want to add the following line to ifort.cfg (overwrite).
 # -isystem/ssoft/spack/syrah/v1/opt/spack/linux-rhel8-x86_64_v2/gcc-8.5.0/intel-oneapi-compilers-classic-2021.6.0-q3mi2mylw3zyuht6p72u25ruqnpptpym/compiler/include/intel64
-DST_PRFX=`spack location -i intel-oneapi-compilers`
-DST_PATH="compiler/2022.1.0/linux/bin/intel64"
-DST_FILE="ifort.cfg"
-CNT_PRFX=`spack location -i intel-oneapi-compilers-classic`
-CNT_PATH="compiler/include/intel64"
-CONTENTS="-isystem$CNT_PRFX/$CNT_PATH"
-echo $CONTENTS > $DST_PRFX/$DST_PATH/$DST_FILE
+DST_FILE=`spack location -i intel-oneapi-compilers`/bin/ifort.cfg
+CONTENTS=`spack location -i intel-oneapi-compilers-classic`/compiler/include/intel64
+echo -isystem$CONTENTS > $DST_FILE
 
 echo "============= COMPILERS DEBUG INFO ============="
 
