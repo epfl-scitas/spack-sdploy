@@ -88,7 +88,7 @@ modules:
         # ------------------------------
 
       blacklist_implicits: true
-      gcc@11.3.0:
+      gcc:
         environment:
           set:
             CC: ${PREFIX}/bin/gcc
@@ -96,6 +96,11 @@ modules:
             F77: ${PREFIX}/bin/gfortran
             FC: ${PREFIX}/bin/gfortran
             F90: ${PREFIX}/bin/gfortran
+      intel:
+        environment:
+          set:
+            C_INCLUDE_PATH: ${PERFIX}/compiler/include/icc
+            CPLUS_INCLUDE_PATH: ${PERFIX}/compiler/include/icc
       openmpi:
         environment:
           set:
