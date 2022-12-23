@@ -96,11 +96,6 @@ modules:
             F77: ${PREFIX}/bin/gfortran
             FC: ${PREFIX}/bin/gfortran
             F90: ${PREFIX}/bin/gfortran
-      intel:
-        environment:
-          set:
-            C_INCLUDE_PATH: ${PERFIX}/compiler/include/icc
-            CPLUS_INCLUDE_PATH: ${PERFIX}/compiler/include/icc
       openmpi:
         environment:
           set:
@@ -139,6 +134,8 @@ modules:
       intel-oneapi-compilers-classic:
         environment:
           set:
+            C_INCLUDE_PATH: ${PERFIX}/compiler/include/icc
+            CPLUS_INCLUDE_PATH: ${PERFIX}/compiler/include/icc
             INTEL_ROOT: ${PREFIX}
       intel-oneapi-mpi:
         environment:
