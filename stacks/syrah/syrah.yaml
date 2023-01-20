@@ -651,9 +651,9 @@ external_packages:
           buildable: false
         externals::
           - spec: gaussian@g16-A.03 %<core_compiler>
-            prefix: <external_prefix>/gaussian/g16-A.03
+            prefix: <external_prefix>/gaussian/g16-A.03/avx2
           - spec: gaussian@g16-C.01 %<core_compiler>
-            prefix: <external_prefix>/gaussian/g16-C.01
+            prefix: <external_prefix>/gaussian/g16-C.01/avx2
     - matlab:
         default:
           buildable: false
