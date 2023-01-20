@@ -343,12 +343,16 @@ serial_packages_python_activated:
   packages:
     - py-absl-py
     - py-astunparse
+    - py-cycler
     - py-cython
     - py-gast
     - py-google-pasta
+    - py-packaging
     - py-pip
+    - py-pillow
     - py-ply
     - py-protobuf
+    - py-python-dateutil
     - py-requests
     - py-semver
     - py-six
