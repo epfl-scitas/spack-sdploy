@@ -50,16 +50,18 @@ class ActivatePkgs(StackFile):
 
     def _get_pe_spec(self, definition):
         def_ = dict(definition)
-        pe_name = def_['pe'][0]
-        if pe_name not in self._pe_definitions:
-            return ''
+        specs = []
+        for pe_name in def_['pe']:
+            if pe_name not in self._pe_definitions:
+                return ''
 
-        pe = self._pe_definitions[pe_name]
-        spec = f''' %{pe['compiler']} arch=linux-{self.tokens['os']}-{self.tokens['target']}'''
-        if 'dependencies' in def_:
-            for dep in def_['dependencies']:
-                spec = f'''^{pe[dep]} {spec}'''
-        return spec
+            pe = self._pe_definitions[pe_name]
+            spec = f''' %{pe['compiler']} arch=linux-{self.tokens['os']}-{self.tokens['target']}'''
+            if 'dependencies' in def_:
+                for dep in def_['dependencies']:
+                    spec = f'''^{pe[dep]} {spec}'''
+            specs.append(spec)
+        return specs
 
     def _add_activated_lists(self):
         """Add packages from lists having 'activate: true' attribute"""
@@ -74,13 +76,13 @@ class ActivatePkgs(StackFile):
             if not v['metadata']['activated']:
                 continue
 
-            tty.debug(f'{v}')
-            spec = self._get_pe_spec(v)
+            tty.debug(f'Blip {v}')
+            specs = self._get_pe_spec(v)
             for pkg in v['packages']:
                 if isinstance(pkg, dict):
                     pkg = ' '.join(self._handle_package_dictionary(pkg))
 
-                self.pkglist.append(f'{pkg} {spec}')
+                self.pkglist.extend([f'{pkg} {spec}' for spec in specs])
 
     def _add_activated_pkgs(self):
         """Add packages from lists NOT having 'activate: true' attribute.
@@ -88,7 +90,8 @@ class ActivatePkgs(StackFile):
         data = self.group_sections(self.data, 'packages')
 
         for _, v in data.items():
-            spec = self._get_pe_spec(v)
+            specs = self._get_pe_spec(v)
+            tty.debug(f'Blip {specs}')
             for pkg in v['packages']:
                 if not isinstance(pkg, dict):
                     continue
@@ -98,7 +101,8 @@ class ActivatePkgs(StackFile):
 
                 if 'activated' in pkg_attributes and pkg_attributes['activated']:
                     pkg_spec = ' '.join(self._handle_package_dictionary(pkg))
-                    self.pkglist.append(f'{pkg_spec} {spec}')
+                    self.pkglist.extend([f'{pkg_spec} {spec}' for spec in specs])
+
 
     def write_activated_pkgs(self):
         """Write activated packages to file, one per line"""
