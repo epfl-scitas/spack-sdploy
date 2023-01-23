@@ -139,6 +139,7 @@ serial_packages:
     - fastqc
     - fftw +openmp ~mpi
     - fftw ~openmp ~mpi
+    - gmp
     - gsl
     - gzip
     - hisat2
@@ -153,15 +154,18 @@ serial_packages:
               amd: +rocm ~cuda
     - intel-oneapi-tbb
     - jasper
+    - libarchive
     - libfabric:
         default:
           variants: fabrics=tcp,udp,sockets,mlx,verbs
+    - libtiff
     - libxc
     - libxml2:
         default: { version: 2.9.13 }
     - mafft
     - metis:
         default: { variants: +real64 }
+    - mpfr
     - muscle
     # ok syntax for namd
     #- namd:
