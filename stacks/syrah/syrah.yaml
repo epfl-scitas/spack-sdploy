@@ -347,8 +347,11 @@ serial_packages_python_activated:
   packages:
     - py-absl-py
     - py-astunparse
+    - py-backports-entry-points-selectable
     - py-cycler
     - py-cython
+    - py-distlib
+    - py-filelock
     - py-gast
     - py-google-pasta
     - py-kiwisolver
