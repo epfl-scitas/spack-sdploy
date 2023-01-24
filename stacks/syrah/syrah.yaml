@@ -363,6 +363,7 @@ serial_packages_python_activated:
     - py-protobuf
     - py-python-dateutil
     - py-pyparsing
+    - py-pytz
     - py-requests
     - py-semver
     - py-six
