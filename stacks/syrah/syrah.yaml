@@ -348,6 +348,8 @@ serial_packages_python_activated:
     - py-absl-py
     - py-astunparse
     - py-backports-entry-points-selectable
+    - py-certifi
+    - py-charset-normalizer
     - py-cycler
     - py-cython
     - py-distlib
@@ -355,6 +357,8 @@ serial_packages_python_activated:
     - py-gast
     - py-google-pasta
     - py-kiwisolver
+    - py-idna
+    - py-mpmath
     - py-packaging
     - py-pip
     - py-pillow
@@ -370,6 +374,7 @@ serial_packages_python_activated:
     - py-sympy
     - py-termcolor
     - py-virtualenv
+    - py-urllib3
     - py-wheel
     - py-wrapt
 
