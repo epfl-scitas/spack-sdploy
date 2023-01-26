@@ -142,7 +142,7 @@ serial_packages:
     - gmp
     - gsl
     - gzip
-    - hisat2
+    - hisat2@2.2.1
     - htslib
     - hwloc:
         default:
