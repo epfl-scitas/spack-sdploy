@@ -75,7 +75,7 @@ class ConfigYaml(StackFile):
 
     def _add_license_dir(self):
         self.conf['license_dir'] = os.path.join(self.commons.data['work_directory'],
-                                                self.commons.data['stack_release'],
+                                                self.commons.data['spack_external'],
                                                 self.commons.data['spack_licences'])
 
     def _add_build_stage(self):
