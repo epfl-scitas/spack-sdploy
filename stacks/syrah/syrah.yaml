@@ -49,7 +49,7 @@ gcc:
   stable:
     compiler: gcc@11.3.0
     mpi:
-      infiniband: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh
+      infiniband: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2
       ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2
     blas: openblas@0.3.20 threads=none +locking
     blas_parallel: openblas@0.3.20 threads=openmp +locking
