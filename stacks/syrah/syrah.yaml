@@ -198,6 +198,7 @@ serial_packages:
     - star
     - subread
     - tcl
+    - tk +xft+xss
     - valgrind ~boost ~mpi
     - voropp
     - zlib
