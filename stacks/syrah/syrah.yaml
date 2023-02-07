@@ -615,6 +615,11 @@ external_packages:
         externals:
           - spec: adf@2017.11 %<core_compiler>
             prefix: <external_prefix>/adf
+    - ams:
+        default: {buildable: false }
+        externals:
+          - spec: ams@2022.103 %<core_compiler>
+            prefix: <external_prefix>/ams
     - ansys:
         default:
           buildable: false
