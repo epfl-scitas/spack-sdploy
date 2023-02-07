@@ -780,7 +780,7 @@ mpi_packages_intel_stable:
             group: adf-soft
         externals:
           - spec: adf@2017.11
-            prefix: <external_prefix>/adf
+            prefix: <external_prefix>/adf/adf2017.111
     - ams:
         default:
           buildable: false
@@ -789,7 +789,7 @@ mpi_packages_intel_stable:
             group: adf-soft
         externals:
           - spec: ams@2022.103
-            prefix: <external_prefix>/ams
+            prefix: <external_prefix>/ams/ams2022.103
     - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
     - netcdf-c +mpi ^hdf5 ~ipo +mpi +szip +hl +fortran +cxx
     - netcdf-fortran ^hdf5 ~ipo +mpi +szip +hl +fortran +cxx
