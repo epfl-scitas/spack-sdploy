@@ -610,11 +610,6 @@ external_packages:
             prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.el8_5.x86_64
         modules:
           blacklist: True
-    - adf:
-        default: { buildable: false }
-        externals:
-          - spec: adf@2017.11 %<core_compiler>
-            prefix: <external_prefix>/adf
     - ansys:
         default:
           buildable: false
@@ -777,6 +772,15 @@ mpi_packages_intel_stable:
   dependencies:
     - mpi
   packages:
+    - adf:
+        default:
+          buildable: false
+          permissions:
+            read: group
+            group: adf-soft
+        externals:
+          - spec: adf@2017.11
+            prefix: <external_prefix>/adf
     - ams:
         default:
           buildable: false
@@ -784,7 +788,7 @@ mpi_packages_intel_stable:
             read: group
             group: adf-soft
         externals:
-          - spec: ams@2022.103 %<core_compiler>
+          - spec: ams@2022.103
             prefix: <external_prefix>/ams
     - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
     - netcdf-c +mpi ^hdf5 ~ipo +mpi +szip +hl +fortran +cxx
