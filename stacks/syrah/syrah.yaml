@@ -615,11 +615,6 @@ external_packages:
         externals:
           - spec: adf@2017.11 %<core_compiler>
             prefix: <external_prefix>/adf
-    - ams:
-        default: {buildable: false }
-        externals:
-          - spec: ams@2022.103 %<core_compiler>
-            prefix: <external_prefix>/ams
     - ansys:
         default:
           buildable: false
@@ -782,6 +777,15 @@ mpi_packages_intel_stable:
   dependencies:
     - mpi
   packages:
+    - ams:
+        default:
+          buildable: false
+          permissions:
+            read: group
+            group: adf-soft
+        externals:
+          - spec: ams@2022.103 %<core_compiler>
+            prefix: <external_prefix>/ams
     - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
     - netcdf-c +mpi ^hdf5 ~ipo +mpi +szip +hl +fortran +cxx
     - netcdf-fortran ^hdf5 ~ipo +mpi +szip +hl +fortran +cxx
