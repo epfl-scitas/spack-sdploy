@@ -409,7 +409,7 @@ serial_packages_python:
   dependencies: [python3]
   packages:
     - bedtools2
-    - bowtie2
+    - bowtie2 ^intel-oneapi-tbb
     - cairo:
         default: { variants: +png +pdf +fc +ft }
     - mercurial
