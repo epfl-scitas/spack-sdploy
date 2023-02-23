@@ -772,6 +772,15 @@ mpi_packages_intel_stable:
   dependencies:
     - mpi
   packages:
+    - abaqus:
+        default:
+          buildable: false
+          permissions:
+            read: group
+            group: abaqus-soft
+        externals:
+          - spec: abaqus@2019
+            prefix: <external_prefix>/abaqus/2019
     - adf:
         default:
           buildable: false
