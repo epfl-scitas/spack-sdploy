@@ -154,6 +154,7 @@ serial_packages:
               amd: +rocm ~cuda
     - intel-oneapi-tbb
     - jasper
+    - kallisto ^hdf5 ~mpi
     - libarchive
     - libfabric:
         default:
