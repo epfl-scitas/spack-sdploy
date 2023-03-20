@@ -270,6 +270,7 @@ serial_packages_intel_stable:
   packages:
     - eigen ~ipo
     - hdf5~ipo
+    - intel-oneapi-ipp
     - netcdf-c~mpi ^hdf5~ipo~mpi+szip+hl+fortran+cxx
     - netcdf-fortran ^netcdf-c~mpi ^hdf5~ipo~mpi+szip+hl+fortran+cxx
 
