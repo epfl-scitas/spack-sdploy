@@ -102,6 +102,10 @@ class SpackYaml(StackFile):
 
             tty.debug(f'Entering package list: {pkg_list_name}')
 
+            # skip the list if `none` is found in filters
+            if self._skip_list(pkg_list_name):
+                continue
+
             self.definitions_list.append(pkg_list_name)
 
             self.pkgs_defs[pkg_list_name] = []
@@ -126,6 +130,11 @@ class SpackYaml(StackFile):
 
         self.pkgs_stack = self.group_sections(deepcopy(self.data), 'packages')
         for pkg_list_name, pkg_list_cfg in self.pkgs_stack.items():
+
+            # skip the list if `none` is found in filters
+            if self._skip_list(pkg_list_name):
+                continue
+
             # Create new entry
             self.pkgs_specs[pkg_list_name] = {}
             # Add compilers
@@ -144,6 +153,22 @@ class SpackYaml(StackFile):
                         self.pkgs_specs[pkg_list_name]['dependencies'].append(d)
                 if len(self.pkgs_specs[pkg_list_name]['dependencies']) == 0:
                     self.pkgs_specs[pkg_list_name].pop('dependencies')
+
+    def _skip_list(self, pkg_list_name):
+        """Returns true if the package list passed in argument is to skip
+
+        This method searches for the presence of the 'filters' key in the
+        package configuration section. If found, it will read each filter
+        here defined and if at least one has the none property, this list
+        is skipped."""
+
+        _skip = False
+        pkg_list_cfg = self.pkgs_stack[pkg_list_name]
+        if 'filters' in pkg_list_cfg:
+            for filter in pkg_list_cfg['filters']:
+                if self.filters[filter] == 'none':
+                    _skip = True
+        return _skip
 
     def _flatten_dict(self, d: MutableMapping, parent_key: str = '', sep: str = '_'):
         """Returns a flat dict
