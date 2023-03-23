@@ -162,13 +162,12 @@ class SpackYaml(StackFile):
         here defined and if at least one has the none property, this list
         is skipped."""
 
-        _skip = False
         pkg_list_cfg = self.pkgs_stack[pkg_list_name]
         if 'filters' in pkg_list_cfg:
             for filter in pkg_list_cfg['filters']:
                 if self.filters[filter] == 'none':
-                    _skip = True
-        return _skip
+                    return True
+        return False
 
     def _flatten_dict(self, d: MutableMapping, parent_key: str = '', sep: str = '_'):
         """Returns a flat dict
