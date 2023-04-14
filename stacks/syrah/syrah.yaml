@@ -663,6 +663,8 @@ external_packages:
             prefix: <external_prefix>/gurobi/8.1.1
           - spec: gurobi@9.5.2 %<core_compiler>
             prefix: <external_prefix>/gurobi/9.5.2
+          - spec: gurobi@10.0.1 %<core_compiler>
+            prefix: <external_prefix>/gurobi/10.0.1
 
     - gaussian:
         default:
