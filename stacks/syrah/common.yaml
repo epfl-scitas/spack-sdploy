@@ -1,20 +1,49 @@
-spack_release: v0.18.1
-stack_release: syrah
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+#
+#
+#                                                               PATH DEFINITIONS
+#
+#
+#
+#
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Path definitions
-work_directory: /ssoft/spack
+# stack, python env and spack sdploy will be placed here
+work_directory: /work/scitas-ge/erothe/stack/izar8
+spack_sdploy: spack-sdploy
 python_venv: py3-venv
 spack_external: external
+
+# Where to find jenkins scripts (under spack-sdploy)
 jenkins: jenkins/deploy/scripts
 extensions: spack-config
+
+# Name of the spack directory
 spack: spack
-spack_sdploy: spack-sdploy
+
+# This is where spack will install the packages
 stack_version: v1
 spack_licences: licences
 
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+#
+#
+#                                                           OTHER CONFIGURATIONS
+#
+#
+#
+#
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+spack_release: v0.18.1
+stack_release: syrah
+
 environments: # platforms
-  - jed
-  - helvetios
+  - izar
 
 # The mirrors paths are common to all stacks.
 # They are created under `work_directory`.
@@ -31,6 +60,20 @@ extra_repos:
     repo: http://github.com/epfl-scitas/scitas-spack-packages.git
     path: scitas-spack-packages/
     tag: releases/syrah
+
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+#
+#
+#
+#                                                            SPACK CONFIGURATION
+#
+#
+#
+#
+#
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 modules:
   roots:

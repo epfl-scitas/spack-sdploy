@@ -1,0 +1,16 @@
+platform:
+  filters:
+    gpu: nvidia
+    mpi: infiniband
+  tokens:
+    core_compiler: gcc@8.5.0 arch=linux-rhel8-x86_64_v2
+    cuda_arch: 70
+    python3: 3.10.4
+    target: cascadelake
+    os: rhel8
+    lmod_root: izar
+    lmod_arch: linux-rhel8-cascadelake
+    jdk_version: 1.8.0_332
+    slurm_version: 23-02-0
+    core_per_socket: 20
+    external_prefix: /work/scitas-ge/erothe/stack/izar8/external
