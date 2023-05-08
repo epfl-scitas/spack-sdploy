@@ -80,28 +80,9 @@ class ModulesYaml(StackFile):
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
-        env = ev.active_environment()
-        if env:
-            env_path = env.name
-        else:
-            env_path = None
-
-        if ('modules' not in self.commons.data or
-            'roots' not in self.commons.data['modules']):
-            return
 
         for module_type in ['lmod', 'tcl']:
-            root = os.path.join(
-                self.commons.data['work_directory'],
-                self.commons.data['stack_release'],
-                self.commons.data['stack_version'],
-                self.commons.data['modules']['roots'][module_type])
-            if env_path:
-                root = os.path.join(
-                    root,
-                    env_path
-                )
-            self.modules[f'{module_type}_roots'] = root
+            self.modules[f'{module_type}_roots'] = self.config.configs["modules"][f'{module_type}_roots']
 
     def _add_suffixes(self):
         """Add modules suffixes from stack.yaml"""

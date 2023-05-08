@@ -1,6 +1,28 @@
 spack:
 {#                                                          #}
 {#                                                          #}
+{#                                                   CONFIG #}
+{#                                                          #}
+{#                                                          #}
+{% if 'install_tree' in data['configs'].keys() %}
+  config:
+    install_tree:
+      root: {{data['configs']['install_tree']}}
+{% endif %}
+{#                                                          #}
+{#                                                          #}
+{#                                                  MODULES #}
+{#                                                          #}
+{#                                                          #}
+{% if "modules" in data['configs'].keys() %}
+  modules:
+    default:
+      roots:
+        lmod: {{ data['configs']['modules']['lmod_roots'] }}
+        tcl: {{ data['configs']['modules']['tcl_roots'] }}
+{% endif %}
+{#                                                          #}
+{#                                                          #}
 {#                                              DEFINITIONS #}
 {#                                                          #}
 {#                                                          #}
