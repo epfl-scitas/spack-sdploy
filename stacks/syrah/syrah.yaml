@@ -1061,7 +1061,7 @@ mpi_blas_parallel_python_packages_gcc_stable:
 
 mpi_blas_parallel_python_packages_intel_stable:
   metadata: { section: packages }
-  pe: [gcc_stable]
+  pe: [intel_stable]
   dependencies: [mpi, blas_parallel, python3]
   packages:
     - py-h5py ^hdf5 ~ipo +mpi
