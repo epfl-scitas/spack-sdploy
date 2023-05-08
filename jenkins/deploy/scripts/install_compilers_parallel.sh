@@ -28,21 +28,21 @@ do
     echo "spack compiler find --scope system ${spec_path} || true"
 
     if [[ "$spec" =~ "intel@" ]]; then
-	compiler_add=1
-	if [ -e ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml ]; then
-	    grep -q ${spec_path} ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
-	    if [ $? -eq 0 ]; then
-		compiler_add=0
-	    fi
-	fi
-	if [ ${compiler_add} -eq 1 ]; then
-	    spack compiler find --scope system ${spec_path} || true
-	fi
-	version=$(${spec_path}/bin/icc --version | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
-	spec_version=$(echo $spec |  sed 's/intel@\([0-9.]*\).*/\1/')
-	sed -i -e "s/intel@${version}/intel@${spec_version}/" ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+        compiler_add=1
+        if [ -e ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml ]; then
+            grep -q ${spec_path} ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+            if [ $? -eq 0 ]; then
+                compiler_add=0
+            fi
+        fi
+        if [ ${compiler_add} -eq 1 ]; then
+            spack compiler find --scope system ${spec_path} || true
+        fi
+        version=$(${spec_path}/bin/icc --version | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
+        spec_version=$(echo $spec |  sed 's/intel@\([0-9.]*\).*/\1/')
+        sed -i -e "s/intel@${version}/intel@${spec_version}/" ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
     else
-	spack compiler find --scope system ${spec_path} || true
+        spack compiler find --scope system ${spec_path} || true
     fi
 done <<< $(cat compilers.list)
 
@@ -54,8 +54,7 @@ done <<< $(cat compilers.list)
 #  icc.cfg/icpc.cfg (overwrite):
 #  -isystem/ssoft/spack/syrah/v1/opt/spack/linux-rhel8-x86_64_v2/gcc-8.5.0/intel-oneapi-compilers-classic-2021.6.0-q3mi2mylw3zyuht6p72u25ruqnpptpym/compiler/include/icc
 
-if [ 0 -eq 1 ]; then
-
+if [ ${IN_PR} -eq 0 ]; then
     DST_DIR=`spack location -i intel-oneapi-compilers`/compiler/2022.1.0/linux/bin/intel64
     CONTENT=`spack location -i intel-oneapi-compilers-classic`/compiler/include
     echo -isystem$CONTENT/intel64 > $DST_DIR/ifort.cfg
