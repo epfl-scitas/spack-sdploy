@@ -27,7 +27,7 @@ echo "COMPILER_SPEC_VER: $COMPILER_SPEC_VER"
 
 echo "Creating modules"
 # we can pass -e ${environment} to the spack command
-spack module lmod refresh -y
+spack --env ${environment} module lmod refresh -y
 
 # What's happening ?
 # ----------------
