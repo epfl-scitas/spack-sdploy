@@ -439,27 +439,6 @@ serial_packages_python_gcc_stable:
               none: ~cuda
     - py-grpcio:
        activated: True
-    - py-h5py ^hdf5~mpi:
-        modules:
-          autoload: direct
-
-serial_packages_python_intel_stable:
-  metadata:
-    section: packages
-  pe: [intel_stable]
-  dependencies: [python3]
-  packages:
-    - py-h5py ^hdf5~mpi~ipo:
-        modules:
-          autoload: direct
-    # - llvm@14.0.6:
-    #     default:
-    #       version: 14.0.6
-    #       variants:
-    #         common: ~ipo ~internal_unwind
-    #         gpu:
-    #           nvidia: +cuda cuda_arch=<cuda_arch>
-    #           none: ~cuda
 
 # PYTHON BLAS ------------------------------------------------------------------
 #
@@ -496,6 +475,9 @@ serial_packages_python_blas_gcc_stable:
     - iq-tree +ipo@2.0.6
     - polymake
     - py-deeptools
+    - py-h5py ^hdf5 ~mpi +ipo:
+        modules:
+          autoload: direct
     - py-scikit-learn
     - py-scipy
     - py-statsmodels
@@ -520,6 +502,9 @@ serial_packages_python_blas_intel_stable:
           - mmg ~ipo ~vtk
     - iq-tree ~ipo@1.6.12
     - iq-tree ~ipo@2.0.6
+    - py-h5py ^hdf5 ~mpi ~ipo:
+        modules:
+          autoload: direct
 
 
 # PYTHON 2 ---------------------------------------------------------------------
@@ -733,8 +718,6 @@ mpi_packages:
   dependencies:
     - mpi
   packages:
-    - arpack-ng:
-        default: { variants: +mpi }
     - fftw:
         variants: +mpi +openmp
         default: { variants: +mpi ~openmp }
@@ -890,6 +873,8 @@ mpi_blas_packages:
   pe: [gcc_stable, intel_stable]
   dependencies: [mpi, blas]
   packages:
+    - arpack-ng:
+        default: { variants: +mpi }
     - hypre:
         default:
           variants:
@@ -914,22 +899,6 @@ mpi_python_packages:
   dependencies: [mpi, python3]
   packages:
     - py-mpi4py
-
-mpi_python_packages_gcc_stable:
-  metadata:
-    section: packages
-  pe: [gcc_stable]
-  dependencies: [mpi, python3]
-  packages:
-    - py-h5py ^hdf5 +mpi
-
-mpi_python_packages_intel_gcc:
-  metadata:
-    section: packages
-  pe: [intel_stable]
-  dependencies: [mpi, python3]
-  packages:
-    - py-h5py ^hdf5 ~ipo+mpi
 
 # MPI + BLAS + PYTHON ----------------------------------------------------------
 #
@@ -1072,6 +1041,7 @@ mpi_blas_parallel_python_packages_gcc_stable:
             none: +osmesa
         dependencies:
           - netcdf-c+mpi
+    - py-h5py ^hdf5 +mpi +ipo
     - cp2k@9.1 +mpi ~plumed +openmp smm=blas:
         variants:
           gpu:
@@ -1088,6 +1058,13 @@ mpi_blas_parallel_python_packages_gcc_stable:
         dependencies:
           - boost+mpi
           - fftw+mpi+openmp
+
+mpi_blas_parallel_python_packages_intel_stable:
+  metadata: { section: packages }
+  pe: [intel_stable]
+  dependencies: [mpi, blas_parallel, python3]
+  packages:
+    - py-h5py ^hdf5 ~ipo +mpi
 
 mpi_blas_python_packages_intel_stable:
   metadata: { section: packages }
