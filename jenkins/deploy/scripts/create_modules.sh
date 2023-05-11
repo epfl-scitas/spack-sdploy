@@ -45,12 +45,12 @@ if [ -e ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua ]; then
 
     # step 2
     cat >> ${LMOD_CORE}/${COMPILER}/${COMPILER_VER}.lua<<-EOL
-    -- Services provided by the package
-    family("compiler")
+	-- Services provided by the package
+	family("compiler")
 
-    -- Loading this module unlocks the path below unconditionally
-    prepend_path("MODULEPATH", "${LMOD_INTEL}/${COMPILER_VER}")
-    EOL
+	-- Loading this module unlocks the path below unconditionally
+	prepend_path("MODULEPATH", "${LMOD_INTEL}/${COMPILER_VER}")
+	EOL
 
     # step 3
     mv ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua.bckp
