@@ -44,7 +44,7 @@ if [ -e ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua ]; then
     cp -f ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua ${LMOD_CORE}/${COMPILER}/${COMPILER_VER}.lua
 
     # step 2
-    cat >> ${LMOD_CORE}/${COMPILER}/${COMPILER_VER}.lua<<EOL
+    cat >> ${LMOD_CORE}/${COMPILER}/${COMPILER_VER}.lua<<-EOL
     -- Services provided by the package
     family("compiler")
 
