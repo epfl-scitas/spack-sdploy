@@ -19,10 +19,12 @@ gcc:
   metadata:
     section: pe
   stable:
-    compiler: gcc@11.3.0
+    compiler: gcc@11.3.0 <compiler_arch>
+    compiler_spec: gcc@11.3.0
     mpi:
-      infiniband: openmpi@4.1.3 +cuda cuda_arch=<cuda_arch> fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2 ^ucx +cuda +gdrcopy cuda_arch=<cuda_arch>
-      ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2
+      infiniband: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2
+      infiniband_gdrcopy: openmpi@4.1.3 +cuda cuda_arch=<cuda_arch> fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2
+      ethernet_roce: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2
     blas: openblas@0.3.20 threads=none +locking
     blas_parallel: openblas@0.3.20 threads=openmp +locking
     python3: python@<python3> +tkinter +optimizations ~debug +ssl ~libxml2
@@ -35,9 +37,9 @@ intel:
   metadata:
     section: pe
   stable:
-    compiler: intel@2021.6.0
+    compiler: intel@2021.6.0 <compiler_arch>
     compiler_spec: intel-oneapi-compilers-classic@2021.6.0
-    mpi: intel-oneapi-mpi
+    mpi: intel-oneapi-mpi ~external-libfabric
     blas: intel-oneapi-mkl
     blas_parallel: intel-oneapi-mkl
     python3: python@<python3> +tkinter +optimizations ~debug +ssl
@@ -45,34 +47,6 @@ intel:
     gpu:
       nvidia: cuda@11.8.0
       none: ""
-
-# GPU --------------------------------------------------------------------------
-#
-#
-# ------------------------------------------------------------------------------
-GPU_packages:
-  metadata: {section: packages }
-  pe: [gcc_stable, intel_stable]
-  filters: ['gpu']
-  dependencies: [gpu]
-  packages:
-    - cuda:
-        default:
-          version: 11.8.0
-    - cudnn@8.7.0
-    - nccl +cuda cuda_arch=<cuda_arch>
-
-  # Double openmpi spec to show up in packages.yaml
-    - openmpi:
-        default:
-          variants: +cuda cuda_arch=<cuda_arch> fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2 ^ucx +cuda +gdrcopy cuda_arch=<cuda_arch>
-
-  # The ucx package specified in serial packages contains a deprecated variant: cm
-  # With care must we proceed to not impact existing installations of this package
-    - ucx:
-        variants: |
-          +cuda +gdrcopy cuda_arch=<cuda_arch> +rdmacm +rc +dc +ud
-          +cma +verbs +mlx5_dv +parameter_checking +thread_multiple
 
 # CORE -------------------------------------------------------------------------
 #
@@ -111,6 +85,37 @@ core_packages:
     - tar
     - tmux
     - trimmomatic
+    - openssl:
+        default:
+          version: 1.1.1k
+          buildable: false
+        externals:
+          - spec: openssl@1.1.1k
+            prefix: /usr
+    - pmix:
+        default:
+          buildable: False
+        externals:
+          - spec: pmix@4.2.2
+            prefix: /usr
+    - rdma-core:
+        default:
+          buildable: False
+        externals:
+          - spec: rdma-core@40.1
+            prefix: /usr
+    - rust:
+        default:
+          buildable: False
+        externals:
+          - spec: rust ~rls ~clippy ~rustfmt ~analysis ~src@1.45
+            prefix: /usr
+    - slurm:
+        default:
+          buildable: false
+        externals:
+          - spec: slurm@<slurm_version> ~mariadb
+            prefix: /usr
 
 # CORE (STABLE COMPILER) -------------------------------------------------------
 #
@@ -169,12 +174,12 @@ serial_packages:
     - mpfr
     - muscle
     # ok syntax for namd
-    - namd:
-        variants: interface=tcl
-        dependencies:
-          mpi:
-            infiniband:
-              - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
+    #- namd:
+    #    variants: interface=tcl
+    #    dependencies:
+    #      mpi:
+    #        infiniband:
+    #          - charmpp ~smp backend=verbs build-target=charm++ pmi=slurmpmi2
     - perl:
         default: { version: 5.32.0 }
     # This is already specified in the PE section
@@ -185,13 +190,6 @@ serial_packages:
           version: <python3>
           variants: +tkinter +optimizations ~debug +ssl ~libxml2
     - nfft ^fftw~mpi+openmp
-    - openssl:
-        default:
-          version: 1.1.1k
-          buildable: false
-        externals:
-          - spec: openssl@1.1.1k
-            prefix: /usr
     - scotch:
         variants: ~mpi
         default: { variants: +esmumps ~metis }
@@ -203,6 +201,33 @@ serial_packages:
     - valgrind ~boost ~mpi
     - voropp
     - zlib
+
+# GPU --------------------------------------------------------------------------
+#
+#
+# ------------------------------------------------------------------------------
+serial_packages_cuda:
+  metadata: {section: packages }
+  pe: [gcc_stable, intel_stable]
+  filters: ['gpu']
+  packages:
+    - cuda:
+        default:
+          version: 11.8.0
+
+
+serial_packages_gpu:
+  metadata: {section: packages }
+  pe: [gcc_stable, intel_stable]
+  filters: ['gpu']
+  dependencies: [gpu]
+  packages:
+    - cudnn:
+        default:
+          version: 8.7.0.84-11.8
+    - nccl:
+        default:
+          variants: +cuda cuda_arch=<cuda_arch>
 
 # GCC ONLY ---------------------------------------------------------------------
 #
@@ -235,34 +260,15 @@ serial_packages_gcc_stable:
           - netcdf-c ~mpi~parallel-netcdf
     - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
-    - pmix:
-        default:
-          buildable: False
-        externals:
-          - spec: pmix@4.2.2
-            prefix: /usr
-    - rdma-core:
-        default:
-          buildable: False
-        externals:
-          - spec: rdma-core@40.1
-            prefix: /usr
-    # - rust
-    - slurm:
-        default:
-          buildable: false
-        externals:
-          - spec: slurm@<slurm_version> ~mariadb
-            prefix: /usr
     - sox
   # This package contains a deprecated variant: `cm`
     - ucx:
         default:
           variants:
-            common: +rdmacm +rc +dc +ud +cm +cma +verbs +mlx5_dv +parameter_checking +thread_multiple
+            common: +rdmacm +rc +dc +ud +cma +verbs +mlx5_dv +parameter_checking +thread_multiple
             gpu:
               nvidia: +gdrcopy +cuda cuda_arch=<cuda_arch>
-              none: ~gdrcopy
+              none: ~gdrcopy +cm
 
 # INTEL ONLY ---------------------------------------------------------------------
 #
@@ -272,8 +278,18 @@ serial_packages_intel_stable:
   metadata: { section: packages }
   pe: [intel_stable]
   packages:
+    - abaqus:
+        default:
+          buildable: false
+          permissions:
+            read: group
+            group: abaqus-soft
+        externals:
+          - spec: abaqus@2019
+            prefix: <external_prefix>/abaqus/2019
     - eigen ~ipo
     - hdf5~ipo
+    - intel-oneapi-ipp
     - netcdf-c~mpi ^hdf5~ipo~mpi+szip+hl+fortran+cxx
     - netcdf-fortran ^netcdf-c~mpi ^hdf5~ipo~mpi+szip+hl+fortran+cxx
 
@@ -285,26 +301,14 @@ serial_packages_blas:
   metadata:
     section: packages
   pe: [gcc_stable, intel_stable]
-  dependencies:
-    - blas
+  dependencies: [blas]
   packages:
     - arpack-ng ~mpi
-    - superlu
-
-# BLAS + GPU -------------------------------------------------------------------
-#
-#
-# ------------------------------------------------------------------------------
-serial_packages_blas_gpu:
-  metadata: { section: packages }
-  pe: [gcc_stable, intel_stable]
-  dependencies: [blas, gpu]
-  packages:
-    #- suite-sparse:
-    #    variants:
-    #      gpu:
-    #        nvidia: +cuda
-    #        none: ~cuda
+    - suite-sparse:
+        variants:
+          gpu:
+            nvidia: +cuda
+            none: ~cuda
     - magma:
         variants:
           gpu:
@@ -426,27 +430,6 @@ serial_packages_python_gcc_stable:
               none: ~cuda
     - py-grpcio:
        activated: True
-    - py-h5py ^hdf5~mpi:
-        modules:
-          autoload: direct
-
-#serial_packages_python_intel_stable:
-#  metadata:
-#    section: packages
-#  pe: [intel_stable]
-#  dependencies: [python3]
-#  packages:
-#    - py-h5py ^hdf5~mpi~ipo:
-#        modules:
-#          autoload: direct
-#    # - llvm@14.0.6:
-#    #     default:
-#    #       version: 14.0.6
-#    #       variants:
-#    #         common: ~ipo ~internal_unwind
-#    #         gpu:
-#    #           nvidia: +cuda cuda_arch=<cuda_arch>
-#    #           none: ~cuda
 
 # PYTHON BLAS ------------------------------------------------------------------
 #
@@ -462,9 +445,6 @@ serial_packages_python_blas:
           variants: cxxstd=14 +icu ~mpi +python +numpy +atomic +chrono +container +date_time +filesystem +graph +iostreams ~json +locale +log +math ~pic +program_options +random +regex +serialization +shared +signals ~singlethreaded ~stacktrace +system ~taggedlayout +test +thread +timer ~type_erasure ~versionedlayout +wave +exception
     #- bcl2fastq2
     - py-biopython
-
-  # ATTENTION: this package should be mooved to GPU only list
-    - py-keras ^py-h5py ^hdf5 ~mpi ^openmpi+pmi ^py-tensorflow+nccl
     - py-macs2
     - py-pybigwig
 
@@ -485,6 +465,9 @@ serial_packages_python_blas_gcc_stable:
     - iq-tree +ipo@2.0.6
     - polymake
     - py-deeptools
+    - py-h5py ^hdf5 ~mpi +ipo:
+        modules:
+          autoload: direct
     - py-scikit-learn
     - py-scipy
     - py-statsmodels
@@ -509,6 +492,9 @@ serial_packages_python_blas_intel_stable:
           - mmg ~ipo ~vtk
     - iq-tree ~ipo@1.6.12
     - iq-tree ~ipo@2.0.6
+    - py-h5py ^hdf5 ~mpi ~ipo:
+        modules:
+          autoload: direct
 
 
 # PYTHON 2 ---------------------------------------------------------------------
@@ -553,7 +539,7 @@ serial_packages_python_gcc_stable:
     - xgboost:
         variants:
           gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch> ^nccl +cuda cuda_arch=<cuda_arch>
+            nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
 
 # PYTHON + GPU (GCC ONLY) ------------------------------------------------------
@@ -652,6 +638,8 @@ external_packages:
             prefix: <external_prefix>/gurobi/8.1.1
           - spec: gurobi@9.5.2 %<core_compiler>
             prefix: <external_prefix>/gurobi/9.5.2
+          - spec: gurobi@10.0.1 %<core_compiler>
+            prefix: <external_prefix>/gurobi/10.0.1
 
     - gaussian:
         default:
@@ -720,8 +708,6 @@ mpi_packages:
   dependencies:
     - mpi
   packages:
-    - arpack-ng:
-        default: { variants: +mpi }
     - fftw:
         variants: +mpi +openmp
         default: { variants: +mpi ~openmp }
@@ -763,15 +749,6 @@ mpi_packages_intel_stable:
   dependencies:
     - mpi
   packages:
-    - abaqus:
-        default:
-          buildable: false
-          permissions:
-            read: group
-            group: abaqus-soft
-        externals:
-          - spec: abaqus@2019
-            prefix: <external_prefix>/abaqus/2019
     - adf:
         default:
           buildable: false
@@ -809,15 +786,15 @@ mpi_blas_packages_gcc_stable:
     - mpi
     - blas
   packages:
-    #- abinit +openmp +mpi +scalapack +wannier90:
-    #    dependencies:
-    #      - hdf5 +mpi
-    #      - netcdf-c +mpi
+    # - abinit +openmp +mpi +scalapack +wannier90:
+    #     dependencies:
+    #       - hdf5 +mpi
+    #       - netcdf-c +mpi
     - gmsh +mpi +eigen +openmp +hdf5 ~fltk ~opencascade ~med:
         dependencies:
           - hdf5 +mpi
           - mmg +ipo ~vtk
-    #- cpmd@4.3 ~openmp
+    - cpmd@4.3 ~openmp
     - elmerfem +mumps +openmp +hypre:
         dependencies:
           - hdf5 +mpi
@@ -839,7 +816,7 @@ mpi_blas_packages_gcc_stable:
               none: ~cuda
     - yambo+mpi io=iotk,etsf-io ^fftw+mpi+openmp
 
-# MPI + BLAS ------------------------------------------------------------------
+# MPI + BLAS -------------------------------------------------------------------
 #
 #
 # ------------------------------------------------------------------------------
@@ -853,11 +830,19 @@ mpi_blas_packages_intel_stable:
           - hdf5 +mpi ~ipo
           - mmg ~ipo ~vtk
     - quantum-espresso+mpi+scalapack
-    - quantum-espresso+mpi+scalapack hdf5=parallel
+    - quantum-espresso+mpi+scalapack hdf5=parallel:
+        dependencies:
+          - hdf5 +mpi ~ipo
     - mumps:
         default: { variants: +mpi +parmetis +metis +scotch +ptscotch }
         dependencies:
           - scotch +mpi
+
+mpi_blas_gpu_packages_intel_stable:
+  metadata: { section: packages }
+  pe: [intel_stable]
+  dependencies: [mpi, blas]
+  packages:
     - superlu-dist:
         default:
           variants:
@@ -866,7 +851,7 @@ mpi_blas_packages_intel_stable:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
 
-# MPI + BLAS ------------------------------------------------------------------
+# MPI + BLAS -------------------------------------------------------------------
 #
 #
 # ------------------------------------------------------------------------------
@@ -875,18 +860,20 @@ mpi_blas_packages:
   pe: [gcc_stable, intel_stable]
   dependencies: [mpi, blas]
   packages:
+    - arpack-ng:
+        default: { variants: +mpi }
     - hypre:
         default:
           variants:
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
-#    - molpro:
-#        default:
-#          buildable: true
-#          permissions:
-#            read: group
-#            group: molpro-soft
+    # - molpro:
+    #     default:
+    #       buildable: true
+    #       permissions:
+    #         read: group
+    #         group: molpro-soft
 
 # MPI PYTHON --------------------------------------------------------------------
 #
@@ -899,22 +886,6 @@ mpi_python_packages:
   dependencies: [mpi, python3]
   packages:
     - py-mpi4py
-
-mpi_python_packages_gcc_stable:
-  metadata:
-    section: packages
-  pe: [gcc_stable]
-  dependencies: [mpi, python3]
-  packages:
-    - py-h5py ^hdf5 +mpi
-
-mpi_python_packages_intel_gcc:
-  metadata:
-    section: packages
-  pe: [intel_stable]
-  dependencies: [mpi, python3]
-  packages:
-    - py-h5py ^hdf5 ~ipo+mpi
 
 # MPI + BLAS + PYTHON ----------------------------------------------------------
 #
@@ -944,9 +915,9 @@ mpi_blas_python_packages:
 mpi_packages_gcc_stable:
   metadata: { section: packages }
   pe: [gcc_stable]
-  dependencies: [mpi]
+  dependencies: [mpi, gpu]
   packages:
-    - relion ~mklfft:
+    - relion@4.0-beta ~mklfft:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch> +double-gpu
@@ -966,22 +937,21 @@ mpi_blas_python_packages_gcc_stable:
     - adios2:
         default: { variants: +hdf5 +mpi +python }
     # Cannot fetch
-    #- amber +mpi:
-    #    variants:
-    #      gpu:
-    #        nvidia: +cuda cuda_arch=<cuda_arch>
-    #        none: ~cuda
-    #    dependencies:
-    #      - boost+mpi
+    # - amber +mpi:
+    #     variants:
+    #       gpu:
+    #         nvidia: +cuda cuda_arch=<cuda_arch>
+    #         none: ~cuda
+    #     dependencies:
+    #       - boost+mpi
     - fenics +parmetis +hdf5 +scotch +suite-sparse ~vtk ~trilinos ^boost+mpi
-
-  # Must explicitly add openmpi+cuda dependency otherwise spack will
-  # build another openmpi without cuda to satisfy the dependency.
     - gromacs@2021.4+mpi+plumed:
         variants:
           gpu:
             nvidia: +cuda
             none: ~cuda
+        dependencies:
+          - fftw~mpi+openmp
     - lammps@20220107:
         variants:
           common: |
@@ -997,56 +967,23 @@ mpi_blas_python_packages_gcc_stable:
           - netcdf-c+mpi
           - fftw+mpi+openmp
     - openfoam +metis ^boost+mpi ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools ^fftw+mpi+openmp
-    - py-horovod controllers=mpi frameworks=pytorch,tensorflow,keras:
-        variants:
-          gpu:
-            nvidia: |
-              tensor_ops=nccl +cuda cuda_arch=<cuda_arch>
-              ^nccl +cuda cuda_arch=<cuda_arch>
-              ^openmpi+pmi ^cuda@11.8.0 ^py-tensorflow@2.10.1 ^py-torch+magma~mkldnn
-            none: tensor_ops=mpi ~cuda
-
-  # Spack is guessing cuda_arch=80 for nccl although this variant is
-  # explicitly defined below. In fact the concretization does not contain
-  # the nccl package as we state here. Let's move it to the dependencies.
-  # In production scenario, this package will have to move to a list
-  # only available to on a GPU cluster.
-    - py-tensorflow:
-        default:
-          version: 2.10.1
-          variants:
-            common: +mpi
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch>
-              none: ~cuda ~nccl ~rocm amdgpu_target=none cuda_arch=none
-        dependencies:
-          - bazel@5.4.0^openjdk@11
-          - nccl +cuda cuda_arch=<cuda_arch>
-
     - py-torch:
-        variants: +mpi ~valgrind
+        variants: +mpi
         default:
           variants:
-            common: +mpi ~valgrind
             gpu:
-              nvidia:
-              - +cuda cuda_arch=<cuda_arch> +magma
-              - ^magma +cuda cuda_arch=<cuda_arch>
-              - ^nccl +cuda cuda_arch=<cuda_arch>
+              nvidia: +cuda cuda_arch=<cuda_arch> +magma +cudnn +nccl
               none: ~cuda ~cudnn ~nccl
               rocm: +magma +rocm
         dependencies:
           gpu:
-            nvidia:
-              - magma +cuda cuda_arch=<cuda_arch>
-              - nccl +cuda cuda_arch=<cuda_arch>
-              - openmpi +cuda cuda_arch=<cuda_arch>
+            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
             rocm: [magma +rocm amdgpuarch=<amd_arch>]
-
-  # py-torchvision~cuda does not seem good !
-    #- py-torchvision:
-    #    dependencies:
-    #      - py-torch+mpi~cuda
+    - py-torchvision:
+        dependencies:
+          gpu:
+            nvidia: [py-torch+mpi+cuda cuda_arch=<cuda_arch>]
+            none: [py-torch+mpi~cuda]
     - opencv +vtk +python3:
         variants:
           gpu:
@@ -1054,7 +991,7 @@ mpi_blas_python_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - netcdf-c +mpi
-          - boost+mpi
+          - boost +mpi
     - vtk:
         default:
           variants: +ffmpeg +python +xdmf +mpi ~qt +ipo +opengl2
@@ -1064,6 +1001,46 @@ mpi_blas_python_packages_gcc_stable:
         dependencies:
           - netcdf-c +mpi
           - boost+mpi
+
+mpi_blas_parallel_python_gpu_packages_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  filters: ['gpu']
+  dependencies: [mpi, blas_parallel, python3, gpu]
+  packages:
+    - py-keras
+    - py-horovod:
+        default:
+          variants:
+            common: controllers=mpi frameworks=pytorch,tensorflow,keras
+            gpu:
+              nvidia: tensor_ops=nccl +cuda cuda_arch=<cuda_arch>
+              none: tensor_ops=mpi ~cuda
+
+    # Spack is guessing cuda_arch=80 for nccl although this variant is
+    # explicitly defined below. In fact the concretization does not contain
+    # the nccl package as we state here. Let's move it to the dependencies.
+    # In production scenario, this package will have to move to a list
+    # only available to on a GPU cluster.
+    - py-tensorflow:
+        default:
+          version: 2.10.1
+          variants:
+            common: +mpi
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch> +nccl
+              none: ~cuda ~nccl ~rocm
+            networks:
+              infiniband: +verbs
+              infiniband_gdrcopy: +verbs
+              ehternet_roce: ~verbs
+        variants:
+          common: +mpi
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch> +nccl
+            none: ~cuda ~nccl ~rocm
+        dependencies:
+          - bazel ^openjdk@11
 
 mpi_blas_parallel_python_packages_gcc_stable:
   metadata: { section: packages }
@@ -1078,6 +1055,7 @@ mpi_blas_parallel_python_packages_gcc_stable:
             none: +osmesa
         dependencies:
           - netcdf-c+mpi
+    - py-h5py ^hdf5 +mpi +ipo
     - cp2k@9.1 +mpi ~plumed +openmp smm=blas:
         variants:
           gpu:
@@ -1086,14 +1064,21 @@ mpi_blas_parallel_python_packages_gcc_stable:
         dependencies:
           - boost+mpi
           - fftw+mpi+openmp
-    - cp2k@9.1 +mpi +plumed +openmp smm=blas:
-        variants:
-          gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch>
-            none: ~cuda
-        dependencies:
-          - boost+mpi
-          - fftw+mpi+openmp
+    # - cp2k@9.1 +mpi +plumed +openmp smm=blas:
+    #     variants:
+    #       gpu:
+    #         nvidia: +cuda cuda_arch=<cuda_arch>
+    #         none: ~cuda
+    #     dependencies:
+    #       - boost+mpi
+    #       - fftw+mpi+openmp
+
+mpi_blas_parallel_python_packages_intel_stable:
+  metadata: { section: packages }
+  pe: [intel_stable]
+  dependencies: [mpi, blas_parallel, python3]
+  packages:
+    - py-h5py ^hdf5 ~ipo +mpi
 
 mpi_blas_python_packages_intel_stable:
   metadata: { section: packages }
