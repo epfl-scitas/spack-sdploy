@@ -1,3 +1,8 @@
 repos:
-  - /work/scitas-ge/erothe/stack/spack-repos/scitas-spack-packages
-  - /work/scitas-ge/erothe/stack/izar5/syrah/external/scitas-repos-externals
+{% if data | length %}
+{% for repo in data %}
+- {{ data[repo]['path'] }}
+{% endfor %}
+{% else %}
+{}
+{% endif %}
