@@ -14,3 +14,4 @@ platform:
     slurm_version: 23-02-0
     core_per_socket: 20
     external_prefix: /work/scitas-ge/richart/syrah
+    compiler_arch: "arch=linux-rhel8-skylake_avx512"

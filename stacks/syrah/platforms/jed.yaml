@@ -13,3 +13,4 @@ platform:
     slurm_version: 22-05-6
     core_per_socket: 72
     external_prefix: /ssoft/spack/external
+    compiler_arch: ""
