@@ -895,11 +895,7 @@ mpi_blas_python_packages:
   metadata:
     section: packages
   pe: [gcc_stable, intel_stable]
-  dependencies:
-    - mpi
-    - blas
-    - python3
-    - gpu
+  dependencies: [mpi, blas, python3]
   packages:
     - boost +mpi
     - cgal ^boost+mpi
