@@ -39,7 +39,10 @@ intel:
   stable:
     compiler: intel@2021.6.0 <compiler_arch>
     compiler_spec: intel-oneapi-compilers-classic@2021.6.0
-    mpi: intel-oneapi-mpi ~external-libfabric
+    mpi:
+      infiniband: intel-oneapi-mpi
+      infiniband_gdrcopy: intel-oneapi-mpi ~external-libfabric
+      ethernet_roce: intel-oneapi-mpi
     blas: intel-oneapi-mkl
     blas_parallel: intel-oneapi-mkl
     python3: python@<python3> +tkinter +optimizations ~debug +ssl
@@ -85,37 +88,6 @@ core_packages:
     - tar
     - tmux
     - trimmomatic
-    - openssl:
-        default:
-          version: 1.1.1k
-          buildable: false
-        externals:
-          - spec: openssl@1.1.1k
-            prefix: /usr
-    - pmix:
-        default:
-          buildable: False
-        externals:
-          - spec: pmix@4.2.2
-            prefix: /usr
-    - rdma-core:
-        default:
-          buildable: False
-        externals:
-          - spec: rdma-core@40.1
-            prefix: /usr
-    - rust:
-        default:
-          buildable: False
-        externals:
-          - spec: rust ~rls ~clippy ~rustfmt ~analysis ~src@1.45
-            prefix: /usr
-    - slurm:
-        default:
-          buildable: false
-        externals:
-          - spec: slurm@<slurm_version> ~mariadb
-            prefix: /usr
 
 # CORE (STABLE COMPILER) -------------------------------------------------------
 #
@@ -189,6 +161,13 @@ serial_packages:
           version: <python3>
           variants: +tkinter +optimizations ~debug +ssl ~libxml2
     - nfft ^fftw~mpi+openmp
+    - openssl:
+        default:
+          version: 1.1.1k
+          buildable: false
+        externals:
+          - spec: openssl@1.1.1k
+            prefix: /usr
     - scotch:
         variants: ~mpi
         default: { variants: +esmumps ~metis }
@@ -224,9 +203,17 @@ serial_packages_gpu:
     - cudnn:
         default:
           version: 8.7.0.84-11.8
+
+serial_packages_gpu_gcc_stable:
+  metadata: {section: packages }
+  pe: [gcc_stable]
+  filters: ['gpu']
+  dependencies: [gpu]
+  packages:
     - nccl:
         default:
           variants: +cuda cuda_arch=<cuda_arch>
+
 
 # GCC ONLY ---------------------------------------------------------------------
 #
@@ -260,6 +247,31 @@ serial_packages_gcc_stable:
           - netcdf-c ~mpi~parallel-netcdf
     - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
+    # It stays here just to not change what is already installed but it would make more sense to have it in core_packages
+    - pmix:
+        default:
+          buildable: False
+        externals:
+          - spec: pmix@4.2.2
+            prefix: /usr
+    - rdma-core:
+        default:
+          buildable: False
+        externals:
+          - spec: rdma-core@40.1
+            prefix: /usr
+    - rust:
+        default:
+          buildable: False
+        externals:
+          - spec: rust ~rls ~clippy ~rustfmt ~analysis ~src@1.45
+            prefix: /usr
+    - slurm:
+        default:
+          buildable: false
+        externals:
+          - spec: slurm@<slurm_version> ~mariadb
+            prefix: /usr
     - sox
   # This package contains a deprecated variant: `cm`
     - ucx:
@@ -305,6 +317,14 @@ serial_packages_blas:
   dependencies: [blas]
   packages:
     - arpack-ng ~mpi
+    - superlu
+
+serial_packages_blas_gpu:
+  metadata:
+    section: packages
+  pe: [gcc_stable, intel_stable]
+  dependencies: [blas, gpu]
+  packages:
     - suite-sparse:
         variants:
           gpu:
@@ -314,6 +334,8 @@ serial_packages_blas:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
+        dependencies:
+          - cmake +ownlibs
 
 # BLAS (GCC ONLY) --------------------------------------------------------------
 #
@@ -750,24 +772,15 @@ mpi_packages_intel_stable:
   dependencies:
     - mpi
   packages:
-    - adf:
-        default:
-          buildable: false
-          permissions:
-            read: group
-            group: adf-soft
-        externals:
-          - spec: adf@2017.11
-            prefix: <external_prefix>/adf/adf2017.111
-    - ams:
-        default:
-          buildable: false
-          permissions:
-            read: group
-            group: adf-soft
-        externals:
-          - spec: ams@2022.103
-            prefix: <external_prefix>/ams/ams2022.103
+#    - adf:
+#        default:
+#          buildable: false
+#          permissions:
+#            read: group
+#            group: adf-soft
+#        externals:
+#          - spec: adf@2017.11
+#            prefix: <external_prefix>/adf/adf2017.111
     - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
     - netcdf-c +mpi ^hdf5 ~ipo +mpi +szip +hl +fortran +cxx
     - netcdf-fortran ^hdf5 ~ipo +mpi +szip +hl +fortran +cxx
@@ -842,7 +855,7 @@ mpi_blas_packages_intel_stable:
 mpi_blas_gpu_packages_intel_stable:
   metadata: { section: packages }
   pe: [intel_stable]
-  dependencies: [mpi, blas]
+  dependencies: [mpi, blas, gpu]
   packages:
     - superlu-dist:
         default:
@@ -909,12 +922,13 @@ mpi_blas_python_packages:
 #
 #
 # ------------------------------------------------------------------------------
-mpi_packages_gcc_stable:
+mpi_packages_gpu_gcc_stable:
   metadata: { section: packages }
   pe: [gcc_stable]
   dependencies: [mpi, gpu]
+  filters: ["gpu"]
   packages:
-    - relion@4.0-beta ~mklfft:
+    - relion@4.0.1 ~mklfft:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch> +double-gpu
@@ -941,7 +955,14 @@ mpi_blas_python_packages_gcc_stable:
     #         none: ~cuda
     #     dependencies:
     #       - boost+mpi
-    - fenics +parmetis +hdf5 +scotch +suite-sparse ~vtk ~trilinos ^boost+mpi
+    - fenics +parmetis +hdf5 +scotch +suite-sparse ~vtk ~trilinos:
+        dependencies:
+          common:
+            - boost+mpi
+            #- hdf5 +ipo +mpi +szip +hl +fortran +cxx
+          gpu:
+            nvidia: [suite-sparse +cuda]
+            none: []
     - gromacs@2021.4+mpi+plumed:
         variants:
           gpu:
@@ -966,6 +987,7 @@ mpi_blas_python_packages_gcc_stable:
     - openfoam +metis ^boost+mpi ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools ^fftw+mpi+openmp
     - py-torch:
         variants: +mpi
+        default: { version: 2.0.1 }
         default:
           variants:
             gpu:
@@ -974,13 +996,41 @@ mpi_blas_python_packages_gcc_stable:
               rocm: +magma +rocm
         dependencies:
           gpu:
-            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
+            nvidia: [magma +cuda cuda_arch=<cuda_arch> ^cmake +ownlibs]
             rocm: [magma +rocm amdgpuarch=<amd_arch>]
     - py-torchvision:
         dependencies:
           gpu:
-            nvidia: [py-torch+mpi+cuda cuda_arch=<cuda_arch>]
+            nvidia: [py-torch +mpi +cuda cuda_arch=<cuda_arch> ^magma +cuda cuda_arch=<cuda_arch> ^cmake +ownlibs]
             none: [py-torch+mpi~cuda]
+#    - petsc:
+#        default:
+#          variants:
+#            common:  ~int64 +double +hdf5 +metis +mpi +superlu-dist +hypre +suite-sparse
+#            gpu:
+#              nvidia: +cuda
+#              none: ~cuda
+#        dependencies:
+#          common:
+#            - hdf5 +ipo +mpi
+#          gpu:
+#            nvidia: [suite-sparse +cuda]
+#            none: []
+#    - slepc:
+#        default: { variants: +arpack }
+#        dependencies:
+#          common:
+#            - hdf5 +ipo +mpi
+#          gpu:
+#            nvidia: [petsc ^suite-sparse +cuda]
+#            none: []
+#    - py-petsc4py:
+#        dependencies:
+#          common:
+#            - hdf5 +ipo +mpi
+#          gpu:
+#            nvidia: [petsc ^suite-sparse +cuda]
+#            none: []
     - opencv +vtk +python3:
         variants:
           gpu:
@@ -988,7 +1038,7 @@ mpi_blas_python_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - netcdf-c +mpi
-          - boost +mpi
+          - boost+mpi
     - vtk:
         default:
           variants: +ffmpeg +python +xdmf +mpi ~qt +ipo +opengl2
@@ -1005,7 +1055,7 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
   filters: ['gpu']
   dependencies: [mpi, blas_parallel, python3, gpu]
   packages:
-    - py-keras
+    - py-keras ^py-tensorflow@2.10.1
     - py-horovod:
         default:
           variants:
@@ -1013,6 +1063,9 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
             gpu:
               nvidia: tensor_ops=nccl +cuda cuda_arch=<cuda_arch>
               none: tensor_ops=mpi ~cuda
+        dependencies:
+          - py-keras
+          - py-tensorflow@2.10.1
 
     # Spack is guessing cuda_arch=80 for nccl although this variant is
     # explicitly defined below. In fact the concretization does not contain
@@ -1044,14 +1097,17 @@ mpi_blas_parallel_python_packages_gcc_stable:
   pe: [gcc_stable]
   dependencies: [mpi, blas_parallel, python3]
   packages:
-    - paraview +shared +python3 +hdf5:
+    - paraview:
+        default: { version: 5.10.1 }
         variants:
+          common: +shared +python3 +hdf5
           gpu:
-            nvidia: ~osmesa
+            nvidia: ~osmesa +opengl2
             rocm: ~osmesa
             none: +osmesa
         dependencies:
           - netcdf-c+mpi
+#          - hdf5 +mpi +ipo
     - py-h5py ^hdf5 +mpi +ipo
     - cp2k@9.1 +mpi ~plumed +openmp smm=blas:
         variants:
@@ -1061,14 +1117,14 @@ mpi_blas_parallel_python_packages_gcc_stable:
         dependencies:
           - boost+mpi
           - fftw+mpi+openmp
-    # - cp2k@9.1 +mpi +plumed +openmp smm=blas:
-    #     variants:
-    #       gpu:
-    #         nvidia: +cuda cuda_arch=<cuda_arch>
-    #         none: ~cuda
-    #     dependencies:
-    #       - boost+mpi
-    #       - fftw+mpi+openmp
+    - cp2k@9.1 +mpi +plumed +openmp smm=blas:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
+        dependencies:
+          - boost+mpi
+          - fftw+mpi+openmp
 
 mpi_blas_parallel_python_packages_intel_stable:
   metadata: { section: packages }
@@ -1097,14 +1153,27 @@ mpi_blas_python_packages_intel_stable:
               nvidia: +cuda
               none: ~cuda
         dependencies:
-          - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+          common:
+            - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+          gpu:
+            nvidia: [suite-sparse +cuda]
+            none: []
     - slepc:
         default: { variants: +arpack }
         dependencies:
-          - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+          common:
+            - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+          gpu:
+            nvidia: [petsc ^suite-sparse +cuda]
+            none: []
     - py-petsc4py:
         dependencies:
-          - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+          common:
+            - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
+          gpu:
+            nvidia: [petsc ^suite-sparse +cuda]
+            none: []
+
 
 
 # BENCHMARKS -------------------------------------------------------------------
