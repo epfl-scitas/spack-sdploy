@@ -59,17 +59,17 @@ class StackFile(ReadYaml):
         result = []
         if isinstance(attributes, dict):
             # Check for filters presence
-            for filter in self.filters.keys():
-                if filter in attributes:
-                    if self.filters[filter] in attributes[filter]:
-                        values = attributes[filter][self.filters[filter]]
+            for fid, filter_ in self.filters.items():
+                if fid in attributes:
+                    if filter_ in attributes[fid]:
+                        values = attributes[fid][filter_]
                         if isinstance(values, list):
                             result.extend(values)
                         else:
                             result.append(values)
                     else:
-                        raise FilterException(filter, self.filters[filter])
-        else: # We are just checking that attributes is not a structure (dict, list, etc)
+                        raise FilterException(fid, filter_)
+        else:  # We are just checking that attributes is not a structure (dict, list, etc)
             # We need to cast version to str because of ' '.join in next step
             result.append(str(attributes))
         return result
@@ -200,6 +200,14 @@ class StackFile(ReadYaml):
         if isinstance(dependencies_attributes, list):
             dependencies = dependencies_attributes
         else:
-            dependencies = self._handle_filter(dependencies_attributes)
+            if 'common' in dependencies_attributes:
+                dependencies.extend(dependencies_attributes['common'])
 
-        return(self._remove_newline(' ^' + ' ^'.join(dependencies)))
+            dependencies.extend(self._handle_filter(dependencies_attributes))
+
+
+
+        str_dep = ' ^'.join(dependencies)
+        if str_dep:
+            str_dep = ' ^' + str_dep
+        return(self._remove_newline(str_dep))

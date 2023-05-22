@@ -136,23 +136,25 @@ class SpackYaml(StackFile):
                 continue
 
             # Create new entry
-            self.pkgs_specs[pkg_list_name] = {}
+            spec = {}
             # Add compilers
-            self.pkgs_specs[pkg_list_name]['compilers'] = pkg_list_cfg.get('pe')
+            spec['compilers'] = pkg_list_cfg.get('pe')
             # Add dependencies
             if 'dependencies' in pkg_list_cfg.keys():
                 # Add dependencies one by one and check against filters
                 # if dependency is equals to the string "none" in which
                 # case do not add the dependency. In the end, if the
                 # dependencies list is empty, remove it.
-                self.pkgs_specs[pkg_list_name]['dependencies'] = []
+                deps = []
                 for d in pkg_list_cfg['dependencies']:
                     if d in self.filters.keys() and self.filters[d] != 'none':
-                        self.pkgs_specs[pkg_list_name]['dependencies'].append(d)
+                        deps.append(d)
                     elif d not in self.filters.keys():
-                        self.pkgs_specs[pkg_list_name]['dependencies'].append(d)
-                if len(self.pkgs_specs[pkg_list_name]['dependencies']) == 0:
-                    self.pkgs_specs[pkg_list_name].pop('dependencies')
+                        deps.append(d)
+                if len(deps) != 0:
+                    spec['dependencies'] = deps
+
+            self.pkgs_specs[pkg_list_name] = spec
 
     def _skip_list(self, pkg_list_name):
         """Returns true if the package list passed in argument is to skip
@@ -169,7 +171,8 @@ class SpackYaml(StackFile):
                     return True
         return False
 
-    def _flatten_dict(self, d: MutableMapping, parent_key: str = '', sep: str = '_'):
+    def _flatten_dict(self, d: MutableMapping,
+                      parent_key: str = '', sep: str = '_'):
         """Returns a flat dict
 
         Return a 1-depth dict (flat) whose elements are formed by composing
