@@ -27,7 +27,7 @@ echo "COMPILER_SPEC_VER: $COMPILER_SPEC_VER"
 
 echo "Creating modules"
 # we can pass -e ${environment} to the spack command
-spack module lmod refresh -y
+spack --env ${environment} module lmod refresh -y
 
 # What's happening ?
 # ----------------
@@ -37,19 +37,21 @@ spack module lmod refresh -y
 # step 3: backup the old module
 
 # step 0
-mkdir -p ${LMOD_CORE}/intel
+if [ -e ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua ]; then
+    mkdir -p ${LMOD_CORE}/${COMPILER}
 
-# step 1
-cp -f ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua ${LMOD_CORE}/${COMPILER}/${COMPILER_VER}.lua
+    # step 1
+    cp -f ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua ${LMOD_CORE}/${COMPILER}/${COMPILER_VER}.lua
 
-# step 2
-cat >> ${LMOD_CORE}/${COMPILER}/${COMPILER_VER}.lua<<EOL
--- Services provided by the package
-family("compiler")
+    # step 2
+    cat >> ${LMOD_CORE}/${COMPILER}/${COMPILER_VER}.lua<<-EOL
+	-- Services provided by the package
+	family("compiler")
 
--- Loading this module unlocks the path below unconditionally
-prepend_path("MODULEPATH", "${LMOD_INTEL}/${COMPILER_VER}")
-EOL
+	-- Loading this module unlocks the path below unconditionally
+	prepend_path("MODULEPATH", "${LMOD_INTEL}/${COMPILER_VER}")
+	EOL
 
-# step 3
-mv ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua.bckp
+    # step 3
+    mv ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua.bckp
+fi

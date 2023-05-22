@@ -117,18 +117,18 @@ pipeline {
                 }
             }
         }
-        stage('Prepare build cache') {
-            steps {
-                sh '${JENKINS}/create_buildcache.sh'
-            }
-        }
-        stage('Push to buildcache') {
-            steps {
-                script {
-                    parallel(do_push_buildcache())
-                }
-            }
-        }
+        // stage('Prepare build cache') {
+        //     steps {
+        //         sh '${JENKINS}/create_buildcache.sh'
+        //     }
+        // }
+        // stage('Push to buildcache') {
+        //     steps {
+        //         script {
+        //             parallel(do_push_buildcache())
+        //         }
+        //     }
+        // }
 
     }
 }
