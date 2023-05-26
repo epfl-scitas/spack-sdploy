@@ -79,6 +79,7 @@ core_packages:
     - libtool
     - lmod
     - m4
+    - neovim@0.9.0
     - parallel
     - perl:
         default: { version: 5.32.0 }
