@@ -132,6 +132,14 @@ serial_packages:
               amd: +rocm ~cuda
     - intel-oneapi-tbb
     - jasper
+    - kokkos:
+        variants: target=<target>
+        default:
+          variants:
+            common: +openmp
+            gpu:
+              nvidia: +cuda +cuda_uvm cuda_arch=<cuda_arch> +wrapper
+              none: ~cuda ~cuda_uvm ~rocm
     - libarchive
     - libfabric:
         default:
@@ -980,7 +988,7 @@ mpi_blas_python_packages_gcc_stable:
             +netcdf +peri ~poems +python +qeq +replica +rigid +shock +ml-snap
             +srd +voronoi +plumed
           gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch>
+            nvidia: +cuda cuda_arch=<cuda_arch> +kokkos
             none: ~cuda
         dependencies:
           - netcdf-c+mpi
