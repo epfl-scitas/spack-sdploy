@@ -51,7 +51,6 @@ class StackFile(ReadYaml):
 
         self.schema = None
 
-
     def _remove_newline(self, values):
         return ' '.join((values.strip().split('\n')))
 
@@ -73,6 +72,20 @@ class StackFile(ReadYaml):
             # We need to cast version to str because of ' '.join in next step
             result.append(str(attributes))
         return result
+
+    def _skip_list(self, pkg_list_cfg):
+        """Returns true if the package list passed in argument is to skip
+
+        This method searches for the presence of the 'filters' key in the
+        package configuration section. If found, it will read each filter
+        here defined and if at least one has the none property, this list
+        is skipped."""
+
+        if 'filters' in pkg_list_cfg:
+            for filter in pkg_list_cfg['filters']:
+                if self.filters[filter] == 'none':
+                    return True
+        return False
 
     def _write_yaml(self, output, filename):
         with fs.write_tmp_and_move(os.path.realpath(filename)) as f:

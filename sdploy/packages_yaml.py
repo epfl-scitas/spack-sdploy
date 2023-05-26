@@ -66,6 +66,9 @@ class PackagesYaml(StackFile):
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         for pkg_list_name, pkg_list_cfg in self.stack.items():
+            if self._skip_list(pkg_list_cfg):
+                continue
+
             tty.debug(f'Entering package list: {pkg_list_name}')
             for pkg_list in pkg_list_cfg.get('packages'):
                 if not isinstance(pkg_list, dict):
