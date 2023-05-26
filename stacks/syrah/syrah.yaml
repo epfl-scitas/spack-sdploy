@@ -174,8 +174,9 @@ serial_packages:
         default:
           version: 1.1.1k
           buildable: false
+          variants: certs=system
         externals:
-          - spec: openssl@1.1.1k
+          - spec: openssl@1.1.1k certs=system
             prefix: /usr
     - scotch:
         variants: ~mpi
@@ -223,7 +224,6 @@ serial_packages_gpu_gcc_stable:
         default:
           variants: +cuda cuda_arch=<cuda_arch>
 
-
 # GCC ONLY ---------------------------------------------------------------------
 #
 #
@@ -232,6 +232,8 @@ serial_packages_gcc_stable:
   metadata: { section: packages }
   pe: [gcc_stable]
   packages:
+    - cistem target=<target>
+    - ctffind target=<target>
     - eigen:
         default: { variants: +ipo }
     - ffmpeg +libx264
@@ -256,6 +258,7 @@ serial_packages_gcc_stable:
           - netcdf-c ~mpi~parallel-netcdf
     - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
+    - unblur target=<target>
     # It stays here just to not change what is already installed but it would make more sense to have it in core_packages
     - pmix:
         default:
@@ -460,6 +463,7 @@ serial_packages_python_gcc_stable:
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
+    - py-pyem
     - py-grpcio:
        activated: True
 
@@ -508,6 +512,8 @@ serial_packages_python_blas_gcc_stable:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
+    - py-cryolobm
+    - py-pymol
 
 serial_packages_python_blas_intel_stable:
   metadata: { section: packages }
@@ -996,8 +1002,8 @@ mpi_blas_python_packages_gcc_stable:
     - openfoam +metis ^boost+mpi ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools ^fftw+mpi+openmp
     - py-torch:
         variants: +mpi
-        default: { version: 2.0.1 }
         default:
+          version: 2.0.1
           variants:
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch> +magma +cudnn +nccl
@@ -1012,6 +1018,13 @@ mpi_blas_python_packages_gcc_stable:
           gpu:
             nvidia: [py-torch +mpi +cuda cuda_arch=<cuda_arch> ^magma +cuda cuda_arch=<cuda_arch> ^cmake +ownlibs]
             none: [py-torch+mpi~cuda]
+    - py-topaz:
+        default:
+          variants:
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch>
+              none: ~gpu
+
 #    - petsc:
 #        default:
 #          variants:
@@ -1064,6 +1077,7 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
   filters: ['gpu']
   dependencies: [mpi, blas_parallel, python3, gpu]
   packages:
+    - eman2 +cuda +mpi
     - py-keras ^py-tensorflow@2.10.1
     - py-horovod:
         default:
@@ -1075,12 +1089,6 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
         dependencies:
           - py-keras
           - py-tensorflow@2.10.1
-
-    # Spack is guessing cuda_arch=80 for nccl although this variant is
-    # explicitly defined below. In fact the concretization does not contain
-    # the nccl package as we state here. Let's move it to the dependencies.
-    # In production scenario, this package will have to move to a list
-    # only available to on a GPU cluster.
     - py-tensorflow:
         default:
           version: 2.10.1
@@ -1100,7 +1108,6 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
             none: ~cuda ~nccl ~rocm
         dependencies:
           - bazel ^openjdk@11
-
 mpi_blas_parallel_python_packages_gcc_stable:
   metadata: { section: packages }
   pe: [gcc_stable]
