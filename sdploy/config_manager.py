@@ -92,11 +92,11 @@ class Config(object):
         if not args.prefix:
             if 'prefix' in config_data:
                 if config_data['prefix'] is None:
-                    self.prefix = prefix # from util.py
+                    self.prefix = prefix  # from util.py
                 else:
-                    self.prefix = config_data['prefix'] # from sdploy.yaml
+                    self.prefix = config_data['prefix']  # from sdploy.yaml
         else:
-            self.prefix = args.prefix # from arguments
+            self.prefix = args.prefix  # from arguments
 
         # stack:
         # - name of the stack, which is also a subdirectory under prefix;
@@ -128,7 +128,8 @@ class Config(object):
 
         # Once we know the name of the platforms subdirectory, we can now configure
         # the fully qualifies path to this directory.
-        self.platforms_path = os.path.join(self.prefix, self.stack, self.platforms_dir)
+        self.platforms_path = os.path.join(self.prefix,
+                                           self.stack, self.platforms_dir)
 
         # platform:
         # - name of the platform (environment)
@@ -147,7 +148,8 @@ class Config(object):
 
         # Once we know the name of the platform, we can compute the fully qualified
         # plaform yaml file name
-        self.platform_yaml = os.path.join(self.platforms_path, self.platform + '.yaml')
+        self.platform_yaml = os.path.join(self.platforms_path,
+                                          self.platform + '.yaml')
 
         # stack_ver:
         if 'stack_ver' in config_data:
@@ -166,7 +168,8 @@ class Config(object):
 
         # Once we know the prefix, the stack name and the templates subdir name
         # we can configure its fully qualified path:
-        self.templates_path = os.path.join(self.prefix, self.stack, self.templates_dir)
+        self.templates_path = os.path.join(self.prefix,
+                                           self.stack, self.templates_dir)
 
         # FILENAME: template for spack.yaml, for example, 'spack.yaml.j2'
         if 'spack_yaml_template' in config_data:

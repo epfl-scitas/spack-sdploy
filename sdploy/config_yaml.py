@@ -96,7 +96,7 @@ class ConfigYaml(StackFile):
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         self.conf['extensions'] = [
-            os.path.join(self.commons.data['work_directory'],
+            os.path.join(self.config.prefix,
                          self.commons.data['stack_release'],
                          self.commons.data['spack_sdploy'])
         ]
