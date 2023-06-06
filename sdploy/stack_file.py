@@ -31,8 +31,8 @@ class StackFile(ReadYaml):
 
         # Configuration files
         self.platform_file = config.platform_yaml
-            
         self.stack_file = config.stack_yaml
+        self.commons_file = config.commons_yaml
 
         # Original data
         self.data = {} # The original data
@@ -221,8 +221,6 @@ class StackFile(ReadYaml):
                 dependencies.extend(deps)
 
             dependencies.extend(self._handle_filter(dependencies_attributes))
-
-
 
         str_dep = ' ^'.join(dependencies)
         if str_dep:

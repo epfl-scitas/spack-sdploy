@@ -22,6 +22,7 @@ from .yaml_manager import ReadYaml
 from .util import *
 from .config import *
 
+
 class Config(object):
     """This class will handle the parsing of the arguments for all the commands.
     Its only goal is to define an argument and decide if its value should come

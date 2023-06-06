@@ -68,17 +68,7 @@ extra_repos:
     tag: main
 
 #  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#
-#
-#
-#
-#
 #                                                            SPACK CONFIGURATION
-#
-#
-#
-#
-#
 #  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 modules:
@@ -97,3 +87,6 @@ concretizer:
     granularity: microarchitectures
     host_compatible: True
   reuse: True
+
+tokens:
+  external_prefix: /ssoft/spack/external

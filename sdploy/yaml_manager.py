@@ -48,6 +48,10 @@ class ReadYaml(object):
         self.config = None
         self.platform = None
 
+        self.platform_file = None
+        self.stack_file = None
+        self.commons_file = None
+
     def read(self, filename, **kwargs):
         """Read yaml file into data object"""
 
@@ -102,10 +106,20 @@ class ReadYaml(object):
         if not os.path.exists(platform_file):
             return {}
 
-        common = ReadYaml()
-        common.read(platform_file)
-            
-        return(common.data['platform']['tokens'])
+        tokens = {}
+
+        if self.commons_file:
+            common = ReadYaml()
+            common.read(self.commons_file)
+            if 'tokens' in common.data['commons']:
+                tokens = common.data['commons']['tokens']
+
+        platform = ReadYaml()
+        platform.read(platform_file)
+        if 'tokens' in platform.data['platform']:
+            tokens.update(platform.data['platform']['tokens'])
+
+        return tokens
 
     def _do_replace_tokens(self, d, pat, rep):
         """Attempt to replace stuff in YAML file
