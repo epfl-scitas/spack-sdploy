@@ -198,7 +198,7 @@ class StackFile(ReadYaml):
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         variants = []
         if 'common' in variants_attributes:
-            variants.append(variants_attributes.get('common'))
+            variants.append(variants_attributes['common'])
 
         variants.extend(self._handle_filter(variants_attributes))
 
@@ -214,7 +214,11 @@ class StackFile(ReadYaml):
             dependencies = dependencies_attributes
         else:
             if 'common' in dependencies_attributes:
-                dependencies.extend(dependencies_attributes['common'])
+                deps = dependencies_attributes['common']
+                if not isinstance(deps, list):
+                    deps = [deps]
+
+                dependencies.extend(deps)
 
             dependencies.extend(self._handle_filter(dependencies_attributes))
 
