@@ -1,5 +1,7 @@
 concretizer:
-{% if 'reuse' in  data %}
+{% if 'reuse' in tokens %}
+  reuse: {{ tokens['reuse'] }}
+{% elif 'reuse' in data %}
   reuse: {{ data['reuse'] }}
 {% endif %}
 {% if 'targets' in  data %}
