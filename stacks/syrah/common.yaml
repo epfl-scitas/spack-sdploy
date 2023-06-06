@@ -11,7 +11,7 @@
 #  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # stack, python env and spack sdploy will be placed here
-work_directory: /work/scitas-ge/erothe/stack/izar8
+work_directory: /ssoft/spack
 spack_sdploy: spack-sdploy
 python_venv: py3-venv
 spack_external: external

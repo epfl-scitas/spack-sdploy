@@ -12,5 +12,4 @@ platform:
     jdk_version: 1.8.0_332
     slurm_version: 22-05-6
     core_per_socket: 36
-    external_prefix: /ssoft/spack/external
-    compiler_arch: ""
+    compiler_arch: "arch=linux-rhel8-skylake_avx512"
