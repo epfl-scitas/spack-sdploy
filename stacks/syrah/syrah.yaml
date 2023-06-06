@@ -994,37 +994,21 @@ mpi_blas_python_packages_gcc_stable:
             +netcdf +peri ~poems +python +qeq +replica +rigid +shock +ml-snap
             +srd +voronoi +plumed
           gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch> +kokkos
+            nvidia: +cuda cuda_arch=<cuda_arch>
             none: ~cuda
         dependencies:
           - netcdf-c+mpi
           - fftw+mpi+openmp
     - openfoam +metis ^boost+mpi ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools ^fftw+mpi+openmp
-    - py-torch:
-        variants: +mpi
-        default:
-          version: 2.0.1
-          variants:
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch> +magma +cudnn +nccl
-              none: ~cuda ~cudnn ~nccl
-              rocm: +magma +rocm
-        dependencies:
+    - py-torch@1.11.0:
+        variants:
+          common: +mpi
           gpu:
-            nvidia: [magma +cuda cuda_arch=<cuda_arch> ^cmake +ownlibs]
-            rocm: [magma +rocm amdgpuarch=<amd_arch>]
+            none: ~cuda
     - py-torchvision:
         dependencies:
           gpu:
-            nvidia: [py-torch +mpi +cuda cuda_arch=<cuda_arch> ^magma +cuda cuda_arch=<cuda_arch> ^cmake +ownlibs]
-            none: [py-torch+mpi~cuda]
-    - py-topaz:
-        default:
-          variants:
-            gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch>
-              none: ~gpu
-
+            none: [py-torch +mpi ~cuda]
 #    - petsc:
 #        default:
 #          variants:
@@ -1089,6 +1073,7 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
         dependencies:
           - py-keras
           - py-tensorflow@2.10.1
+          - cmake +ownlibs
     - py-tensorflow:
         default:
           version: 2.10.1
@@ -1108,6 +1093,43 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
             none: ~cuda ~nccl ~rocm
         dependencies:
           - bazel ^openjdk@11
+    - py-torch@2.0.1:
+        variants:
+          common: +mpi
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch> +magma +cudnn +nccl
+            rocm: +magma +rocm
+        default:
+          version: 2.0.1
+          variants:
+            common: +mpi
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch> +magma +cudnn +nccl
+              rocm: +magma +rocm
+        dependencies:
+          common:
+            - cmake +ownlibs
+          gpu:
+            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
+            none: []
+            rocm: [magma +rocm amdgpuarch=<amd_arch>]
+    - py-torchvision@0.15.2:
+        dependencies:
+          common:
+            - cmake +ownlibs
+          gpu:
+            nvidia:
+              - py-torch +mpi +cuda cuda_arch=<cuda_arch>
+              - magma +cuda cuda_arch=<cuda_arch>
+            none: [py-torch +mpi ~cuda]
+    - py-topaz:
+        variants:
+          gpu:
+            nvidia: +cuda cuda_arch=<cuda_arch>
+            none: ~cuda
+        dependencies:
+          - cmake +ownlibs
+
 mpi_blas_parallel_python_packages_gcc_stable:
   metadata: { section: packages }
   pe: [gcc_stable]
