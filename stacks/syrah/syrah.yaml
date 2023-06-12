@@ -1060,8 +1060,18 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
   filters: ['gpu']
   dependencies: [mpi, blas_parallel, python3, gpu]
   packages:
-    - eman2 +cuda +mpi
-    - py-keras ^py-tensorflow@2.10.1
+    - eman2 +cuda +mpi:
+          - py-tensorflow +nccl@2.10.1
+          - bazel
+          - openjdk@11
+          - hdf5 +mpi
+          - cmake +ownlibs
+    - py-keras:
+          - py-tensorflow +nccl@2.10.1
+          - bazel
+          - openjdk@11
+          - hdf5 +mpi
+          - cmake +ownlibs
     - py-horovod:
         default:
           variants:
@@ -1071,8 +1081,11 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
               none: tensor_ops=mpi ~cuda
         dependencies:
           - py-keras
-          - py-tensorflow@2.10.1
+          - py-tensorflow +nccl@2.10.1
+          - bazel ^openjdk@11
+          - hdf5 +mpi
           - cmake +ownlibs
+          - py-torch +mpi +cuda cuda_arch=<cuda_arch>
     - py-tensorflow:
         default:
           version: 2.10.1
@@ -1092,6 +1105,8 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
             none: ~cuda ~nccl ~rocm
         dependencies:
           - bazel ^openjdk@11
+          - hdf5 +mpi
+          - cmake +ownlibs
     - py-torch@2.0.1:
         variants:
           common: +mpi
@@ -1128,6 +1143,7 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - cmake +ownlibs
+          - py-torch +mpi +cuda cuda_arch=<cuda_arch>
 
 mpi_blas_parallel_python_packages_gcc_stable:
   metadata: { section: packages }
