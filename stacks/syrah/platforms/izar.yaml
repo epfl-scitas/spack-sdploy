@@ -3,14 +3,8 @@ platform:
     gpu: nvidia
     mpi: infiniband_gdrcopy
   tokens:
-    core_compiler: gcc@8.5.0 arch=linux-rhel8-x86_64_v2
-    cuda_arch: 70
-    python3: 3.10.4
     target: skylake_avx512
-    os: rhel8
     lmod_root: izar
-    lmod_arch: linux-rhel8-x86_64
-    jdk_version: 1.8.0_332
     slurm_version: 23-02-0
     core_per_socket: 20
-    compiler_arch: "arch=linux-rhel8-skylake_avx512"
+    cuda_arch: 70

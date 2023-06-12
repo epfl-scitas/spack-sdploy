@@ -90,3 +90,9 @@ concretizer:
 
 tokens:
   external_prefix: /ssoft/spack/external
+  core_compiler: gcc@8.5.0 arch=linux-rhel8-x86_64_v2
+  os: rhel8
+  python3: 3.10.4
+  lmod_arch: linux-rhel8-x86_64
+  jdk_version: 1.8.0_332
+  slurm_version: 22-05-6

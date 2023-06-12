@@ -75,7 +75,6 @@ class ReadYaml(object):
     # THESE ARE THE NEW FUNCTIONS USED POTENTIALLY IN EVERY CLASS
     #
     #
-
     def replace_tokens(self, data):
         """Reads tokens from platform file and executes replacement.
         `data` is a dictionary where the replacements will happen.

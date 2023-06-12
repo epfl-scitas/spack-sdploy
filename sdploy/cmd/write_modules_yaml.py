@@ -46,4 +46,4 @@ def write_modules_yaml(parser, args):
 
     # Write modules file.
     # Each commend must pass the dictionary in the contents variable.
-    modules.write_yaml(data = modules.modules)
+    modules.write_yaml(data=modules.modules)

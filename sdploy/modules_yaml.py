@@ -72,17 +72,17 @@ class ModulesYaml(StackFile):
 
         platform = ReadYaml()
         platform.read(os.path.join(self.config.platform_yaml))
-        self.modules['core_compiler'] = platform.data['platform']['tokens']['core_compiler']
+        self.modules['core_compiler'] = self.tokens['core_compiler']
 
     def _add_module_roots(self):
         """Add modules installation paths. Note that These
         are read from commons.yaml and not from sdploy.yaml."""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-
+        modules = self.config.configs["modules"]
 
         for module_type in ['lmod', 'tcl']:
-            self.modules[f'{module_type}_roots'] = self.config.configs["modules"][f'{module_type}_roots']
+            self.modules[f'{module_type}_roots'] = modules[f'{module_type}_roots']
 
     def _add_suffixes(self):
         """Add modules suffixes from stack.yaml"""
