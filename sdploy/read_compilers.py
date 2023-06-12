@@ -35,7 +35,12 @@ class Compilers(StackFile):
 
         compilers = []
         for pe, stack in compilers_data.items():
+            if self._skip_list(stack):
+                continue
+
             for stack_name, stack in stack.items():
+                if stack_name in ['filters', 'metadata']:
+                    continue
                 # The order is important:
                 # - compiler_spec has priority over compiler
                 if 'compiler_spec' in stack:

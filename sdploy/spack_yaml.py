@@ -95,9 +95,23 @@ class SpackYaml(StackFile):
             for k, v in core_compiler.items():
                 self.pe_stack[k] = v
 
+        pes = list(self.pe_stack.keys())
         # Check for filters presence and applies filters
-        for pe, stack in self.pe_stack.items():
-            for stack_name, stack_env in stack.items():
+        for pe in pes:
+            stack = self.pe_stack[pe]
+            if self._skip_list(stack):
+                self.pe_stack.pop(pe)
+                continue
+
+            for stack_name in list(stack.keys()):
+                if stack_name in ['filters', 'metadata']:
+                    stack.pop(stack_name)
+                    continue
+
+                stack_env = stack[stack_name]
+                if not isinstance(stack_env, dict):
+                    continue
+
                 for filter in self.filters.keys():
                     if filter in stack_env and isinstance(stack_env[filter], dict):
                         spec = stack_env[filter][self.filters[filter]]

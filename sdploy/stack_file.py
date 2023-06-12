@@ -82,8 +82,12 @@ class StackFile(ReadYaml):
         is skipped."""
 
         if 'filters' in pkg_list_cfg:
-            for filter in pkg_list_cfg['filters']:
-                if self.filters[filter] == 'none':
+            for filter_ in pkg_list_cfg['filters']:
+                if '=' in filter_:
+                    k, v = filter_.split('=')
+                    if self.filters[k.strip()] != v.strip():
+                        return True
+                elif self.filters[filter_] == 'none':
                     return True
         return False
 
@@ -134,7 +138,13 @@ class StackFile(ReadYaml):
         tty.debug(f'List of PEs: {pes}')
 
         for pe_name, pe in pes.items():
+            if self._skip_list(stack):
+                continue
+
             for stack_name, stack in pe.items():
+                if stack_name in ['filters', 'metadata']:
+                    continue
+
                 tty.debug(f'{pe_name}_{stack_name}')
                 pe_defs[f'{pe_name}_{stack_name}'] = {}
                 res = pe_defs[f'{pe_name}_{stack_name}']

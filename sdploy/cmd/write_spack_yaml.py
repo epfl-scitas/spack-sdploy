@@ -57,6 +57,7 @@ def write_spack_yaml(parser, args):
     data['pkgs_specs'] = stack.pkgs_specs
     data['definitions_list'] = stack.definitions_list
     data['configs'] = config.configs
+    data['pe_compilers'] = list(stack.pe_compilers.values())
     tty.debug(stack.definitions_list)
 
     stack.write_yaml(data = data)
