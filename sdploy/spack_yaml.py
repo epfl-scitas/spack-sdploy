@@ -49,6 +49,7 @@ class SpackYaml(StackFile):
         self.pe_specs = {}
         self.pkgs_specs = {}
         self.definitions_list = []
+        self.pe_compilers = {}
 
     def create_pe_libraries_specs_dict(self):
         pass
@@ -61,13 +62,25 @@ class SpackYaml(StackFile):
         data = self.group_sections(deepcopy(self.data), 'pe')
 
         for pe, stack in data.items():
-            for stack_name in stack.keys():
-                self.pe_specs[pe + '_' + stack_name] = list(stack[stack_name].keys())
+            if self._skip_list(stack):
+                continue
+
+            for stack_name, stack_env in stack.items():
+                if stack_name in ['filters', 'metadata']:
+                    continue
+
+                self.pe_specs[pe + '_' + stack_name] = list(stack_env.keys())
+                specs = self.pe_specs[pe + '_' + stack_name]
+
                 # Remove compilers
-                if 'compiler' in self.pe_specs[pe + '_' + stack_name]:
-                    self.pe_specs[pe + '_' + stack_name].remove('compiler')
-                if 'compiler_spec' in self.pe_specs[pe + '_' + stack_name]:
-                    self.pe_specs[pe + '_' + stack_name].remove('compiler_spec')
+                if 'compiler' in specs:
+                    self.pe_compilers[pe + '_' + stack_name] = \
+                        stack_env['compiler']
+                    specs.remove('compiler')
+                if 'compiler_spec' in specs:
+                    self.pe_compilers[pe + '_' + stack_name] = \
+                        stack_env['compiler_spec']
+                    specs.remove('compiler_spec')
 
     def create_pe_definitions_dict(self, filter = 1, core = True):
         """Regroup PE definitions in a single dictionary"""

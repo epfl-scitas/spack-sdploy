@@ -32,6 +32,7 @@ spack:
 {#                                  PROGRAMMING ENVIRONMENT #}
 {#                                                          #}
 {#                                                          #}
+  - compilers: {{ data['pe_compilers'] }}
 {% for definition, spec  in data['pe_defs'].items() %}
   - {{ definition }}: [ {{ spec }} ]
 {% endfor %}
@@ -59,6 +60,9 @@ spack:
 {#                                  PROGRAMMING ENVIRONMENT #}
 {#                                                          #}
 {#                                                          #}
+  - matrix:
+    - [ $compilers ]
+    - [ $%core_compiler ]
 {% for pe, stack in data['pe_specs'].items() %}
 {% for library in stack %}
   - matrix:
