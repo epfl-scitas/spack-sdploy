@@ -10,4 +10,4 @@ echo "STACK: ${STACK_RELEASE}"
 # This is a workaround, we must specify an existing
 # platform, because SpackFile will do stuff, even if
 # not needed for this command.
-spack clone-external-repos -s ${STACK_RELEASE}
+spack clone-external-repos -s ${STACK_RELEASE} -w ${WORK_DIR}

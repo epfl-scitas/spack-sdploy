@@ -15,6 +15,10 @@ def setup_parser(subparser):
         help='path to the stacks directory.'
     )
     subparser.add_argument(
+        '-w', '--work_directory', type=str,
+        help='path to overwrite work  directory.'
+    )
+    subparser.add_argument(
         '-d', '--debug', action='store_true', default=False,
         help='print debug information.'
    )

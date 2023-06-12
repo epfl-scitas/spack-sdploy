@@ -22,30 +22,30 @@ if [ ! -z ${_env_path} ]; then
 fi
 
 echo "Deploying manifest for ${environment}"
-spack --env ${environment} write-spack-yaml -s ${STACK_RELEASE}
+spack --env ${environment} write-spack-yaml -s ${STACK_RELEASE} -w ${WORK_DIR}
 
 echo "Installing packages configuration for ${environment}"
-spack --env ${environment} write-packages-yaml -s ${STACK_RELEASE}
+spack --env ${environment} write-packages-yaml -s ${STACK_RELEASE} -w ${WORK_DIR}
 spack --env ${environment} config blame packages
 
 echo "Installing modules configuration for ${environment}"
-spack --env ${environment} write-modules-yaml -s ${STACK_RELEASE}
+spack --env ${environment} write-modules-yaml -s ${STACK_RELEASE} -w ${WORK_DIR}
 spack --env ${environment} config blame modules
 
 echo "Installing config.yaml for ${environment}"
-spack --env ${environment} write-config-yaml -s ${STACK_RELEASE}
+spack --env ${environment} write-config-yaml -s ${STACK_RELEASE} -w ${WORK_DIR}
 spack --env ${environment} config blame config
 
 echo "Installing external repos for ${environment}"
-spack --env ${environment} write-repos-yaml -s ${STACK_RELEASE}
+spack --env ${environment} write-repos-yaml -s ${STACK_RELEASE} -w ${WORK_DIR}
 spack --env ${environment} config blame repos
 
 echo "Installing mirrors configuration for ${environment}"
-spack --env ${environment} write-mirrors-yaml -s ${STACK_RELEASE}
+spack --env ${environment} write-mirrors-yaml -s ${STACK_RELEASE} -w ${WORK_DIR}
 spack --env ${environment} config blame mirrors
 
 echo "Installing concretizer configuration for ${environment}"
-spack --env ${environment} write-concretizer-yaml -s ${STACK_RELEASE}
+spack --env ${environment} write-concretizer-yaml -s ${STACK_RELEASE}  -w ${WORK_DIR}
 spack --env ${environment} config blame concretizer
 
 if [ -d ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK}/data/templates ]; then
@@ -60,7 +60,10 @@ ln -sf ${SPACK_SYSTEM_CONFIG_PATH} ${environment}
 
 echo "------------------------------------------------------------------- ${IN_PR}"
 if [ "x${IN_PR}" != "x" -a ${IN_PR} -eq 1 ]; then
-    cp /ssoft/spack/syrah/v1/var/spack/environments/jed/spack.lock ${SPACK_SYSTEM_CONFIG_PATH}
+    LOCK_FILE=${WORK_DIR_INTERNAL}/${STACK_RELEASE}/${STACK_RELEASE_VER}/var/spack/environments/${environment}/spack.lock
+    if [ -e ${LOCK_FILE} -a ! -e ${SPACK_SYSTEM_CONFIG_PATH}/spack.lock ]; then
+        cp ${LOCK_FILE} ${SPACK_SYSTEM_CONFIG_PATH}
+    fi
     cp ${SPACK_SDPLOY_INSTALL_PATH}/stacks/${STACK}/templates/upstreams.yaml ${SPACK_SYSTEM_CONFIG_PATH}
 fi
 

@@ -119,6 +119,13 @@ class Config(object):
         self.commons_yaml = os.path.join(self.stack_path,
                                          config_data['commons_yaml'])
 
+        if not args.work_directory:
+            commons = ReadYaml()
+            commons.read(self.commons_yaml)
+            self.work_directory = commons.data["work_directory"]
+        else:
+            self.work_directory = args.work_directory
+
         # platforms_dir:
         # - name of the platforms subdirectory under the stack
         if 'platforms_dir' in config_data:
@@ -349,7 +356,7 @@ class Config(object):
         commons = ReadYaml()
         commons.read(os.path.join(self.commons_yaml))
         self.configs['install_tree'] = os.path.join(
-            commons.data['work_directory'],
+            self.work_directory,
             commons.data['stack_release'],
             commons.data['stack_version'],
             'opt', 'spack')
@@ -362,7 +369,7 @@ class Config(object):
         self.configs['modules'] = {}
         for module_type in ['lmod', 'tcl']:
             root = os.path.join(
-                commons.data['work_directory'],
+                self.work_directory,
                 commons.data['stack_release'],
                 commons.data['stack_version'],
                 commons.data['modules']['roots'][module_type])

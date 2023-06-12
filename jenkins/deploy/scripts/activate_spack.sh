@@ -40,6 +40,8 @@ if [ -e $SPACK_INSTALL_PATH/share/spack/setup-env.sh ]; then
     if [ ! -z ${_env_path} ]; then
         export SPACK_SYSTEM_CONFIG_PATH=${_env_path}
         echo "Setting SPACK_SYSTEM_CONFIG_PATH to: ${SPACK_SYSTEM_CONFIG_PATH}" 1>&2
+    else
+        unset SPACK_SYSTEM_CONFIG_PATH
     fi
 else
     unset SPACK_SYSTEM_CONFIG_PATH

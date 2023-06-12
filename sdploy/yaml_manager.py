@@ -111,8 +111,8 @@ class ReadYaml(object):
         if self.commons_file:
             common = ReadYaml()
             common.read(self.commons_file)
-            if 'tokens' in common.data['commons']:
-                tokens = common.data['commons']['tokens']
+            if 'tokens' in common.data:
+                tokens = common.data['tokens']
 
         platform = ReadYaml()
         platform.read(platform_file)
