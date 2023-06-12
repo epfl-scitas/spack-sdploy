@@ -41,6 +41,8 @@ do
         version=$(${spec_path}/bin/icc --version | grep ICC | sed 's/icc (ICC) \([0-9.]*\) .*/\1/')
         spec_version=$(echo $spec |  sed 's/intel@\([0-9.]*\).*/\1/')
         sed -i -e "s/intel@${version}/intel@${spec_version}/" ${SPACK_SYSTEM_CONFIG_PATH}/compilers.yaml
+    elif [[ "$spec" =~ "nvhpc@" ]]; then
+        spack compiler find --scope system ${spec_path}/*/*.*/compilers/ || true
     else
         spack compiler find --scope system ${spec_path} || true
     fi
