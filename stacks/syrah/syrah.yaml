@@ -50,6 +50,18 @@ intel:
       nvidia: cuda@11.8.0
       none: ""
 
+nvhpc:
+  metadata:
+    section: pe
+  filters: ['gpu = nvidia']
+  stable:
+    compiler: nvhpc@23.3
+    compiler_spec: nvhpc@23.3 +mpi +blas +lapack
+    mpi: ""
+    blas: ""
+    blas_parallel: ""
+    gpu: cuda@11.8.0
+
 # CORE -------------------------------------------------------------------------
 #
 #
@@ -196,7 +208,7 @@ serial_packages:
 serial_packages_cuda:
   metadata: {section: packages }
   pe: [gcc_stable, intel_stable]
-  filters: ['gpu']
+  filters: ['gpu = nvidia']
   packages:
     - cuda:
         default:
@@ -206,7 +218,7 @@ serial_packages_cuda:
 serial_packages_gpu:
   metadata: {section: packages }
   pe: [gcc_stable, intel_stable]
-  filters: ['gpu']
+  filters: ['gpu = nvidia']
   dependencies: [gpu]
   packages:
     - cudnn:
@@ -216,7 +228,7 @@ serial_packages_gpu:
 serial_packages_gpu_gcc_stable:
   metadata: {section: packages }
   pe: [gcc_stable]
-  filters: ['gpu']
+  filters: ['gpu = nvidia']
   dependencies: [gpu]
   packages:
     - nccl:
@@ -975,7 +987,7 @@ mpi_blas_python_packages_gcc_stable:
             - boost+mpi
             #- hdf5 +ipo +mpi +szip +hl +fortran +cxx
           gpu:
-            nvidia: [suite-sparse +cuda]
+            nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
             none: []
     - gromacs@2021.4+mpi+plumed:
         variants:
@@ -1008,34 +1020,6 @@ mpi_blas_python_packages_gcc_stable:
         dependencies:
           gpu:
             none: [py-torch +mpi ~cuda]
-#    - petsc:
-#        default:
-#          variants:
-#            common:  ~int64 +double +hdf5 +metis +mpi +superlu-dist +hypre +suite-sparse
-#            gpu:
-#              nvidia: +cuda
-#              none: ~cuda
-#        dependencies:
-#          common:
-#            - hdf5 +ipo +mpi
-#          gpu:
-#            nvidia: [suite-sparse +cuda]
-#            none: []
-#    - slepc:
-#        default: { variants: +arpack }
-#        dependencies:
-#          common:
-#            - hdf5 +ipo +mpi
-#          gpu:
-#            nvidia: [petsc ^suite-sparse +cuda]
-#            none: []
-#    - py-petsc4py:
-#        dependencies:
-#          common:
-#            - hdf5 +ipo +mpi
-#          gpu:
-#            nvidia: [petsc ^suite-sparse +cuda]
-#            none: []
     - opencv +vtk +python3:
         variants:
           gpu:
@@ -1053,6 +1037,41 @@ mpi_blas_python_packages_gcc_stable:
         dependencies:
           - netcdf-c +mpi
           - boost+mpi
+
+mpi_blas_python_packages_petsc_gcc_stable:
+  metadata: { section: packages }
+  pe: [gcc_stable]
+  filters: ['gpu'] # This filter is only for backward compatibility
+  dependencies: [mpi, blas, python3, gpu]
+  packages:
+    - petsc:
+        default:
+          variants:
+            common:  ~int64 +double +hdf5 +metis +mpi +superlu-dist +hypre +suite-sparse
+            gpu:
+              nvidia: +cuda cuda_arch=<cuda_arch>
+              none: ~cuda
+        dependencies:
+          common:
+            - hdf5 +ipo +mpi
+          gpu:
+            nvidia: [suite-sparse +cuda]
+            none: []
+    - slepc:
+        default: { variants: +arpack }
+        dependencies:
+          common:
+            - hdf5 +ipo +mpi
+          gpu:
+            nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
+            none: []
+    - py-petsc4py:
+        dependencies:
+          common:
+            - hdf5 +ipo +mpi
+          gpu:
+            nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
+            none: []
 
 mpi_blas_parallel_python_gpu_packages_gcc_stable:
   metadata: { section: packages }
@@ -1203,7 +1222,7 @@ mpi_blas_python_packages_intel_stable:
           variants:
             common:  ~int64 +double +hdf5 +metis +mpi +superlu-dist +hypre +suite-sparse
             gpu:
-              nvidia: +cuda
+              nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
         dependencies:
           common:
@@ -1217,14 +1236,14 @@ mpi_blas_python_packages_intel_stable:
           common:
             - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
           gpu:
-            nvidia: [petsc ^suite-sparse +cuda]
+            nvidia: [petsc +cuda cuda_arch=<cuda_arch> ,suite-sparse +cuda]
             none: []
     - py-petsc4py:
         dependencies:
           common:
             - hdf5 ~ipo +mpi +szip +hl +fortran +cxx
           gpu:
-            nvidia: [petsc ^suite-sparse +cuda]
+            nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
             none: []
 
 
