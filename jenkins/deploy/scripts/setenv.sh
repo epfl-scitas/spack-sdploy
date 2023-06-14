@@ -3,8 +3,13 @@
 export WORK_DIR_INTERNAL=`cat stacks/${STACK}/common.yaml |grep work_directory: | cut -n -d " " -f 2`
 
 set +u
+if [ "x${WORK_DIR}" == "x" ]; then
+    export WORK_DIR=${WORK_DIR_INTERNAL}
+fi
 if [ "x${IN_PR}" == "x" ]; then
-    IN_PR=0
+    set +e
+    IN_PR=`[ "${WORK_DIR}" != "${WORK_DIR_INTERNAL}" ]`
+    set -e
 fi
 set -u
 

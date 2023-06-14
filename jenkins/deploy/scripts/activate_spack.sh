@@ -17,7 +17,7 @@ fi
 echo 'Active Spack' 1>&2
 if [ -e $SPACK_INSTALL_PATH/share/spack/setup-env.sh ]; then
     . $SPACK_INSTALL_PATH/share/spack/setup-env.sh
-    spack --version
+    spack --version 1>&2
 
     export SPACK_USER_CACHE_PATH=$HOME/.spack-${STACK}
     export SPACK_USER_CONFIG_PATH=$HOME/.spack-${STACK}
