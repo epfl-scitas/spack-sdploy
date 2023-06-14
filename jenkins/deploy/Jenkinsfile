@@ -146,9 +146,9 @@ def get_prefix(branch_name, stack_name) {
 
 def get_agent_name(platform) {
     os_version=sh(returnStdout:true,
-                  script:"""${JENKINS}/get_token.sh os""").trim()
+                  script:"""${JENKINS}/get_tokens.sh os""").trim()
     slurm_version=sh(returnStdout:true,
-                     script:"""${JENKINS}/get_token.sh slurm_version | sed -e \'s/\\([0-9]*\\)\\-\\([0-9]*\\).*/\\1\\2/\'""").trim()
+                     script:"""${JENKINS}/get_tokens.sh slurm_version | sed -e \'s/\\([0-9]*\\)\\-\\([0-9]*\\).*/\\1\\2/\'""").trim()
 
     agent_name = """${platform}-${STACK}-${os_version}-slurm${slurm_version}"""
     return agent_name
