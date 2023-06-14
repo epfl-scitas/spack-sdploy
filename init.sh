@@ -17,7 +17,7 @@ export ENVIRONMENT=izar
 export IN_PR=1
 
 # Variables read from commons.yaml using cat, grep and cut.
-export WORK_DIR=`cat stacks/${STACK}/common.yaml |grep work_directory: | cut -n -d " " -f 2`
+export WORK_DIR=/scratch/syrah/run/pr
 echo "WORK_DIR: $WORK_DIR"
 
 # Because this script is adapted from the Jenkins Pipeline, the environment
@@ -175,7 +175,7 @@ echo '> create_modules.sh'
 echo
 
 echo "skip create modules"
-# ${JENKINS}/create_modules.sh 2>&1 | tee ${LOGS}/10_create_modules.${execution_timestamp}.log
+${JENKINS}/create_modules.sh 2>&1 | tee ${LOGS}/10_create_modules.${execution_timestamp}.log
 
 echo '  _________________________________________   ____ ____ '
 echo ' /   _____/\__    ___/\_   _____/\______   \ /_   /_   |'
@@ -187,7 +187,10 @@ echo
 echo '> activate_packages.sh'
 echo
 
-echo "skip final steps"
-# ${JENKINS}/activate_packages.sh 2>&1 | tee ${LOGS}/11_activate_packages.${execution_timestamp}.log
+if [ "${IN_PR}" -eq 1 ]; then
+    echo "skip activation in PRs"
+else
+    ${JENKINS}/activate_packages.sh 2>&1 | tee ${LOGS}/11_activate_packages.${execution_timestamp}.log
+fi
 # ${JENKINS}/create_buildcache.sh 2>&1 | tee ${LOGS}/11_create_buildcache.${execution_timestamp}.log
 # ${JENKINS}/push_buildcache.sh 2>&1 | tee ${LOGS}/12_push_buildcache.${execution_timestamp}.log
