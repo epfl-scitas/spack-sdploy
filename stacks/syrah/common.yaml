@@ -61,7 +61,7 @@ extra_repos:
   scitas-spack-packages:
     repo: http://github.com/epfl-scitas/scitas-spack-packages.git
     path: scitas-spack-packages/
-    tag: rhel8/izar
+    tag: releases/syrah
   scitas-cryoem-packages:
     repo: http://github.com/epfl-scitas/scitas-cryoem-spack-packages.git
     path: scitas-cryoem-packages/
