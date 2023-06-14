@@ -12,6 +12,8 @@ cat > ${SPACK_INSTALL_PATH}/etc/spack/config.yaml << EOF
 config:
   extensions:
   - ${SPACK_SDPLOY_INSTALL_PATH}
+  install_tree:
+    root: ${STACK_PREFIX}/${STACK_RELEASE_VER}/opt/spack
 EOF
 
 echo "spack config blame config"

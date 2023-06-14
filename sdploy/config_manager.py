@@ -22,6 +22,7 @@ from .yaml_manager import ReadYaml
 from .util import *
 from .config import *
 
+
 class Config(object):
     """This class will handle the parsing of the arguments for all the commands.
     Its only goal is to define an argument and decide if its value should come
@@ -65,7 +66,7 @@ class Config(object):
         self.packages_yaml_path = None
         self.modules_yaml = None
         self.modules_yaml_path = None
-
+        self.configs = {}
         # Read sdploy configuration.
         config = ReadYaml()
         config.read(os.path.join(get_prefix(), CONFIG_FILE))
@@ -80,6 +81,8 @@ class Config(object):
         # file, then spack-sdploy will be used the value defined by default in
         # the util module.
 
+        config_data = config.data['config']
+
         if args.debug == True:
             self.debug = True
 
@@ -88,23 +91,23 @@ class Config(object):
         # prefix:
         # - it includes the 'samples' or 'stacks' subdir defined in util.py;
         if not args.prefix:
-            if 'prefix' in config.data['config']:
-                if config.data['config']['prefix'] is None:
-                    self.prefix = prefix # from util.py
+            if 'prefix' in config_data:
+                if config_data['prefix'] is None:
+                    self.prefix = prefix  # from util.py
                 else:
-                    self.prefix = config.data['config']['prefix'] # from sdploy.yaml
+                    self.prefix = config_data['prefix']  # from sdploy.yaml
         else:
-            self.prefix = args.prefix # from arguments
+            self.prefix = args.prefix  # from arguments
 
         # stack:
         # - name of the stack, which is also a subdirectory under prefix;
         # - it is also the name of the stack yaml;
         if not args.stack:
-            if 'stack' in config.data['config']:
-                if config.data['config']['stack'] is None:
+            if 'stack' in config_data:
+                if config_data['stack'] is None:
                     self.stack = stack # from util.py
                 else:
-                    self.stack = config.data['config']['stack'] # from sdploy.yaml
+                    self.stack = config_data['stack'] # from sdploy.yaml
         else:
             self.stack = args.stack # from arguments
 
@@ -114,19 +117,27 @@ class Config(object):
         self.stack_yaml = os.path.join(self.stack_path, self.stack + '.yaml')
         self.commons_path = os.path.join(self.stack_path)
         self.commons_yaml = os.path.join(self.stack_path,
-                                         config.data['config']['commons_yaml'])
+                                         config_data['commons_yaml'])
+
+        if not args.work_directory:
+            commons = ReadYaml()
+            commons.read(self.commons_yaml)
+            self.work_directory = commons.data["work_directory"]
+        else:
+            self.work_directory = args.work_directory
 
         # platforms_dir:
         # - name of the platforms subdirectory under the stack
-        if 'platforms_dir' in config.data['config']:
-            if config.data['config']['platforms_dir'] is None:
-                self.platforms_dir = config.data['config']['platforms_dir']
+        if 'platforms_dir' in config_data:
+            if config_data['platforms_dir'] is None:
+                self.platforms_dir = config_data['platforms_dir']
             else:
                 self.platforms_dir = platforms_dir
 
         # Once we know the name of the platforms subdirectory, we can now configure
         # the fully qualifies path to this directory.
-        self.platforms_path = os.path.join(self.prefix, self.stack, self.platforms_dir)
+        self.platforms_path = os.path.join(self.prefix,
+                                           self.stack, self.platforms_dir)
 
         # platform:
         # - name of the platform (environment)
@@ -135,83 +146,85 @@ class Config(object):
             tty.debug("Using env instead of platform")
             self.platform = env.name
         elif not args.platform:
-            if 'platform' in config.data['config']:
-                if config.data['config']['platform'] is None:
+            if 'platform' in config_data:
+                if config_data['platform'] is None:
                     self.platform = platform
                 else:
-                    self.platform = config.data['config']['platform']
+                    self.platform = config_data['platform']
         else:
             self.platform = args.platform
 
         # Once we know the name of the platform, we can compute the fully qualified
         # plaform yaml file name
-        self.platform_yaml = os.path.join(self.platforms_path, self.platform + '.yaml')
+        self.platform_yaml = os.path.join(self.platforms_path,
+                                          self.platform + '.yaml')
 
         # stack_ver:
-        if 'stack_ver' in config.data['config']:
-            if config.data['config']['stack_ver'] is None:
+        if 'stack_ver' in config_data:
+            if config_data['stack_ver'] is None:
                 self.stack_ver = stack_ver
             else:
-                self.stack_ver = config.data['config']['stack_ver']
+                self.stack_ver = config_data['stack_ver']
 
         # templated_dir:
         # - name of the templates subdirectory under the stack
-        if 'templates_dir' in config.data['config']:
-            if config.data['config']['templates_dir'] is None:
-                self.templates_dir = config.data['config']['templates_dir']
+        if 'templates_dir' in config_data:
+            if config_data['templates_dir'] is None:
+                self.templates_dir = config_data['templates_dir']
             else:
                 self.templates_dir = templates_dir
 
         # Once we know the prefix, the stack name and the templates subdir name
         # we can configure its fully qualified path:
-        self.templates_path = os.path.join(self.prefix, self.stack, self.templates_dir)
+        self.templates_path = os.path.join(self.prefix,
+                                           self.stack, self.templates_dir)
 
         # FILENAME: template for spack.yaml, for example, 'spack.yaml.j2'
-        if 'spack_yaml_template' in config.data['config']:
-            if config.data['config']['spack_yaml_template'] is not None:
-                self.spack_yaml_template = config.data['config']['spack_yaml_template']
+        if 'spack_yaml_template' in config_data:
+            if config_data['spack_yaml_template'] is not None:
+                self.spack_yaml_template = config_data['spack_yaml_template']
             else:
                 self.spack_yaml_template = spack_yaml_template
 
         # FILENAME: template for packages.yaml, for example, 'packages.yaml.j2'
-        if 'packages_yaml_template' in config.data['config']:
-            if config.data['config']['packages_yaml_template'] is not None:
-                self.packages_yaml_template = config.data['config']['packages_yaml_template']
+        if 'packages_yaml_template' in config_data:
+            if config_data['packages_yaml_template'] is not None:
+                self.packages_yaml_template = config_data['packages_yaml_template']
             else:
                 self.packages_yaml_template = packages_yaml_template
 
         # FILENAME: template for modules.yaml, for example, 'modules.yaml.j2'
-        if 'modules_yaml_template' in config.data['config']:
-            if config.data['config']['modules_yaml_template'] is not None:
-                self.modules_yaml_template = config.data['config']['modules_yaml_template']
+        if 'modules_yaml_template' in config_data:
+            if config_data['modules_yaml_template'] is not None:
+                self.modules_yaml_template = config_data['modules_yaml_template']
             else:
                 self.modules_yaml_template = modules_yaml_template
 
         # FILENAME: template for repos.yaml, for example, 'repos.yaml.j2'
-        if 'repos_yaml_template' in config.data['config']:
-            if config.data['config']['repos_yaml_template'] is not None:
-                self.repos_yaml_template = config.data['config']['repos_yaml_template']
+        if 'repos_yaml_template' in config_data:
+            if config_data['repos_yaml_template'] is not None:
+                self.repos_yaml_template = config_data['repos_yaml_template']
             else:
                 self.repos_yaml_template = repos_yaml_template
 
         # FILENAME: template for mirrors.yaml, for example, 'mirrors.yaml.j2'
-        if 'mirrors_yaml_template' in config.data['config']:
-            if config.data['config']['mirrors_yaml_template'] is not None:
-                self.mirrors_yaml_template = config.data['config']['mirrors_yaml_template']
+        if 'mirrors_yaml_template' in config_data:
+            if config_data['mirrors_yaml_template'] is not None:
+                self.mirrors_yaml_template = config_data['mirrors_yaml_template']
             else:
                 self.mirrors_yaml_template = mirrors_yaml_template
 
         # FILENAME: template for config.yaml, for example, 'config.yaml.j2'
-        if 'config_yaml_template' in config.data['config']:
-            if config.data['config']['config_yaml_template'] is not None:
-                self.config_yaml_template = config.data['config']['config_yaml_template']
+        if 'config_yaml_template' in config_data:
+            if config_data['config_yaml_template'] is not None:
+                self.config_yaml_template = config_data['config_yaml_template']
             else:
                 self.config_yaml_template = config_yaml_template
 
         # FILENAME: template for concretizer.yaml, for example, 'concretizer.yaml.j2'
-        if 'concretizer_yaml_template' in config.data['config']:
-            if config.data['config']['concretizer_yaml_template'] is not None:
-                self.concretizer_yaml_template = config.data['config']['concretizer_yaml_template']
+        if 'concretizer_yaml_template' in config_data:
+            if config_data['concretizer_yaml_template'] is not None:
+                self.concretizer_yaml_template = config_data['concretizer_yaml_template']
             else:
                 self.concretizer_yaml_template = concretizer_yaml_template
 
@@ -221,8 +234,8 @@ class Config(object):
         # This variable is read from the environment (highest priority)
         if os.environ.get('SPACK_SYSTEM_CONFIG_PATH') is not None:
             self.spack_config_path = os.environ.get('SPACK_SYSTEM_CONFIG_PATH')
-        elif config.data['config']['spack_config_path'] is not None:
-            self.spack_config_path = config.data['config']['spack_config_path']
+        elif config_data['spack_config_path'] is not None:
+            self.spack_config_path = config_data['spack_config_path']
         else:
             self.spack_config_path = spack_config_path
 
@@ -230,115 +243,142 @@ class Config(object):
         # This variable is read from the environment (highest priority)
         if os.environ.get('SPACK_INSTALL_PATH') is not None:
             self.spack_install_path = os.environ.get('SPACK_INSTALL_PATH')
-        elif config.data['config']['spack_install_path'] is not None:
-            self.spack_install_path = config.data['config']['spack_install_path']
+        elif config_data['spack_install_path'] is not None:
+            self.spack_install_path = config_data['spack_install_path']
         else:
             self.spack_install_path = spack_install_path
 
         # FILENAME: spack.yaml, for example, 'spack.yaml'
-        if 'spack_yaml' in config.data['config']:
-            if config.data['config']['spack_yaml'] is not None:
-                self.spack_yaml = config.data['config']['spack_yaml']
+        if 'spack_yaml' in config_data:
+            if config_data['spack_yaml'] is not None:
+                self.spack_yaml = config_data['spack_yaml']
             else:
                 self.spack_yaml = spack_yaml
 
         # PATH: spack.yaml path, for example, '/path/to/config'
         #       -> does not include the file name
-        if 'spack_yaml_path' in config.data['config']:
-            if config.data['config']['spack_yaml_path'] is not None:
-                self.spack_yaml_path = config.data['config']['spack_yaml_path']
+        if 'spack_yaml_path' in config_data:
+            if config_data['spack_yaml_path'] is not None:
+                self.spack_yaml_path = config_data['spack_yaml_path']
             else:
                 self.spack_yaml_path = spack_yaml_path
 
         # FILENAME: packages.yaml, for example, 'packages.yaml'
-        if 'packages_yaml' in config.data['config']:
-            if config.data['config']['packages_yaml'] is not None:
-                self.packages_yaml = config.data['config']['packages_yaml']
+        if 'packages_yaml' in config_data:
+            if config_data['packages_yaml'] is not None:
+                self.packages_yaml = config_data['packages_yaml']
             else:
                 self.packages_yaml = packages_yaml
 
         # PATH: path to packages.yaml, for example, '/path/to/config'
         #       -> does not include the file name
-        if 'packages_yaml_path' in config.data['config']:
-            if config.data['config']['packages_yaml_path'] is not None:
-                self.packages_yaml_path = config.data['config']['packages_yaml_path']
+        if 'packages_yaml_path' in config_data:
+            if config_data['packages_yaml_path'] is not None:
+                self.packages_yaml_path = config_data['packages_yaml_path']
             else:
                 self.packages_yaml_path = packages_yaml_path
 
         # FILENAME: modules.yaml, for example, 'modules.yaml'
-        if 'modules_yaml' in config.data['config']:
-            if config.data['config']['modules_yaml'] is not None:
-                self.modules_yaml = config.data['config']['modules_yaml']
+        if 'modules_yaml' in config_data:
+            if config_data['modules_yaml'] is not None:
+                self.modules_yaml = config_data['modules_yaml']
             else:
                 self.modules_yaml = modules_yaml
 
         # PATH: path to modules.yaml, for example, '/path/to/config'
         #       -> does not include the file name
-        if 'modules_yaml_path' in config.data['config']:
-            if config.data['config']['modules_yaml_path'] is not None:
-                self.modules_yaml_path = config.data['config']['modules_yaml_path']
+        if 'modules_yaml_path' in config_data:
+            if config_data['modules_yaml_path'] is not None:
+                self.modules_yaml_path = config_data['modules_yaml_path']
             else:
                 self.modules_yaml_path = modules_yaml_path
 
         # FILENAME: repos.yaml, for example, 'repos.yaml'
-        if 'repos_yaml' in config.data['config']:
-            if config.data['config']['repos_yaml'] is not None:
-                self.repos_yaml = config.data['config']['repos_yaml']
+        if 'repos_yaml' in config_data:
+            if config_data['repos_yaml'] is not None:
+                self.repos_yaml = config_data['repos_yaml']
             else:
                 self.repos_yaml = repos_yaml
 
         # PATH: path to repos.yaml, for example, '/path/to/config'
         #       -> does not include the file name
-        if 'repos_yaml_path' in config.data['config']:
-            if config.data['config']['repos_yaml_path'] is not None:
-                self.repos_yaml_path = config.data['config']['repos_yaml_path']
+        if 'repos_yaml_path' in config_data:
+            if config_data['repos_yaml_path'] is not None:
+                self.repos_yaml_path = config_data['repos_yaml_path']
             else:
                 self.repos_yaml_path = repos_yaml_path
 
         # FILENAME: mirrors.yaml, for example, 'mirrors.yaml'
-        if 'mirrors_yaml' in config.data['config']:
-            if config.data['config']['mirrors_yaml'] is not None:
-                self.mirrors_yaml = config.data['config']['mirrors_yaml']
+        if 'mirrors_yaml' in config_data:
+            if config_data['mirrors_yaml'] is not None:
+                self.mirrors_yaml = config_data['mirrors_yaml']
             else:
                 self.mirrors_yaml = mirrors_yaml
 
         # PATH: path to mirrors.yaml, for example, '/path/to/config'
         #       -> does not include the file name
-        if 'mirrors_yaml_path' in config.data['config']:
-            if config.data['config']['mirrors_yaml_path'] is not None:
-                self.mirrors_yaml_path = config.data['config']['mirrors_yaml_path']
+        if 'mirrors_yaml_path' in config_data:
+            if config_data['mirrors_yaml_path'] is not None:
+                self.mirrors_yaml_path = config_data['mirrors_yaml_path']
             else:
                 self.mirrors_yaml_path = mirrors_yaml_path
 
         # FILENAME: config.yaml, for example, 'config.yaml'
-        if 'config_yaml' in config.data['config']:
-            if config.data['config']['config_yaml'] is not None:
-                self.config_yaml = config.data['config']['config_yaml']
+        if 'config_yaml' in config_data:
+            if config_data['config_yaml'] is not None:
+                self.config_yaml = config_data['config_yaml']
             else:
                 self.config_yaml = config_yaml
 
         # PATH: path to config.yaml, for example, '/path/to/config'
         #       -> does not include the file name
-        if 'config_yaml_path' in config.data['config']:
-            if config.data['config']['config_yaml_path'] is not None:
-                self.config_yaml_path = config.data['config']['config_yaml_path']
+        if 'config_yaml_path' in config_data:
+            if config_data['config_yaml_path'] is not None:
+                self.config_yaml_path = config_data['config_yaml_path']
             else:
                 self.config_yaml_path = config_yaml_path
 
         # FILENAME: concretizer.yaml, for example, 'concretizer.yaml'
-        if 'concretizer_yaml' in config.data['config']:
-            if config.data['config']['concretizer_yaml'] is not None:
-                self.concretizer_yaml = config.data['config']['concretizer_yaml']
+        if 'concretizer_yaml' in config_data:
+            if config_data['concretizer_yaml'] is not None:
+                self.concretizer_yaml = config_data['concretizer_yaml']
             else:
                 self.concretizer_yaml = concretizer_yaml
 
         # PATH: path to concretizer.yaml, for example, '/path/to/config'
         #       -> does not include the file name
-        if 'concretizer_yaml_path' in config.data['config']:
-            if config.data['config']['concretizer_yaml_path'] is not None:
-                self.concretizer_yaml_path = config.data['config']['concretizer_yaml_path']
+        if 'concretizer_yaml_path' in config_data:
+            if config_data['concretizer_yaml_path'] is not None:
+                self.concretizer_yaml_path = config_data['concretizer_yaml_path']
             else:
                 self.concretizer_yaml_path = concretizer_yaml_path
+
+        commons = ReadYaml()
+        commons.read(os.path.join(self.commons_yaml))
+        self.configs['install_tree'] = os.path.join(
+            self.work_directory,
+            commons.data['stack_release'],
+            commons.data['stack_version'],
+            'opt', 'spack')
+
+        if env:
+            env_path = env.name
+        else:
+            env_path = None
+
+        self.configs['modules'] = {}
+        for module_type in ['lmod', 'tcl']:
+            root = os.path.join(
+                self.work_directory,
+                commons.data['stack_release'],
+                commons.data['stack_version'],
+                commons.data['modules']['roots'][module_type])
+            if env_path:
+                root = os.path.join(
+                    root,
+                    env_path
+                )
+            self.configs['modules'][f'{module_type}_roots'] = root
 
     def info_to_file(self, file=None):
         """Print debug information to file"""

@@ -1,0 +1,10 @@
+platform:
+  filters:
+    gpu: nvidia
+    mpi: infiniband_gdrcopy
+  tokens:
+    target: skylake_avx512
+    lmod_root: izar
+    slurm_version: 23-02-0
+    core_per_socket: 20
+    cuda_arch: 70

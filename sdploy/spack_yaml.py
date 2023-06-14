@@ -49,6 +49,7 @@ class SpackYaml(StackFile):
         self.pe_specs = {}
         self.pkgs_specs = {}
         self.definitions_list = []
+        self.pe_compilers = {}
 
     def create_pe_libraries_specs_dict(self):
         pass
@@ -61,13 +62,25 @@ class SpackYaml(StackFile):
         data = self.group_sections(deepcopy(self.data), 'pe')
 
         for pe, stack in data.items():
-            for stack_name in stack.keys():
-                self.pe_specs[pe + '_' + stack_name] = list(stack[stack_name].keys())
+            if self._skip_list(stack):
+                continue
+
+            for stack_name, stack_env in stack.items():
+                if stack_name in ['filters', 'metadata']:
+                    continue
+
+                self.pe_specs[pe + '_' + stack_name] = list(stack_env.keys())
+                specs = self.pe_specs[pe + '_' + stack_name]
+
                 # Remove compilers
-                if 'compiler' in self.pe_specs[pe + '_' + stack_name]:
-                    self.pe_specs[pe + '_' + stack_name].remove('compiler')
-                if 'compiler_spec' in self.pe_specs[pe + '_' + stack_name]:
-                    self.pe_specs[pe + '_' + stack_name].remove('compiler_spec')
+                if 'compiler' in specs:
+                    self.pe_compilers[pe + '_' + stack_name] = \
+                        stack_env['compiler']
+                    specs.remove('compiler')
+                if 'compiler_spec' in specs:
+                    self.pe_compilers[pe + '_' + stack_name] = \
+                        stack_env['compiler_spec']
+                    specs.remove('compiler_spec')
 
     def create_pe_definitions_dict(self, filter = 1, core = True):
         """Regroup PE definitions in a single dictionary"""
@@ -82,9 +95,23 @@ class SpackYaml(StackFile):
             for k, v in core_compiler.items():
                 self.pe_stack[k] = v
 
+        pes = list(self.pe_stack.keys())
         # Check for filters presence and applies filters
-        for pe, stack in self.pe_stack.items():
-            for stack_name, stack_env in stack.items():
+        for pe in pes:
+            stack = self.pe_stack[pe]
+            if self._skip_list(stack):
+                self.pe_stack.pop(pe)
+                continue
+
+            for stack_name in list(stack.keys()):
+                if stack_name in ['filters', 'metadata']:
+                    stack.pop(stack_name)
+                    continue
+
+                stack_env = stack[stack_name]
+                if not isinstance(stack_env, dict):
+                    continue
+
                 for filter in self.filters.keys():
                     if filter in stack_env and isinstance(stack_env[filter], dict):
                         spec = stack_env[filter][self.filters[filter]]
@@ -103,7 +130,7 @@ class SpackYaml(StackFile):
             tty.debug(f'Entering package list: {pkg_list_name}')
 
             # skip the list if `none` is found in filters
-            if self._skip_list(pkg_list_name):
+            if self._skip_list(pkg_list_cfg):
                 continue
 
             self.definitions_list.append(pkg_list_name)
@@ -132,44 +159,32 @@ class SpackYaml(StackFile):
         for pkg_list_name, pkg_list_cfg in self.pkgs_stack.items():
 
             # skip the list if `none` is found in filters
-            if self._skip_list(pkg_list_name):
+            if self._skip_list(pkg_list_cfg):
                 continue
 
             # Create new entry
-            self.pkgs_specs[pkg_list_name] = {}
+            spec = {}
             # Add compilers
-            self.pkgs_specs[pkg_list_name]['compilers'] = pkg_list_cfg.get('pe')
+            spec['compilers'] = pkg_list_cfg.get('pe')
             # Add dependencies
             if 'dependencies' in pkg_list_cfg.keys():
                 # Add dependencies one by one and check against filters
                 # if dependency is equals to the string "none" in which
                 # case do not add the dependency. In the end, if the
                 # dependencies list is empty, remove it.
-                self.pkgs_specs[pkg_list_name]['dependencies'] = []
+                deps = []
                 for d in pkg_list_cfg['dependencies']:
                     if d in self.filters.keys() and self.filters[d] != 'none':
-                        self.pkgs_specs[pkg_list_name]['dependencies'].append(d)
+                        deps.append(d)
                     elif d not in self.filters.keys():
-                        self.pkgs_specs[pkg_list_name]['dependencies'].append(d)
-                if len(self.pkgs_specs[pkg_list_name]['dependencies']) == 0:
-                    self.pkgs_specs[pkg_list_name].pop('dependencies')
+                        deps.append(d)
+                if len(deps) != 0:
+                    spec['dependencies'] = deps
 
-    def _skip_list(self, pkg_list_name):
-        """Returns true if the package list passed in argument is to skip
+            self.pkgs_specs[pkg_list_name] = spec
 
-        This method searches for the presence of the 'filters' key in the
-        package configuration section. If found, it will read each filter
-        here defined and if at least one has the none property, this list
-        is skipped."""
-
-        pkg_list_cfg = self.pkgs_stack[pkg_list_name]
-        if 'filters' in pkg_list_cfg:
-            for filter in pkg_list_cfg['filters']:
-                if self.filters[filter] == 'none':
-                    return True
-        return False
-
-    def _flatten_dict(self, d: MutableMapping, parent_key: str = '', sep: str = '_'):
+    def _flatten_dict(self, d: MutableMapping,
+                      parent_key: str = '', sep: str = '_'):
         """Returns a flat dict
 
         Return a 1-depth dict (flat) whose elements are formed by composing

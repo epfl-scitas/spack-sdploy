@@ -62,7 +62,7 @@ class ReposYaml(StackFile):
         """Sets path to etc/spack if running outside environment"""
 
         self.yaml_path = os.path.join(
-            self.commons['work_directory'],
+            self.config.work_directory,
             self.commons['stack_release'],
             self.commons['spack'] + '.' + self.commons['stack_version'],
             'etc/spack')
@@ -77,7 +77,7 @@ class ReposYaml(StackFile):
             repo_url = self.commons['extra_repos'][repo]['repo']
             repo_path = self.commons['extra_repos'][repo]['path']
             repo_tag = self.commons['extra_repos'][repo]['tag']
-            prefix = os.path.join(self.commons['work_directory'],
+            prefix = os.path.join(self.config.work_directory,
                                   self.commons['stack_release'],
                                   self.commons['spack_external'])
 

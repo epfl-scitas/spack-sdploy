@@ -31,8 +31,8 @@ class StackFile(ReadYaml):
 
         # Configuration files
         self.platform_file = config.platform_yaml
-            
         self.stack_file = config.stack_yaml
+        self.commons_file = config.commons_yaml
 
         # Original data
         self.data = {} # The original data
@@ -51,7 +51,6 @@ class StackFile(ReadYaml):
 
         self.schema = None
 
-
     def _remove_newline(self, values):
         return ' '.join((values.strip().split('\n')))
 
@@ -59,20 +58,38 @@ class StackFile(ReadYaml):
         result = []
         if isinstance(attributes, dict):
             # Check for filters presence
-            for filter in self.filters.keys():
-                if filter in attributes:
-                    if self.filters[filter] in attributes[filter]:
-                        values = attributes[filter][self.filters[filter]]
+            for fid, filter_ in self.filters.items():
+                if fid in attributes:
+                    if filter_ in attributes[fid]:
+                        values = attributes[fid][filter_]
                         if isinstance(values, list):
                             result.extend(values)
                         else:
                             result.append(values)
                     else:
-                        raise FilterException(filter, self.filters[filter])
-        else: # We are just checking that attributes is not a structure (dict, list, etc)
+                        raise FilterException(fid, filter_)
+        else:  # We are just checking that attributes is not a structure (dict, list, etc)
             # We need to cast version to str because of ' '.join in next step
             result.append(str(attributes))
         return result
+
+    def _skip_list(self, pkg_list_cfg):
+        """Returns true if the package list passed in argument is to skip
+
+        This method searches for the presence of the 'filters' key in the
+        package configuration section. If found, it will read each filter
+        here defined and if at least one has the none property, this list
+        is skipped."""
+
+        if 'filters' in pkg_list_cfg:
+            for filter_ in pkg_list_cfg['filters']:
+                if '=' in filter_:
+                    k, v = filter_.split('=')
+                    if self.filters[k.strip()] != v.strip():
+                        return True
+                elif self.filters[filter_] == 'none':
+                    return True
+        return False
 
     def _write_yaml(self, output, filename):
         with fs.write_tmp_and_move(os.path.realpath(filename)) as f:
@@ -121,7 +138,13 @@ class StackFile(ReadYaml):
         tty.debug(f'List of PEs: {pes}')
 
         for pe_name, pe in pes.items():
+            if self._skip_list(stack):
+                continue
+
             for stack_name, stack in pe.items():
+                if stack_name in ['filters', 'metadata']:
+                    continue
+
                 tty.debug(f'{pe_name}_{stack_name}')
                 pe_defs[f'{pe_name}_{stack_name}'] = {}
                 res = pe_defs[f'{pe_name}_{stack_name}']
@@ -185,7 +208,7 @@ class StackFile(ReadYaml):
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
         variants = []
         if 'common' in variants_attributes:
-            variants.append(variants_attributes.get('common'))
+            variants.append(variants_attributes['common'])
 
         variants.extend(self._handle_filter(variants_attributes))
 
@@ -200,6 +223,16 @@ class StackFile(ReadYaml):
         if isinstance(dependencies_attributes, list):
             dependencies = dependencies_attributes
         else:
-            dependencies = self._handle_filter(dependencies_attributes)
+            if 'common' in dependencies_attributes:
+                deps = dependencies_attributes['common']
+                if not isinstance(deps, list):
+                    deps = [deps]
 
-        return(self._remove_newline(' ^' + ' ^'.join(dependencies)))
+                dependencies.extend(deps)
+
+            dependencies.extend(self._handle_filter(dependencies_attributes))
+
+        str_dep = ' ^'.join(dependencies)
+        if str_dep:
+            str_dep = ' ^' + str_dep
+        return(self._remove_newline(str_dep))

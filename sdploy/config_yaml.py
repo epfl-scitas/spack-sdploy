@@ -96,21 +96,15 @@ class ConfigYaml(StackFile):
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
 
         self.conf['extensions'] = [
-            os.path.join(self.commons.data['work_directory'],
+            os.path.join(self.config.work_directory,
                          self.commons.data['stack_release'],
                          self.commons.data['spack_sdploy'])
         ]
 
     def _add_install_paths(self):
         """Add installation paths"""
-
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-
-        self.conf['install_tree'] = os.path.join(
-            self.commons.data['work_directory'],
-            self.commons.data['stack_release'],
-            self.commons.data['stack_version'],
-            'opt', 'spack')
+        self.conf['install_tree'] = self.config.configs['install_tree']
 
     def _add_template_dirs(self):
         """Add template paths"""

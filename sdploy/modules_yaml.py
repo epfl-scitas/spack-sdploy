@@ -72,36 +72,17 @@ class ModulesYaml(StackFile):
 
         platform = ReadYaml()
         platform.read(os.path.join(self.config.platform_yaml))
-        self.modules['core_compiler'] = platform.data['platform']['tokens']['core_compiler']
+        self.modules['core_compiler'] = self.tokens['core_compiler']
 
     def _add_module_roots(self):
         """Add modules installation paths. Note that These
         are read from commons.yaml and not from sdploy.yaml."""
 
         tty.debug(f'Entering function: {inspect.stack()[0][3]}')
-
-        env = ev.active_environment()
-        if env:
-            env_path = env.name
-        else:
-            env_path = None
-
-        if ('modules' not in self.commons.data or
-            'roots' not in self.commons.data['modules']):
-            return
+        modules = self.config.configs["modules"]
 
         for module_type in ['lmod', 'tcl']:
-            root = os.path.join(
-                self.commons.data['work_directory'],
-                self.commons.data['stack_release'],
-                self.commons.data['stack_version'],
-                self.commons.data['modules']['roots'][module_type])
-            if env_path:
-                root = os.path.join(
-                    root,
-                    env_path
-                )
-            self.modules[f'{module_type}_roots'] = root
+            self.modules[f'{module_type}_roots'] = modules[f'{module_type}_roots']
 
     def _add_suffixes(self):
         """Add modules suffixes from stack.yaml"""

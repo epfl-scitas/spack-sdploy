@@ -1,20 +1,51 @@
-spack_release: v0.18.1
-stack_release: syrah
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+#
+#
+#                                                               PATH DEFINITIONS
+#
+#
+#
+#
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-# Path definitions
+# stack, python env and spack sdploy will be placed here
 work_directory: /ssoft/spack
+spack_sdploy: spack-sdploy
 python_venv: py3-venv
 spack_external: external
+
+# Where to find jenkins scripts (under spack-sdploy)
 jenkins: jenkins/deploy/scripts
 extensions: spack-config
+
+# Name of the spack directory
 spack: spack
-spack_sdploy: spack-sdploy
+
+# This is where spack will install the packages
 stack_version: v1
 spack_licences: licences
+
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#
+#
+#
+#
+#                                                           OTHER CONFIGURATIONS
+#
+#
+#
+#
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+spack_release: v0.18.1
+stack_release: syrah
 
 environments: # platforms
   - jed
   - helvetios
+  - izar
 
 # The mirrors paths are common to all stacks.
 # They are created under `work_directory`.
@@ -31,6 +62,14 @@ extra_repos:
     repo: http://github.com/epfl-scitas/scitas-spack-packages.git
     path: scitas-spack-packages/
     tag: releases/syrah
+  scitas-cryoem-packages:
+    repo: http://github.com/epfl-scitas/scitas-cryoem-spack-packages.git
+    path: scitas-cryoem-packages/
+    tag: main
+
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                            SPACK CONFIGURATION
+#  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 modules:
   roots:
@@ -48,3 +87,12 @@ concretizer:
     granularity: microarchitectures
     host_compatible: True
   reuse: True
+
+tokens:
+  external_prefix: /ssoft/spack/external
+  core_compiler: gcc@8.5.0 arch=linux-rhel8-x86_64_v2
+  os: rhel8
+  python3: 3.10.4
+  lmod_arch: linux-rhel8-x86_64
+  jdk_version: 1.8.0_332
+  slurm_version: 22-05-6

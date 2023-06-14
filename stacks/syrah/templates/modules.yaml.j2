@@ -1,8 +1,5 @@
 modules:
   default:
-    roots:
-      lmod: {{ data['lmod_roots'] }}
-      tcl: {{ data['tcl_roots'] }}
     enable:
     - lmod
     - tcl
@@ -54,6 +51,7 @@ modules:
         - perl
         - pmix
         - rdma-core
+        - rust
         - slurm
         - ucx
         # === activated python packages
