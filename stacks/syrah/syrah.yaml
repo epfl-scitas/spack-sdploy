@@ -1079,18 +1079,8 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
   filters: ['gpu']
   dependencies: [mpi, blas_parallel, python3, gpu]
   packages:
-    - eman2 +cuda +mpi:
-          - py-tensorflow +nccl@2.10.1
-          - bazel
-          - openjdk@11
-          - hdf5 +mpi
-          - cmake +ownlibs
-    - py-keras:
-          - py-tensorflow +nccl@2.10.1
-          - bazel
-          - openjdk@11
-          - hdf5 +mpi
-          - cmake +ownlibs
+    - eman2 +cuda +mpi ^py-tensorflow +nccl@2.10.1 ^bazel ^openjdk@11 ^hdf5 +mpi ^cmake +ownlibs
+    - py-keras ^py-tensorflow +nccl@2.10.1 ^bazel ^openjdk@11 ^hdf5 +mpi ^cmake +ownlibs
     - py-horovod:
         default:
           variants:
