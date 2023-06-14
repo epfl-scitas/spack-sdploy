@@ -5,13 +5,20 @@ set -euo pipefail
 . $JENKINS/activate_spack.sh
 
 # Gather values
-LMOD_PREFIX=`yareed -file stacks/${STACK_RELEASE}/common.yaml -keys modules roots lmod`
-LMOD_SUBDIR=`yareed -file stacks/${STACK_RELEASE}/platforms/${environment}.yaml -keys platform tokens lmod_root`
-ARCH=`yareed -file stacks/${STACK_RELEASE}/platforms/${environment}.yaml -keys platform tokens lmod_arch`
-COMPILER=`yareed -file stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml -keys intel stable compiler |awk -F'@' '{print $1}'`
-COMPILER_VER=`yareed -file stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml -keys intel stable compiler |awk -F'@' '{print $2}'`
-COMPILER_SPEC=`yareed -file stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml -keys intel stable compiler_spec |awk -F'@' '{print $1}'`
-COMPILER_SPEC_VER=`yareed -file stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml -keys intel stable compiler_spec |awk -F'@' '{print $2}'`
+LMOD_PREFIX=`yq .modules.roots.lmod stacks/${STACK_RELEASE}/common.yaml`
+
+TOKENS=`yq -s '.[0].tokens + .[1].platform.tokens'  stacks/${STACK_RELEASE}/common.yaml stacks/${STACK_RELEASE}/platforms/${environment}.yaml`
+
+LMOD_SUBDIR=`echo ${TOKENS} | yq .lmod_root`
+ARCH=`echo ${TOKENS} | yq .lmod_arch`
+
+INTEL_YAML=`yq '.intel.stable.compiler | split("@")' stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml`
+COMPILER=`echo ${INTEL_YAML} | yq '.[0]'`
+COMPILER_VER=`echo ${INTEL_YAML} | yq '.[1]'`
+INTEL_SPEC_YAML=`yq '.intel.stable.compiler_spec | split("@")' stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml`
+COMPILER_SPEC=`echo ${INTEL_SPEC_YAML} | yq '.[0]'`
+COMPILER_SPEC_VER=`echo ${INTEL_SPEC_YAML} | yq '.[1]'`
+
 
 # Compose values
 LMOD_CORE=$STACK_PREFIX/$STACK_RELEASE_VER/$LMOD_PREFIX/${LMOD_SUBDIR}/${ARCH}/Core

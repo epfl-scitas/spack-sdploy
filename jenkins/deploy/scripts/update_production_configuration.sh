@@ -14,7 +14,7 @@ echo 'Upgrading PIP'
 pip install -U pip
 
 echo 'Installing Jinja2'
-pip install jinja2
+pip install jinja2 jq yq
 
 echo 'Installing yareed'
 pip install yareed/
