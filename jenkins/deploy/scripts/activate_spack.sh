@@ -4,7 +4,7 @@ set -euo pipefail
 . ${JENKINS}/configure_proxies.sh
 . ${JENKINS}/setenv.sh
 
-if [ "${IN_PR}" -eq 1 ]; then
+if [ ${IN_PR} -eq 1 ]; then
     echo "[--] Running in PR [--]" 1>&2
 fi
 
