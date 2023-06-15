@@ -151,6 +151,8 @@ serial_packages:
             gpu:
               nvidia: +cuda +cuda_uvm cuda_arch=<cuda_arch> +wrapper
               none: ~cuda ~cuda_uvm ~rocm
+        dependencies:
+          - cmake +ownlibs target=<target>
     - libarchive
     - libfabric:
         default:
