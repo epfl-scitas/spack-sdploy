@@ -43,8 +43,8 @@ spack_release: v0.18.1
 stack_release: syrah
 
 environments: # platforms
-#  - jed
-#  - helvetios
+  - jed
+  - helvetios
   - izar
 
 # The mirrors paths are common to all stacks.
