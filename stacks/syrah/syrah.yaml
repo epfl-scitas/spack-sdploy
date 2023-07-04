@@ -1120,7 +1120,7 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
             networks:
               infiniband: +verbs
               infiniband_gdrcopy: +verbs
-              ehternet_roce: ~verbs
+              ethernet_roce: ~verbs
         variants:
           common: +mpi
           gpu:
