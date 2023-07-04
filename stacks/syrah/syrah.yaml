@@ -765,12 +765,6 @@ mpi_packages:
     - openfoam-org +metis ^scotch+mpi
     - phylobayesmpi
     - scotch +mpi
-    #- vasp@5.4.4:
-    #    default:
-    #      buildable: true
-    #      permissions:
-    #        read: group
-    #        group: vasp-soft
 
 # MPI --------------------------------------------------------------------------
 #
@@ -916,6 +910,12 @@ mpi_blas_packages:
     #       permissions:
     #         read: group
     #         group: molpro-soft
+    - vasp@6.3.2 +hdf5 +scalapack +shmem:
+        default:
+          buildable: true
+          permissions:
+            read: group
+            group: vasp-soft
 
 # MPI PYTHON --------------------------------------------------------------------
 #
