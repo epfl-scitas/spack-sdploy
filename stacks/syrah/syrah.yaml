@@ -765,6 +765,7 @@ mpi_packages:
     - openfoam-org +metis ^scotch+mpi
     - phylobayesmpi
     - scotch +mpi
+    - wrf build_type=dm+sm ^netcdf-c+parallel-netcdf
 
 # MPI --------------------------------------------------------------------------
 #
