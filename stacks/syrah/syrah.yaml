@@ -245,7 +245,7 @@ serial_packages_gcc_stable:
   metadata: { section: packages }
   pe: [gcc_stable]
   packages:
-    - cistem target=<target>
+    - cistem target=<target> ^wxwidgets+libtiff
     - ctffind target=<target>
     - eigen:
         default: { variants: +ipo }
