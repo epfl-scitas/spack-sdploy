@@ -765,7 +765,6 @@ mpi_packages:
     - openfoam-org +metis ^scotch+mpi
     - phylobayesmpi
     - scotch +mpi
-    - wrf ~pnetcdf build_type=dm+sm target=<target> ^netcdf-c +mpi target=<target> ^netcdf-fortran target=<target> ^hdf5 +mpi target=<target>
 
 # MPI --------------------------------------------------------------------------
 #
@@ -783,7 +782,7 @@ mpi_packages_gcc_stable:
     - netcdf-fortran ^hdf5 +mpi +szip +hl +fortran +cxx
     - parmetis:
         default: { variants: +ipo }
-
+    - wrf ~pnetcdf build_type=dm+sm ^netcdf-c +mpi ^netcdf-fortran ^hdf5 +mpi
 # MPI --------------------------------------------------------------------------
 #
 #
