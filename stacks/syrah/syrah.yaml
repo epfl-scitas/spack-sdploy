@@ -782,7 +782,8 @@ mpi_packages_gcc_stable:
     - netcdf-fortran ^hdf5 +mpi +szip +hl +fortran +cxx
     - parmetis:
         default: { variants: +ipo }
-    - wrf ~pnetcdf build_type=dm+sm ^netcdf-c +mpi ^netcdf-fortran ^hdf5 +mpi
+    - wrf ~pnetcdf build_type=dm+sm ^netcdf-c +mpi ^netcdf-fortran
+
 # MPI --------------------------------------------------------------------------
 #
 #
