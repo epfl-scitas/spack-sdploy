@@ -138,7 +138,7 @@ class StackFile(ReadYaml):
         tty.debug(f'List of PEs: {pes}')
 
         for pe_name, pe in pes.items():
-            if self._skip_list(stack):
+            if self._skip_list(pe):
                 continue
 
             for stack_name, stack in pe.items():
