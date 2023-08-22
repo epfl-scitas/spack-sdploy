@@ -126,6 +126,7 @@ serial_packages:
         dependencies:
           - openssl@1.1.1k
     - fastqc
+    - fenics-dolfinx
     - fftw +openmp ~mpi
     - fftw ~openmp ~mpi
     - gmp
