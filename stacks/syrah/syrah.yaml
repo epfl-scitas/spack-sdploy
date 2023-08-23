@@ -842,10 +842,14 @@ mpi_blas_packages_gcc_stable:
           - netlib-scalapack
     - netlib-scalapack:
         default: { variants: +ipo }
-    - quantum-espresso+mpi+scalapack ^fftw+mpi+openmp
-    - quantum-espresso+mpi+scalapack hdf5=parallel ^fftw+mpi+openmp
-    - quantum-espresso@7.2 +mpi+scalapack+gipaw~cmake ^fftw+mpi+openmp
-    - quantum-espresso@7.2 +mpi+scalapack+gipaw~cmake hdf5=parallel ^fftw+mpi+openmp
+    - quantum-espresso@7.2:
+        variants: +mpi+scalapack+gipaw~cmake
+        dependencies:
+          - fftw+mpi+openmp
+    - quantum-espresso@7.2:
+        variants: +mpi+scalapack+gipaw~cmake hdf5=parallel
+        dependencies:
+          - fftw+mpi+openmp
     - superlu-dist:
         default:
           variants:
@@ -868,12 +872,10 @@ mpi_blas_packages_intel_stable:
         dependencies:
           - hdf5 +mpi ~ipo
           - mmg ~ipo ~vtk
-    - quantum-espresso+mpi+scalapack
-    - quantum-espresso+mpi+scalapack hdf5=parallel:
-        dependencies:
-          - hdf5 +mpi ~ipo
-    - quantum-espresso@7.2 +mpi+scalapack+gipaw~cmake
-    - quantum-espresso@7.2 +mpi+scalapack+gipaw~cmake hdf5=parallel:
+    - quantum-espresso@7.2:
+        variants: +mpi+scalapack+gipaw~cmake
+    - quantum-espresso@7.2:
+        variants: +mpi+scalapack+gipaw~cmake hdf5=parallel
         dependencies:
           - hdf5 +mpi ~ipo
     - mumps:
