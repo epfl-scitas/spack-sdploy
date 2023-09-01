@@ -1000,7 +1000,7 @@ mpi_blas_python_packages_gcc_stable:
           gpu:
             nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
             none: []
-    - gromacs@2021.4+mpi+plumed:
+    - gromacs@2023+mpi+plumed:
         variants:
           gpu:
             nvidia: +cuda
