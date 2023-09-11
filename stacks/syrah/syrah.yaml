@@ -1083,6 +1083,13 @@ mpi_blas_python_packages_petsc_gcc_stable:
           gpu:
             nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
             none: []
+    - fenics-dolfinx +slepc:
+        dependencies:
+          common:
+            - hdf5 +ipo +mpi
+          gpu:
+            nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
+            none: []
 
 mpi_blas_parallel_python_gpu_packages_gcc_stable:
   metadata: { section: packages }
@@ -1258,6 +1265,13 @@ mpi_blas_python_packages_intel_stable:
           gpu:
             nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
             none: []
+    # - fenics-dolfinx +slepc:
+    #     dependencies:
+    #       common:
+    #         - hdf5 ~ipo +mpi
+    #       gpu:
+    #         nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
+    #         none: []
 
 
 
