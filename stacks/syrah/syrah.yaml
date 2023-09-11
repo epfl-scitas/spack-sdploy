@@ -1086,7 +1086,7 @@ mpi_blas_python_packages_petsc_gcc_stable:
     - fenics-dolfinx +slepc:
         dependencies:
           common:
-            - hdf5 +po +mpi
+            - hdf5 +ipo +mpi
           gpu:
             nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
             none: []
