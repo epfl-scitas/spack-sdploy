@@ -1007,6 +1007,13 @@ mpi_blas_python_packages_gcc_stable:
             none: ~cuda
         dependencies:
           - fftw~mpi+openmp
+    - gromacs@2023+mpi+plumed:
+        variants:
+          gpu:
+            nvidia: +cuda
+            none: ~cuda
+        dependencies:
+          - fftw~mpi+openmp
     - lammps@20220107:
         variants:
           common: |
