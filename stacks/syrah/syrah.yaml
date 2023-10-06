@@ -638,7 +638,7 @@ external_packages:
             prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.el8_5.x86_64
         modules:
           blacklist: True
-    - ansys:
+    - ansys@2022R1:
         default:
           buildable: false
         externals:
@@ -648,6 +648,7 @@ external_packages:
             prefix: <external_prefix>/ansys/2022R1/v221
           - spec: ansys@2022R2 %<core_compiler>
             prefix: <external_prefix>/ansys/2022R2/v222
+    - ansys@2022R2
     - cfdplusplus:
         default:
           buildable: false
