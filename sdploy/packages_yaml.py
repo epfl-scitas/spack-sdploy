@@ -18,6 +18,7 @@ import llnl.util.tty as tty
 import spack.schema
 
 from copy import deepcopy
+import re
 import inspect
 
 from .stack_file import StackFile, FilterException
@@ -26,6 +27,7 @@ from .util import *
 
 class PackagesYaml(StackFile):
     """Manage the packages section in stack.yaml"""
+    PKG_NAME_RE = "([a-zA-Z0-9-]*)([ +~^@].*)"
 
     def __init__(self, config):
         """Declare class structs"""
@@ -54,7 +56,7 @@ class PackagesYaml(StackFile):
         # Groups entries whose section = <section> in self.stack
         self.stack = {} # The data grouped by `section = packages`
         self.stack = self.group_sections(deepcopy(self.data), 'packages')
-
+        self.pkg_name_re = re.compile(self.PKG_NAME_RE)
 
     def packages_yaml_packages(self):
         """Creates a sub-dictionary containing the packages and their specs that
@@ -80,6 +82,9 @@ class PackagesYaml(StackFile):
                 pkg_name = list(pkg_list.keys())[0]
                 pkg_attributes = pkg_list[pkg_name]
 
+                match = self.pkg_name_re.match(pkg_name)
+                if match:
+                    pkg_name = match.group(1)
                 tty.debug(f'Reading package: {pkg_name}')
 
                 if not 'default' in pkg_attributes:
@@ -149,6 +154,10 @@ class PackagesYaml(StackFile):
                     for pkg_name, pkg_attributes in pkg_list.items():
                         if not 'externals' in pkg_attributes:
                             continue
+
+                        match = self.pkg_name_re.match(pkg_name)
+                        if match:
+                            pkg_name = match.group(1)
 
                         self.externals[pkg_name] = [dict(x) for x in pkg_attributes['externals']]
                         # externals = pkg_attributes.get('external')
