@@ -315,7 +315,7 @@ serial_packages_intel_stable:
   metadata: { section: packages }
   pe: [intel_stable]
   packages:
-    - abaqus:
+    - abaqus@2019:
         default:
           buildable: false
           permissions:
@@ -324,6 +324,9 @@ serial_packages_intel_stable:
         externals:
           - spec: abaqus@2019
             prefix: <external_prefix>/abaqus/2019
+          - spec: abaqus@2023
+            prefix: <external_prefix>/abaqus/2023
+    - abaqus@2023
     - eigen ~ipo
     - hdf5~ipo
     - intel-oneapi-ipp
