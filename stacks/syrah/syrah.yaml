@@ -648,7 +648,7 @@ external_packages:
             prefix: <external_prefix>/ansys/2022R1/v221
           - spec: ansys@2022R2 %<core_compiler>
             prefix: <external_prefix>/ansys/2022R2/v222
-#    - ansys@2022R2
+    - ansys@2022R2
     - cfdplusplus:
         default:
           buildable: false
