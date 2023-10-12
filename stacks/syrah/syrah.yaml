@@ -152,7 +152,11 @@ serial_packages:
               nvidia: +cuda +cuda_uvm cuda_arch=<cuda_arch> +wrapper
               none: ~cuda ~cuda_uvm ~rocm
         dependencies:
-          - cmake +ownlibs target=<target>
+          common:
+            - cmake +ownlibs target=<target>
+          gpu:
+            nvidia:
+              - kokkos-nvcc-wrapper~mpi
     - libarchive
     - libfabric:
         default:
@@ -315,7 +319,7 @@ serial_packages_intel_stable:
   metadata: { section: packages }
   pe: [intel_stable]
   packages:
-    - abaqus:
+    - abaqus@2019:
         default:
           buildable: false
           permissions:
@@ -324,6 +328,9 @@ serial_packages_intel_stable:
         externals:
           - spec: abaqus@2019
             prefix: <external_prefix>/abaqus/2019
+          - spec: abaqus@2023
+            prefix: <external_prefix>/abaqus/2023
+    - abaqus@2023
     - eigen ~ipo
     - hdf5~ipo
     - intel-oneapi-ipp
@@ -638,7 +645,7 @@ external_packages:
             prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.el8_5.x86_64
         modules:
           blacklist: True
-    - ansys:
+    - ansys@2022R1:
         default:
           buildable: false
         externals:
@@ -646,6 +653,9 @@ external_packages:
             prefix: <external_prefix>/ansys/2020R2/v202
           - spec: ansys@2022R1 %<core_compiler>
             prefix: <external_prefix>/ansys/2022R1/v221
+          - spec: ansys@2022R2 %<core_compiler>
+            prefix: <external_prefix>/ansys/2022R2/v222
+    - ansys@2022R2
     - cfdplusplus:
         default:
           buildable: false
@@ -965,6 +975,20 @@ mpi_packages_gpu_gcc_stable:
   dependencies: [mpi, gpu]
   filters: ["gpu"]
   packages:
+    - kokkos:
+        variants: target=<target>
+        default:
+          variants:
+            common: +openmp
+            gpu:
+              nvidia: +cuda +cuda_uvm cuda_arch=<cuda_arch> +wrapper
+              none: ~cuda ~cuda_uvm ~rocm
+        dependencies:
+          common:
+            - cmake +ownlibs target=<target>
+          gpu:
+            nvidia:
+              - kokkos-nvcc-wrapper+mpi
     - relion@4.0.1 ~mklfft:
         variants:
           gpu:
@@ -1001,6 +1025,13 @@ mpi_blas_python_packages_gcc_stable:
             nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
             none: []
     - gromacs@2021.4+mpi+plumed:
+        variants:
+          gpu:
+            nvidia: +cuda
+            none: ~cuda
+        dependencies:
+          - fftw~mpi+openmp
+    - gromacs@2023+mpi+plumed:
         variants:
           gpu:
             nvidia: +cuda
@@ -1083,7 +1114,6 @@ mpi_blas_python_packages_petsc_gcc_stable:
           gpu:
             nvidia: [petsc +cuda cuda_arch=<cuda_arch>, suite-sparse +cuda]
             none: []
-
 
 mpi_blas_python_packages_no_gpu_gcc_stable:
   metadata: { section: packages }
