@@ -97,6 +97,7 @@ core_packages:
     - picard
     - sbt
     - sratoolkit
+    - subversion
     - tar
     - tmux
     - trimmomatic
