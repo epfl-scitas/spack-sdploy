@@ -937,6 +937,12 @@ mpi_blas_packages:
           permissions:
             read: group
             group: vasp-soft
+    - vasp@6.4.1 +hdf5 +scalapack +shmem:
+        default:
+          buildable: true
+          permissions:
+            read: group
+            group: vasp-soft
 
 # MPI PYTHON --------------------------------------------------------------------
 #
