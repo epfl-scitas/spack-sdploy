@@ -87,6 +87,8 @@ core_packages:
     - intel-oneapi-advisor
     - intel-oneapi-inspector
     - intel-oneapi-vtune
+    - libjpeg-turbo
+    - libpng
     - libtool
     - lmod
     - m4
