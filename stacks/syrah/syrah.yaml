@@ -97,6 +97,12 @@ core_packages:
     - perl:
         default: { version: 5.32.0 }
     - picard
+    - pmix:
+        default:
+          buildable: False
+        externals:
+          - spec: pmix@5.0.1
+            prefix: /usr
     - sbt
     - sratoolkit
     - subversion
@@ -191,6 +197,12 @@ serial_packages:
           version: <python3>
           variants: +tkinter +optimizations ~debug +ssl ~libxml2
     - nfft ^fftw~mpi+openmp
+    - opengl:
+        default:
+          buildable: false
+        externals:
+          - spec: opengl@4.6
+            prefix: /usr
     - openssl:
         default:
           version: 1.1.1k
@@ -269,7 +281,7 @@ serial_packages_gcc_stable:
         default:
           buildable: false
         externals:
-          - spec: libevent +openssl@2.1.8
+          - spec: libevent +openssl@2.1.12
             prefix: /usr
         module:
           blacklist: true
@@ -280,13 +292,6 @@ serial_packages_gcc_stable:
     - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - unblur target=<target>
-    # It stays here just to not change what is already installed but it would make more sense to have it in core_packages
-    - pmix:
-        default:
-          buildable: False
-        externals:
-          - spec: pmix@4.2.2
-            prefix: /usr
     - rdma-core:
         default:
           buildable: False
@@ -1250,15 +1255,7 @@ mpi_blas_parallel_python_packages_gcc_stable:
           - netcdf-c+mpi
 #          - hdf5 +mpi +ipo
     - py-h5py ^hdf5 +mpi +ipo
-    - cp2k@9.1 +mpi ~plumed +openmp smm=blas:
-        variants:
-          gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch>
-            none: ~cuda
-        dependencies:
-          - boost+mpi
-          - fftw+mpi+openmp
-    - cp2k@9.1 +mpi +plumed +openmp smm=blas:
+    - cp2k@2023.1 +mpi +plumed +openmp smm=blas:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>

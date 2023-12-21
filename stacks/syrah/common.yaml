@@ -24,7 +24,7 @@ extensions: spack-config
 spack: spack
 
 # This is where spack will install the packages
-stack_version: v1
+stack_version: v2
 spack_licences: licences
 
 #  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -61,7 +61,7 @@ extra_repos:
   scitas-spack-packages:
     repo: http://github.com/epfl-scitas/scitas-spack-packages.git
     path: scitas-spack-packages/
-    tag: releases/syrah
+    tag: releases/syrah.v2
   scitas-cryoem-packages:
     repo: http://github.com/epfl-scitas/scitas-cryoem-spack-packages.git
     path: scitas-cryoem-packages/
@@ -90,9 +90,9 @@ concretizer:
 
 tokens:
   external_prefix: /ssoft/spack/external
-  core_compiler: gcc@8.5.0 arch=linux-rhel8-x86_64_v2
-  os: rhel8
+  core_compiler: gcc@11.2.1 arch=linux-rhel9-x86_64_v2
+  os: rhel9
   python3: 3.10.4
-  lmod_arch: linux-rhel8-x86_64
-  jdk_version: 1.8.0_332
-  slurm_version: 22-05-6
+  lmod_arch: linux-rhel9-x86_64
+  jdk_version: 1.8.0_352
+  slurm_version: 23-11-0

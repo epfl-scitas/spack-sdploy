@@ -13,7 +13,7 @@ set -u
 # CONFIGURATION
 # Variables needed to run this script
 export STACK=syrah
-export ENVIRONMENT=izar
+export ENVIRONMENT=helvetios
 export IN_PR=1
 
 # Variables read from commons.yaml using cat, grep and cut.
