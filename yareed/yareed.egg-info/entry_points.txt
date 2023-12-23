@@ -1,2 +1,0 @@
-[console_scripts]
-yareed = yareed.main:main
