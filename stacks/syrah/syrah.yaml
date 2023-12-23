@@ -83,7 +83,7 @@ core_packages:
     - fio
     - git
     - git-lfs
-    - i7z
+#    - i7z
     - intel-oneapi-advisor
     - intel-oneapi-inspector
     - intel-oneapi-vtune
