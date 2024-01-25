@@ -864,6 +864,7 @@ mpi_blas_packages_gcc_stable:
         variants: +mpi+scalapack+gipaw~cmake hdf5=parallel
         dependencies:
           - fftw+mpi+openmp
+          - hdf5+mpi~ipo
     - superlu-dist:
         default:
           variants:
