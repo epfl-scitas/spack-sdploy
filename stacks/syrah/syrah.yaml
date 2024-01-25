@@ -621,6 +621,11 @@ serial_packages_python_gpu_gcc_stable:
             none: ~cuda
         dependencies:
           - boost~mpi
+    - julia+openlibm@1.10.0:
+        dependencies:
+          gpu:
+            nvidia: [suite-sparse +cuda]
+            none: [suite-sparse ~cuda]
 
 # EXTERNAL ---------------------------------------------------------------------
 #
