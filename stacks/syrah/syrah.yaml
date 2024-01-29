@@ -939,7 +939,8 @@ mpi_blas_packages:
     #       permissions:
     #         read: group
     #         group: molpro-soft
-    - vasp@6.3.2 +hdf5 +scalapack +shmem:
+    - vasp@6.3.2:
+        variants: +hdf5 +scalapack +shmem +wannier90
         default:
           buildable: true
           permissions:
@@ -947,7 +948,8 @@ mpi_blas_packages:
             group: vasp-soft
         dependencies:
           - hdf5 +mpi ~ipo
-    - vasp@6.4.1 +hdf5 +scalapack +shmem:
+    - vasp@6.4.1:
+        variants: +hdf5 +scalapack +shmem +wannier90
         default:
           buildable: true
           permissions:
