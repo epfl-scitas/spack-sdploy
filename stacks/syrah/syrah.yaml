@@ -1260,7 +1260,7 @@ mpi_blas_parallel_python_packages_gcc_stable:
           - netcdf-c+mpi
 #          - hdf5 +mpi +ipo
     - py-h5py ^hdf5 +mpi +ipo
-    - cp2k@2023.1 +mpi +plumed +openmp smm=blas:
+    - cp2k@9.1 +mpi +plumed +openmp smm=blas:
         variants:
           gpu:
             nvidia: +cuda cuda_arch=<cuda_arch>
