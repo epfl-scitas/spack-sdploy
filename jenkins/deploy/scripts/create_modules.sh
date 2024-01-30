@@ -5,24 +5,25 @@ set -euo pipefail
 . $JENKINS/activate_spack.sh
 
 # Gather values
-LMOD_PREFIX=`yq .modules.roots.lmod stacks/${STACK_RELEASE}/common.yaml`
+LMOD_PREFIX=`yq -r '.modules.roots.lmod' stacks/${STACK_RELEASE}/common.yaml`
 
 TOKENS=`yq -s '.[0].tokens + .[1].platform.tokens'  stacks/${STACK_RELEASE}/common.yaml stacks/${STACK_RELEASE}/platforms/${environment}.yaml`
 
 LMOD_SUBDIR=`echo ${TOKENS} | yq .lmod_root`
 ARCH=`echo ${TOKENS} | yq .lmod_arch`
 
-INTEL_YAML=`yq '.intel.stable.compiler | split("@")' stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml`
-COMPILER=`echo ${INTEL_YAML} | yq '.[0]'`
-COMPILER_VER=`echo ${INTEL_YAML} | yq '.[1]'`
-INTEL_SPEC_YAML=`yq '.intel.stable.compiler_spec | split("@")' stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml`
-COMPILER_SPEC=`echo ${INTEL_SPEC_YAML} | yq '.[0]'`
-COMPILER_SPEC_VER=`echo ${INTEL_SPEC_YAML} | yq '.[1]'`
+INTEL_YAML=`yq -r '.intel.stable.compiler | split("@")' stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml`
+COMPILER=`echo ${INTEL_YAML} | yq -r '.[0]'`
+COMPILER_VER=`echo ${INTEL_YAML} | yq -r '.[1]'`
+INTEL_SPEC_YAML=`yq -r '.intel.stable.compiler_spec | split("@")' stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml`
+COMPILER_SPEC=`echo ${INTEL_SPEC_YAML} | yq -r '.[0]'`
+COMPILER_SPEC_VER=`echo ${INTEL_SPEC_YAML} | yq -r '.[1]'`
 
 
+LMOD_PREFIX=$STACK_PREFIX/$STACK_RELEASE_VER/$LMOD_PREFIX/${LMOD_SUBDIR}/${ARCH}
 # Compose values
-LMOD_CORE=$STACK_PREFIX/$STACK_RELEASE_VER/$LMOD_PREFIX/${LMOD_SUBDIR}/${ARCH}/Core
-LMOD_INTEL=$STACK_PREFIX/$STACK_RELEASE_VER/$LMOD_PREFIX/${LMOD_SUBDIR}/${ARCH}/intel
+LMOD_CORE=${LMOD_MODULES_PREFIX}/Core
+LMOD_INTEL=${LMOD_MODULES_PREFIX}/intel
 
 # Show final values
 echo "LMOD_CORE: $LMOD_CORE"
@@ -45,6 +46,7 @@ spack --env ${environment} module lmod refresh -y
 
 # step 0
 if [ -e ${LMOD_CORE}/${COMPILER_SPEC}/${COMPILER_SPEC_VER}.lua ]; then
+    echo "Correcting Intel module"
     mkdir -p ${LMOD_CORE}/${COMPILER}
 
     # step 1
