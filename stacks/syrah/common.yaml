@@ -96,3 +96,4 @@ tokens:
   lmod_arch: linux-rhel8-x86_64
   jdk_version: 1.8.0_332
   slurm_version: 22-05-6
+  default_cuda_version: 11.8.0
