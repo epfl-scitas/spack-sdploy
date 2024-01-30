@@ -1075,15 +1075,15 @@ mpi_blas_python_packages_gcc_stable:
           - netcdf-c+mpi
           - fftw+mpi+openmp
     - openfoam +metis ^boost+mpi ^hdf5+cxx+fortran+hl+ipo~java+mpi+shared+szip~threadsafe+tools ^fftw+mpi+openmp
-    - py-torch@1.11.0:
-        variants:
-          common: +mpi
-          gpu:
-            none: ~cuda
-    - py-torchvision:
-        dependencies:
-          gpu:
-            none: [py-torch +mpi ~cuda]
+    #- py-torch@1.11.0:
+    #    variants:
+    #      common: +mpi
+    #      gpu:
+    #        none: ~cuda
+    #- py-torchvision:
+    #    dependencies:
+    #      gpu:
+    #        none: [py-torch +mpi ~cuda]
     - opencv +vtk +python3:
         variants:
           gpu:
