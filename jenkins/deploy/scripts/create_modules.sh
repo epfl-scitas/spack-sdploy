@@ -7,10 +7,10 @@ set -euo pipefail
 # Gather values
 LMOD_PREFIX=`yq -r '.modules.roots.lmod' stacks/${STACK_RELEASE}/common.yaml`
 
-TOKENS=`yq -s '.[0].tokens + .[1].platform.tokens'  stacks/${STACK_RELEASE}/common.yaml stacks/${STACK_RELEASE}/platforms/${environment}.yaml`
+TOKENS=`yq -r -s '.[0].tokens + .[1].platform.tokens'  stacks/${STACK_RELEASE}/common.yaml stacks/${STACK_RELEASE}/platforms/${environment}.yaml`
 
-LMOD_SUBDIR=`echo ${TOKENS} | yq .lmod_root`
-ARCH=`echo ${TOKENS} | yq .lmod_arch`
+LMOD_SUBDIR=`echo ${TOKENS} | yq -r .lmod_root`
+ARCH=`echo ${TOKENS} | yq -r .lmod_arch`
 
 INTEL_YAML=`yq -r '.intel.stable.compiler | split("@")' stacks/${STACK_RELEASE}/${STACK_RELEASE}.yaml`
 COMPILER=`echo ${INTEL_YAML} | yq -r '.[0]'`
@@ -20,7 +20,7 @@ COMPILER_SPEC=`echo ${INTEL_SPEC_YAML} | yq -r '.[0]'`
 COMPILER_SPEC_VER=`echo ${INTEL_SPEC_YAML} | yq -r '.[1]'`
 
 
-LMOD_PREFIX=$STACK_PREFIX/$STACK_RELEASE_VER/$LMOD_PREFIX/${LMOD_SUBDIR}/${ARCH}
+LMOD_MODULES_PREFIX=$STACK_PREFIX/$STACK_RELEASE_VER/$LMOD_PREFIX/${LMOD_SUBDIR}/${ARCH}
 # Compose values
 LMOD_CORE=${LMOD_MODULES_PREFIX}/Core
 LMOD_INTEL=${LMOD_MODULES_PREFIX}/intel
@@ -36,6 +36,12 @@ echo "COMPILER_SPEC_VER: $COMPILER_SPEC_VER"
 echo "Creating modules"
 # we can pass -e ${environment} to the spack command
 spack --env ${environment} module lmod refresh -y
+
+echo "Correcting LLVM module"
+LLVM_LMOD_PATH=${LMOD_MODULES_PREFIX}/gcc/`yq -r '.gcc.stable.compiler | split("@") | .[1]' stacks/syrah/syrah.yaml`/llvm/15.0.2-julia.lua
+cat ${LLVM_LMOD_PATH} | grep -v family | grep -v MODULEPATH > /tmp/llvm-15.0.2-julia.lua
+
+mv /tmp/llvm-15.0.2-julia.lua ${LLVM_LMOD_PATH}
 
 # What's happening ?
 # ----------------
