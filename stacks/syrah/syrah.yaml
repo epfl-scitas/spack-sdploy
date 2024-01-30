@@ -479,6 +479,7 @@ serial_packages_python_gcc_stable:
   dependencies: [python3]
   packages:
     - angsd
+    - curl@7.83.0
     - llvm@14.0.6:
         default:
           version: 14.0.6
@@ -487,6 +488,7 @@ serial_packages_python_gcc_stable:
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
+    - llvm@15.0.2
     - py-pyem
     - py-grpcio:
        activated: True
@@ -623,6 +625,7 @@ serial_packages_python_gpu_gcc_stable:
           - boost~mpi
     - julia+openlibm@1.10.0:
         dependencies:
+          common: llvm~clang
           gpu:
             nvidia: [suite-sparse +cuda]
             none: [suite-sparse ~cuda]
