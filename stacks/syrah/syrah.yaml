@@ -29,7 +29,7 @@ gcc:
     python3: python@<python3> +tkinter +optimizations ~debug +ssl ~libxml2
     python2: python@2.7.18 +tkinter ~debug
     gpu:
-      nvidia: cuda@11.8.0
+      nvidia: cuda@<default_cuda_version>
       none: ""
 
 intel:
@@ -47,7 +47,7 @@ intel:
     python3: python@<python3> +tkinter +optimizations ~debug +ssl
     python2: python@2.7.18 +tkinter ~debug
     gpu:
-      nvidia: cuda@11.8.0
+      nvidia: cuda@<default_cuda_version>
       none: ""
 
 nvhpc:
@@ -60,7 +60,7 @@ nvhpc:
     mpi: ""
     blas: ""
     blas_parallel: ""
-    gpu: cuda@11.8.0
+    gpu: cuda@<default_cuda_version>
 
 # CORE -------------------------------------------------------------------------
 #
@@ -479,6 +479,7 @@ serial_packages_python_gcc_stable:
   dependencies: [python3]
   packages:
     - angsd
+    - curl@7.83.0
     - llvm@14.0.6:
         default:
           version: 14.0.6
@@ -487,6 +488,7 @@ serial_packages_python_gcc_stable:
             gpu:
               nvidia: +cuda cuda_arch=<cuda_arch>
               none: ~cuda
+    - llvm@15.0.2
     - py-pyem
     - py-grpcio:
        activated: True
@@ -621,6 +623,12 @@ serial_packages_python_gpu_gcc_stable:
             none: ~cuda
         dependencies:
           - boost~mpi
+    - julia+openlibm@1.10.0:
+        dependencies:
+          common: llvm~clang
+          gpu:
+            nvidia: [suite-sparse +cuda]
+            none: [suite-sparse ~cuda]
 
 # EXTERNAL ---------------------------------------------------------------------
 #

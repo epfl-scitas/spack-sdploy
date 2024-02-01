@@ -33,15 +33,18 @@ modules:
           +unwind: unwind
           +debug: dbg
           +ilp64: f64
+          version_suffix=jl: julia
       whitelist:
         - cmake +ncurses%{{tokens['core_compiler']}}
         - llvm%{{tokens['core_compiler']}}
+        - llvm~clang
       blacklist:
         - autoconf
         - automake
         - cmake
         - libevent
         - libfabric
+
         - libtool
         - llvm
         - lmod
@@ -121,6 +124,8 @@ modules:
           set:
             SLURM_MPI_TYPE: pmi2
             OMPI_MCA_btl_openib_warn_default_gid_prefix: '0'
+          prepend_path:
+            JULIA_LOAD_PATH: /ssoft/spack/external/julia/syrah.v1/mpi
       openblas threads=none:
         environment:
           set:
@@ -135,6 +140,10 @@ modules:
         environment:
           prepend_path:
             MATLABPATH: ${PREFIX}/mli
+      cuda@{{tokens['default_cuda_version']}}:
+        environment:
+          prepend_path:
+            JULIA_LOAD_PATH: /ssoft/spack/external/julia/syrah.v1/cuda
       crystal17:
         template: modules/group_restricted.lua
       fdtd:
@@ -167,6 +176,8 @@ modules:
             I_MPI_PMI_LIBRARY: /usr/lib64/libpmi2.so
             I_MPI_EXTRA_FILESYSTEM: '0'
             SLURM_MPI_TYPE: pmi2
+      julia:
+        autoload: direct
       metis:
         suffixes:
           ~real64: sp
