@@ -97,3 +97,5 @@ tokens:
   jdk_version: 1.8.0_352
   slurm_version: 23-11-0
   openssl_version: 3.0.1
+  default_cuda_version: 11.8.0
+
