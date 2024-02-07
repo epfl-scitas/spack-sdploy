@@ -6,3 +6,4 @@ platform:
     target: icelake
     lmod_root: jed
     core_per_socket: 72
+    rdma_core_version: 47.1

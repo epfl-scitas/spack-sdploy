@@ -296,7 +296,7 @@ serial_packages_gcc_stable:
         default:
           buildable: False
         externals:
-          - spec: rdma-core@44.1
+          - spec: rdma-core@<rdma_core_version>
             prefix: /usr
     - rust:
         default:
