@@ -124,8 +124,8 @@ modules:
           set:
             SLURM_MPI_TYPE: pmi2
             OMPI_MCA_btl_openib_warn_default_gid_prefix: '0'
-          prepend_path:
-            JULIA_LOAD_PATH: /ssoft/spack/external/julia/syrah.v1/mpi
+          append_path:
+            JULIA_LOAD_PATH: ":/ssoft/spack/external/julia/syrah.v1/mpi"
       openblas threads=none:
         environment:
           set:
@@ -142,8 +142,8 @@ modules:
             MATLABPATH: ${PREFIX}/mli
       cuda@{{tokens['default_cuda_version']}}:
         environment:
-          prepend_path:
-            JULIA_LOAD_PATH: /ssoft/spack/external/julia/syrah.v1/cuda
+          append_path:
+            JULIA_LOAD_PATH: ":/ssoft/spack/external/julia/syrah.v1/cuda"
       crystal17:
         template: modules/group_restricted.lua
       fdtd:
