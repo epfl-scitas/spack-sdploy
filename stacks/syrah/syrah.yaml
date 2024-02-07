@@ -35,6 +35,7 @@ gcc:
 intel:
   metadata:
     section: pe
+  filters: ['cloud = none']
   stable:
     compiler: intel@2021.6.0
     compiler_spec: intel-oneapi-compilers-classic@2021.6.0
@@ -203,6 +204,14 @@ serial_packages:
     #     externals:
     #       - spec: opengl@4.6
     #         prefix: /usr
+    - openjdk:
+        default:
+          buildable: true
+        externals:
+          - spec: openjdk@<jdk_version>
+            prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.352.b08-2.el9_0.x86_64
+        modules:
+          blacklist: True
     - openssl:
         default:
           version: <openssl_version>
@@ -629,7 +638,7 @@ serial_packages_python_gpu_gcc_stable:
             none: ~cuda
         dependencies:
           - boost~mpi
-    - julia+openlibm@1.10.0:
+    - julia+openlibm~precompile@1.10.0:
         dependencies:
           common: llvm~clang
           gpu:
@@ -652,17 +661,9 @@ serial_packages_python_gpu_gcc_stable:
 external_packages:
   metadata:
     section: packages
-    cloud: False
   pe: [core]
+  filters: ['cloud = none']
   packages:
-    - openjdk:
-        default:
-          buildable: true
-        externals:
-          - spec: openjdk@<jdk_version>
-            prefix: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.352.b08-2.el9_0.x86_64
-        modules:
-          blacklist: True
     - ansys@2022R1:
         default:
           buildable: false

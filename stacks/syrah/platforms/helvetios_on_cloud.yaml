@@ -1,8 +1,8 @@
 platform:
   filters:
     gpu: none
-    mpi: infiniband
-    cloud: none
+    mpi: ethernet_roce
+    cloud: ecocloud
   tokens:
     target: skylake_avx512
     lmod_root: helvetios

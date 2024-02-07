@@ -2,6 +2,7 @@ platform:
   filters:
     gpu: none
     mpi: ethernet_roce
+    cloud: none
   tokens:
     target: icelake
     lmod_root: jed
