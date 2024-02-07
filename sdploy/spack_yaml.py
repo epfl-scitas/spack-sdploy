@@ -165,7 +165,7 @@ class SpackYaml(StackFile):
             # Create new entry
             spec = {}
             # Add compilers
-            spec['compilers'] = pkg_list_cfg.get('pe')
+            spec['compilers'] = [pe for pe in pkg_list_cfg['pe'] if pe.split("_")[0] in self.pe_stack]
             # Add dependencies
             if 'dependencies' in pkg_list_cfg.keys():
                 # Add dependencies one by one and check against filters
