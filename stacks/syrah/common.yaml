@@ -46,6 +46,7 @@ environments: # platforms
   - jed
   - helvetios
   - izar
+  - kintoun
 
 # The mirrors paths are common to all stacks.
 # They are created under `work_directory`.

@@ -1,9 +1,0 @@
-platform:
-  filters:
-    gpu: none
-    mpi: ethernet_roce
-    cloud: ecocloud
-  tokens:
-    target: skylake_avx512
-    lmod_root: helvetios
-    core_per_socket: 18
