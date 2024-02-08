@@ -954,6 +954,13 @@ mpi_blas_packages:
     #       permissions:
     #         read: group
     #         group: molpro-soft
+
+mpi_blas_packages_licensed:
+  metadata: { section: packages }
+  pe: [gcc_stable, intel_stable]
+  dependencies: [mpi, blas]
+  filters: ['cloud = none']
+  packages:
     - vasp@6.3.2:
         variants: +hdf5 +scalapack +shmem +wannier90
         default:
