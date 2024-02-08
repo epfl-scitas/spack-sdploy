@@ -172,7 +172,12 @@ serial_packages:
     - libarchive
     - libfabric:
         default:
-          variants: fabrics=tcp,udp,sockets,mlx,verbs
+          variants:
+            mpi:
+              infiniband: fabrics=tcp,udp,sockets,mlx,verbs
+              infiniband_gdrcopy: fabrics=tcp,udp,sockets,mlx,verbs
+              ethernet_roce: fabrics=tcp,udp,sockets,mlx,verbs
+              ethernet: fabrics=tcp,udp,sockets
     - libtiff
     - libxc
     - libxml2:
@@ -325,12 +330,12 @@ serial_packages_gcc_stable:
     - ucx:
         default:
           variants:
-            common: +parameter_checking +thread_multiple
+            common: +parameter_checking +thread_multiple +cma
             mpi:
-              infiniband: +rdmacm +rc +dc +ud +cma +verbs +mlx5_dv
-              infiniband_gdrcopy: +rdmacm +rc +dc +ud +cma +verbs +mlx5_dv
-              ethernet_roce: +rdmacm +rc +dc +ud +cma +verbs +mlx5_dv
-              ethernet: ~rdmacm ~rc ~dc ~ud ~cma ~verbs ~mlx5_dv
+              infiniband: +rdmacm +rc +dc +ud +verbs +mlx5_dv
+              infiniband_gdrcopy: +rdmacm +rc +dc +ud +verbs +mlx5_dv
+              ethernet_roce: +rdmacm +rc +dc +ud +verbs +mlx5_dv
+              ethernet: ~rdmacm ~rc ~dc ~ud ~verbs ~mlx5_dv
             gpu:
               nvidia: +gdrcopy +cuda cuda_arch=<cuda_arch>
               none: ~gdrcopy +cm
