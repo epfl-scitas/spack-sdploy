@@ -24,6 +24,7 @@ gcc:
       infiniband: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2
       infiniband_gdrcopy: openmpi@4.1.3 +cuda cuda_arch=<cuda_arch> fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2
       ethernet_roce: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2
+      ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2
     blas: openblas@0.3.20 threads=none +locking
     blas_parallel: openblas@0.3.20 threads=openmp +locking
     python3: python@<python3> +tkinter +optimizations ~debug +ssl ~libxml2
@@ -324,7 +325,11 @@ serial_packages_gcc_stable:
     - ucx:
         default:
           variants:
-            common: +rdmacm +rc +dc +ud +cma +verbs +mlx5_dv +parameter_checking +thread_multiple
+            common: +parameter_checking +thread_multiple
+            mpi:
+              infiniband: +rdmacm +rc +dc +ud +cma +verbs +mlx5_dv
+              infiniband_gdrcopy: +rdmacm +rc +dc +ud +cma +verbs +mlx5_dv
+              ethernet_roce: +rdmacm +rc +dc +ud +cma +verbs +mlx5_dv
             gpu:
               nvidia: +gdrcopy +cuda cuda_arch=<cuda_arch>
               none: ~gdrcopy +cm
@@ -1207,6 +1212,7 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
               infiniband: +verbs
               infiniband_gdrcopy: +verbs
               ethernet_roce: ~verbs
+              ethernet: ~verbs
         variants:
           common: +mpi
           gpu:
