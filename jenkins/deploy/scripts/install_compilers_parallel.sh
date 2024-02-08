@@ -57,11 +57,13 @@ done <<< $(cat compilers.list)
 #  -isystem/ssoft/spack/syrah/v1/opt/spack/linux-rhel8-x86_64_v2/gcc-8.5.0/intel-oneapi-compilers-classic-2021.6.0-q3mi2mylw3zyuht6p72u25ruqnpptpym/compiler/include/icc
 
 if [ ${IN_PR} -eq 0 ]; then
-    DST_DIR=`spack location -i intel-oneapi-compilers`/compiler/2022.1.0/linux/bin/intel64
-    CONTENT=`spack location -i intel-oneapi-compilers-classic`/compiler/include
-    echo -isystem$CONTENT/intel64 > $DST_DIR/ifort.cfg
-    echo -isystem$CONTENT/icc > $DST_DIR/icc.cfg
-    echo -isystem$CONTENT/icc > $DST_DIR/icpc.cfg
+    if $(cat compilers.list | grep -q intel); then
+	DST_DIR=`spack location -i intel-oneapi-compilers`/compiler/2022.1.0/linux/bin/intel64
+	CONTENT=`spack location -i intel-oneapi-compilers-classic`/compiler/include
+	echo -isystem$CONTENT/intel64 > $DST_DIR/ifort.cfg
+	echo -isystem$CONTENT/icc > $DST_DIR/icc.cfg
+	echo -isystem$CONTENT/icc > $DST_DIR/icpc.cfg
+    fi
 fi
 # ~end of hack~
 

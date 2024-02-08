@@ -39,9 +39,11 @@ spack --env ${environment} module lmod refresh -y
 
 echo "Correcting LLVM module"
 LLVM_LMOD_PATH=${LMOD_MODULES_PREFIX}/gcc/`yq -r '.gcc.stable.compiler | split("@") | .[1]' stacks/syrah/syrah.yaml`/llvm/15.0.2-julia.lua
-cat ${LLVM_LMOD_PATH} | grep -v family | grep -v MODULEPATH > /tmp/llvm-15.0.2-julia.lua
+if [ -e ${LLVM_LMOD_PATH} ]; then
+    cat ${LLVM_LMOD_PATH} | grep -v family | grep -v MODULEPATH > /tmp/llvm-15.0.2-julia.lua
 
-mv /tmp/llvm-15.0.2-julia.lua ${LLVM_LMOD_PATH}
+    mv /tmp/llvm-15.0.2-julia.lua ${LLVM_LMOD_PATH}
+fi
 
 # What's happening ?
 # ----------------
