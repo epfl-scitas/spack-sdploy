@@ -44,6 +44,9 @@ class ActivatePkgs(StackFile):
         super().__init__(config)
         self.pkglist = []
         self._pe_definitions = self._define_PEs()
+
+        tty.debug(f'PE definitions {self._pe_definitions}')
+        
         self._add_activated_lists()
         self._add_activated_pkgs()
         self.pkglist = set(self.pkglist)
@@ -53,8 +56,8 @@ class ActivatePkgs(StackFile):
         specs = []
         for pe_name in def_['pe']:
             if pe_name not in self._pe_definitions:
-                return ''
-
+                continue
+            
             pe = self._pe_definitions[pe_name]
             spec = f''' %{pe['compiler']} arch=linux-{self.tokens['os']}-{self.tokens['target']}'''
             if 'dependencies' in def_:
@@ -76,8 +79,11 @@ class ActivatePkgs(StackFile):
             if not v['metadata']['activated']:
                 continue
 
-            tty.debug(f'Blip {v}')
+            tty.debug(f'Blip definitions {v}')
             specs = self._get_pe_spec(v)
+            if not specs:
+                continue
+            tty.debug(f'Blip pe specs {specs}')
             for pkg in v['packages']:
                 if isinstance(pkg, dict):
                     pkg = ' '.join(self._handle_package_dictionary(pkg))
@@ -91,7 +97,9 @@ class ActivatePkgs(StackFile):
 
         for _, v in data.items():
             specs = self._get_pe_spec(v)
-            tty.debug(f'Blip {specs}')
+            if not specs:
+                continue
+            
             for pkg in v['packages']:
                 if not isinstance(pkg, dict):
                     continue

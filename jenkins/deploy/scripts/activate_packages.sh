@@ -5,7 +5,7 @@ set -euo pipefail
 . $JENKINS/activate_spack.sh
 
 echo "Activate packages"
-spack -d write-activate-list -s ${STACK_RELEASE} -p ${environment}
+spack -d -e ${environment} write-activate-list -s ${STACK_RELEASE}
 
 echo "Loop through all packages"
 packages_to_activate=$(cat packages_to_activate)
