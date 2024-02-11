@@ -100,3 +100,4 @@ tokens:
   openssl_version: 3.0.1
   default_cuda_version: 11.8.0
   rdma_core_version: 44.1
+  pmix_version: 5.0.1

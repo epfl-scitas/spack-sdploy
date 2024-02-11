@@ -14,3 +14,4 @@ platform:
     target: icelake
     lmod_root: kintoun
     core_per_socket: 18
+    pmix_version: 4.2.2

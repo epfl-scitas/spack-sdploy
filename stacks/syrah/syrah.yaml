@@ -103,7 +103,7 @@ core_packages:
         default:
           buildable: False
         externals:
-          - spec: pmix@5.0.1
+          - spec: pmix@<pmix_version>
             prefix: /usr
     - sbt
     - sratoolkit
