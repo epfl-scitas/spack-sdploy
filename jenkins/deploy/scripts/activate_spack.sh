@@ -19,8 +19,8 @@ if [ -e $SPACK_INSTALL_PATH/share/spack/setup-env.sh ]; then
     . $SPACK_INSTALL_PATH/share/spack/setup-env.sh
     spack --version 1>&2
 
-    export SPACK_USER_CACHE_PATH=$HOME/.spack-${STACK}
-    export SPACK_USER_CONFIG_PATH=$HOME/.spack-${STACK}
+    export SPACK_USER_CACHE_PATH=$HOME/.spack-${STACK}-${STACK_RELEASE_VER}
+    export SPACK_USER_CONFIG_PATH=$HOME/.spack-${STACK}-${STACK_RELEASE_VER}
 
     environment=$(echo $NODE_LABELS | cut -d '-' -f 1)
     set +e
