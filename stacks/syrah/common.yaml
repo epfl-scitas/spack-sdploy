@@ -44,9 +44,9 @@ stack_release: syrah
 
 environments: # platforms
 #  - jed
-#  - helvetios
+  - helvetios
 #  - izar
-  - kintoun
+#  - kintoun
 
 # The mirrors paths are common to all stacks.
 # They are created under `work_directory`.
