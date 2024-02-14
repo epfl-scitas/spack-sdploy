@@ -1,7 +1,7 @@
 #!/bin/bash -l
 set -euo pipefail
 
-#. ${JENKINS}/configure_proxies.sh
+. ${JENKINS}/configure_proxies.sh
 . ${JENKINS}/setenv.sh
 
 # if [ ${IN_PR} -eq 1 ]; then
