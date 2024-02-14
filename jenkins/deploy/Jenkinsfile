@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'helvetios-login'
+        label 'jed-login'
     }
 
     // Adds timestamps to console logs
