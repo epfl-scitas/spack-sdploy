@@ -24,7 +24,7 @@ extensions: spack-config
 spack: spack
 
 # This is where spack will install the packages
-stack_version: v2
+stack_version: v3
 spack_licences: licences
 
 #  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
