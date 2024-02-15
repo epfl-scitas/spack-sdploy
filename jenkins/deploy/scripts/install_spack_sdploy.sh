@@ -4,6 +4,8 @@ set -euo pipefail
 echo 'Activating Spack'
 . $JENKINS/activate_spack.sh
 
+mkdir -p ${SPACK_SDPLOY_INSTALL_PATH}/
+
 rsync -auv $PWD/ ${SPACK_SDPLOY_INSTALL_PATH}/
 
 echo "Adding extension key to config.yaml"
