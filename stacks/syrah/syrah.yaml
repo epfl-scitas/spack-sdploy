@@ -280,8 +280,8 @@ serial_packages_gcc_stable:
   metadata: { section: packages }
   pe: [gcc_stable]
   packages:
-    - cistem target=<target> ^wxwidgets+libtiff
-    - ctffind target=<target>
+    - cistem target=<target> ^wxwidgets+libtiff ^fftw~mpi
+    - ctffind target=<target> ^fftw~mpi
     - eigen:
         default: { variants: +ipo }
     - ffmpeg +libx264
@@ -306,7 +306,7 @@ serial_packages_gcc_stable:
           - netcdf-c ~mpi~parallel-netcdf
     - netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
     - netcdf-fortran ^netcdf-c~mpi ^hdf5~mpi+szip+hl+fortran+cxx
-    - unblur target=<target>
+    - unblur target=<target> ^fftw~mpi
     - rdma-core:
         default:
           buildable: False
@@ -1024,20 +1024,20 @@ mpi_packages_gpu_gcc_stable:
   dependencies: [mpi, gpu]
   filters: ["gpu"]
   packages:
-    - kokkos:
-        variants: target=<target>
-        default:
-          variants:
-            common: +openmp
-            gpu:
-              nvidia: +cuda +cuda_uvm cuda_arch=<cuda_arch> +wrapper
-              none: ~cuda ~cuda_uvm ~rocm
-        dependencies:
-          common:
-            - cmake +ownlibs target=<target>
-          gpu:
-            nvidia:
-              - kokkos-nvcc-wrapper+mpi
+    # - kokkos:
+    #    variants: target=<target>
+    #    default:
+    #      variants:
+    #        common: +openmp
+    #        gpu:
+    #          nvidia: +cuda +cuda_uvm cuda_arch=<cuda_arch> +wrapper
+    #          none: ~cuda ~cuda_uvm ~rocm
+    #    dependencies:
+    #      common:
+    #        - cmake +ownlibs target=<target>
+    #      gpu:
+    #        nvidia:
+    #          - kokkos-nvcc-wrapper+mpi
     - relion@4.0.1 ~mklfft:
         variants:
           gpu:
