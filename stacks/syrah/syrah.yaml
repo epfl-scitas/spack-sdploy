@@ -27,7 +27,7 @@ gcc:
       ethernet: openmpi@4.1.3 fabrics=ucx +pmi schedulers=slurm ~memchecker ~rsh ^hwloc ~libxml2
     blas: openblas@0.3.20 threads=none +locking
     blas_parallel: openblas@0.3.20 threads=openmp +locking
-    python3: python@<python3> +tkinter +optimizations ~debug +ssl ~libxml2
+    python3: python@<python3> +tkinter +optimizations ~debug +ssl ~libxml2 ^tk +xft+xss
     python2: python@2.7.18 +tkinter ~debug
     gpu:
       nvidia: cuda@<default_cuda_version>
