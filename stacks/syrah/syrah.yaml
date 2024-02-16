@@ -391,12 +391,12 @@ serial_packages_blas_gpu:
           gpu:
             nvidia: +cuda
             none: ~cuda
-    - magma:
-        variants:
-          gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch>
-        dependencies:
-          - cmake +ownlibs
+#    - magma:
+#        variants:
+#          gpu:
+#            nvidia: +cuda cuda_arch=<cuda_arch>
+#        dependencies:
+#          - cmake +ownlibs
 
 # BLAS (GCC ONLY) --------------------------------------------------------------
 #
@@ -1239,20 +1239,23 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
         variants:
           common: +mpi
           gpu:
-            nvidia: +cuda cuda_arch=<cuda_arch> +magma +cudnn +nccl
+            #nvidia: +cuda cuda_arch=<cuda_arch> +magma +cudnn +nccl
+            nvidia: +cuda cuda_arch=<cuda_arch> ~magma +cudnn +nccl
             rocm: +magma +rocm
         default:
           version: 2.0.1
           variants:
             common: +mpi
             gpu:
-              nvidia: +cuda cuda_arch=<cuda_arch> +magma +cudnn +nccl
+              #nvidia: +cuda cuda_arch=<cuda_arch> +magma +cudnn +nccl
+              nvidia: +cuda cuda_arch=<cuda_arch> ~magma +cudnn +nccl
               rocm: +magma +rocm
         dependencies:
           common:
             - cmake +ownlibs
           gpu:
-            nvidia: [magma +cuda cuda_arch=<cuda_arch>]
+            #nvidia: [magma +cuda cuda_arch=<cuda_arch>]
+            nvidia: []
             none: []
             rocm: [magma +rocm amdgpuarch=<amd_arch>]
     - py-torchvision@0.15.2:
@@ -1261,8 +1264,9 @@ mpi_blas_parallel_python_gpu_packages_gcc_stable:
             - cmake +ownlibs
           gpu:
             nvidia:
-              - py-torch +mpi +cuda cuda_arch=<cuda_arch>
-              - magma +cuda cuda_arch=<cuda_arch>
+              - py-torch +mpi +cuda cuda_arch=<cuda_arch> ~magma
+              #- py-torch +mpi +cuda cuda_arch=<cuda_arch> ~magma
+              #- magma +cuda cuda_arch=<cuda_arch>
             none: [py-torch +mpi ~cuda]
     - py-topaz:
         variants:
