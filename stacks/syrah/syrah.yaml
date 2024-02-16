@@ -155,20 +155,20 @@ serial_packages:
               amd: +rocm ~cuda
     - intel-oneapi-tbb
     - jasper
-    - kokkos:
-        variants: target=<target>
-        default:
-          variants:
-            common: +openmp
-            gpu:
-              nvidia: +cuda +cuda_uvm cuda_arch=<cuda_arch> +wrapper
-              none: ~cuda ~cuda_uvm ~rocm
-        dependencies:
-          common:
-            - cmake +ownlibs target=<target>
-          gpu:
-            nvidia:
-              - kokkos-nvcc-wrapper~mpi
+    # - kokkos:
+    #    variants: target=<target>
+    #    default:
+    #      variants:
+    #        common: +openmp
+    #        gpu:
+    #          nvidia: +cuda +cuda_uvm cuda_arch=<cuda_arch> +wrapper
+    #          none: ~cuda ~cuda_uvm ~rocm
+    #    dependencies:
+    #      common:
+    #        - cmake +ownlibs target=<target>
+    #      gpu:
+    #        nvidia:
+    #          - kokkos-nvcc-wrapper~mpi
     - libarchive
     - libfabric:
         default:
