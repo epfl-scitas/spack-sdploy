@@ -804,7 +804,7 @@ mpi_packages:
         default: { variants: +mpi ~openmp }
     - openfoam-org +metis ^scotch+mpi
     - phylobayesmpi
-    - scotch +mpi ^flex ^gettext +libxml
+    - scotch +mpi ^flex ^gettext +libxml2
 
 # MPI --------------------------------------------------------------------------
 #
