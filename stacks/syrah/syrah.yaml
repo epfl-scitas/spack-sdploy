@@ -200,6 +200,8 @@ serial_packages:
     # Here we are just making sure it will go into packages.yaml
     - python:
         variants: +tkinter +optimizations ~debug +ssl ~libxml2
+        dependencies:
+          - tk +xft +xss
         default:
           version: <python3>
           variants: +tkinter +optimizations ~debug +ssl ~libxml2
