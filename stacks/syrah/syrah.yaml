@@ -233,7 +233,9 @@ serial_packages:
     - star
     - subread
     - tcl
-    - tk +xft+xss
+    - tk:
+        default: { variants: +xft +xss }
+        variants: +xft +xss
     - valgrind ~boost ~mpi
     - voropp
     - zlib
@@ -490,7 +492,7 @@ serial_packages_python:
     - cairo:
         default: { variants: +png +pdf +fc +ft }
     - mercurial
-    - ninja
+    - ninja ^tk +xft+xss
     - prinseq-lite
     - py-pybind11
     - samtools
