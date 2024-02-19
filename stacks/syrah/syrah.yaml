@@ -561,7 +561,8 @@ serial_packages_python_blas_gcc_stable:
         modules:
           autoload: direct
     - py-scikit-learn
-    - py-scipy
+    - py-scipy:
+        activated: True
     - py-statsmodels
     - py-theano:
         variants:
