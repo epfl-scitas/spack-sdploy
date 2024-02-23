@@ -105,6 +105,7 @@ core_packages:
         externals:
           - spec: pmix@<pmix_version>
             prefix: /usr
+    - rclone
     - sbt
     - sratoolkit
     - subversion
