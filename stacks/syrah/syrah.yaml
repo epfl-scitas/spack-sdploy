@@ -709,6 +709,7 @@ external_packages:
             prefix: <external_prefix>/comsol/6.0
           - spec: comsol@6.2 %<core_compiler>
             prefix: <external_prefix>/comsol/6.2
+     - comsol@6.2
     - fdtd:
         default:
           buildable: false
