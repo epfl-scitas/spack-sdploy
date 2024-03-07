@@ -138,6 +138,7 @@ serial_packages:
     - cmake ~ncurses:
         dependencies:
           - openssl@<openssl_version>
+    - expat
     - fastqc
     - fftw +openmp ~mpi
     - fftw ~openmp ~mpi
