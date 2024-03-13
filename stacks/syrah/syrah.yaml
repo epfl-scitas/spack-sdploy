@@ -811,6 +811,8 @@ mpi_packages:
     - openfoam-org +metis ^scotch+mpi
     - phylobayesmpi
     - scotch +mpi
+    - wrf
+    - wps
 
 # MPI --------------------------------------------------------------------------
 #
